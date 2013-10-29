@@ -6,7 +6,7 @@ server.listen(8080);
 var io = require('socket.io').listen(server);
 var canvas = io.of('/canvas');
 var conductor = io.of('/conductor');
-var client = io.of('/client');
+var clients = io.of('/client');
 
 app.use(express.static(__dirname + "/public"));
 
@@ -28,9 +28,12 @@ canvas.on('connection', function (canv) {
 
 conductor.on('connection', function (cond) {
   cond.emit("welcome","You're a conductor!");
+  cond.on('changeColor',function(data){
+    clients.emit('changeColor',data);
+  });
 });
 
-client.on('connection', function (cli) {
+clients.on('connection', function (cli) {
   cli.emit("welcome","You're a client!");
 });
 

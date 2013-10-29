@@ -4,11 +4,10 @@
 
 <script>
 var server = io.connect('/client');
-// server.emit('device', {
-//   id: 'hash',
-//   type: 'conductor'
-// })
 server.on('welcome',function(data){
+  console.log(data);
+})
+server.on('changeColor',function(data){
   console.log(data);
 })
 </script>
