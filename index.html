@@ -4,8 +4,9 @@
 
 <script>
 var server = io.connect();
-server.on('message', function(data){
-  console.log(data);
+server.emit('device', {
+  id: 'hash'
+  type: 'conductor'
 })
 </script>
 </head>
