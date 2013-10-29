@@ -22,26 +22,15 @@ var canvases = {};
 
 io.sockets.on('connection', function(socket) {
   socket.on('device', function(data) {
-    var id;
-    if (data.type === 'brush') {
-      // var brush = new Brush(socket, setUniqueID());
-      // brushes[brush.id] = brush;
-      // socket.broadcast.emit("brushAdd", { brushId: brush.id } );
-      // socket.emit("welcome", { id : brush.id });
-      id = getUniqueID(brushes);
-      var brush = new Brush(socket, id);
-      brushes[id] = brush;
-      socket.broadcast.emit("brushAdd", { brushId: id } );
-      socket.emit("welcome", { id : id });
-    
+    if (data.type === 'brush') {                  // TODO: Let user import case switching statement
+      var brush = new Brush(socket, setUniqueID());
+      brushes[brush.id] = brush;
+      socket.broadcast.emit("brushAdd", { brushId: brush.id } );
+      socket.emit("welcome", { id : brush.id });
     } else if (data.type === 'canvas') {
-      // var canvas = new Canvas(socket, setUniqueID());
-      // canvases[canvas.id] = canvas;
-      // socket.emit("welcome", { id : canvas.id });
-      id = getUniqueID(canvases);
-      var canvas = new Canvas(socket, id);
-      canvases[id] = canvas;
-      socket.emit('welcome', { id: id });
+      var canvas = new Canvas(socket, setUniqueID());
+      canvases[canvas.id] = canvas;
+      socket.emit("welcome", { id : canvas.id });
     }
   });
   
@@ -52,7 +41,13 @@ io.sockets.on('connection', function(socket) {
 });
 
 io.sockets.on('disconnect', function(socket) {
+  socket.on('device', function(data) {
+    if (data.type === 'brush') {                  // TODO: Let user import case switching statement
+      
+    } else if (data.type === 'canvas') {
 
+    }    
+  }
   // add info to socket instead of vice cersa
 });
 
@@ -76,7 +71,7 @@ var Canvas = function(socket, id) {
 // helper functions
 //////////////////////////////////////////
 
-var getUniqueID = function(set) {                   // is this necessary?
+var getUniqueID = function(set) {                   // TODO: is this function necessary?
   var id = crypto.randomBytes(3).toString('hex');
   while (id in set) {                               // for? || while (!id in set)
     id = crypto.randomBytes(3).toString('hex');
@@ -88,7 +83,7 @@ var setUniqueID = function() {
   return crypto.randomBytes(3).toString('hex');
 };
 
-var checkIDs = function(id, set) {
+var checkIDs = function(id, set) {                   // TODO: is this function necessary?
   for (items in set) {
     if (id === set[items].id) {
       return false;
