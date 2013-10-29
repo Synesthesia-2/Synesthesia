@@ -1,9 +1,8 @@
 var express = require('express')
-    , app=express()
-    , http=require('http')
-    , server = http.createServer(app)
-    , io = require('socket.io').listen(server)
-    , projector = require('projector.js');
+var app=express();
+var http=require('http');
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 
 server.listen(8080);
 
@@ -13,11 +12,6 @@ app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
-app.get('/controller', function (req, res) {
-  res.sendfile(__dirname + '/controller.html');
-});
-
 io.sockets.on('connection', function (client) {
-  client.on('device', function(data){
-    (data.type).listeners();
+  console.log(client)
 });
