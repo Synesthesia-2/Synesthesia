@@ -8,3 +8,11 @@
     "jade": "~0.35.0"
   }
 }
+=======
+{ "name" : "kin",
+  "version" : "0.0.1",
+  "dependencies" : { 
+      "express" : "latest",
+      "socket.io" : "latest"
+  }
+}

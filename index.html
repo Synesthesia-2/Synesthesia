@@ -1,0 +1,18 @@
+<html>
+<head>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+<script>
+var server = io.connect('/client');
+server.on('welcome',function(data){
+  console.log(data);
+})
+server.on('changeColor',function(data){
+  console.log(data);
+})
+</script>
+</head>
+<body>
+Hello world
+</body>
+</html>
