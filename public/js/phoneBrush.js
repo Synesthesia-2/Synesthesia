@@ -16,11 +16,12 @@ CanvasWrapper.prototype.message = function(headline, message) {
 };
 
 CanvasWrapper.prototype.addView = function(brushId, canvas) {
+  // ADD A NODE CANVAS NODE
+  // ASSIGN THIS NODE TO CANVAS, SET CTX
   this.canvases[brushId] = canvas;
 };
 
 CanvasWrapper.prototype.assign = function(data) {
-  console.log(this.canvases);
   this.canvases[data.brushId].calculateMove(data.aX, data.aY, data.aZ, data.color, data.brushSize);
 };
 
@@ -56,6 +57,7 @@ var Canvas = function(brushId) {
   this.y = this.height / 2;
   this.lastX = this.x;
   this.lastY = this.y;
+  this.
 };
 
 Canvas.prototype.emit = function(event, args) {
@@ -89,8 +91,7 @@ var init = function(server) {
   var socket = io.connect(server);
   if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     brush = new Brush();
-    
-    socket.emit('device', { type: 'brush', model: brush });
+    socket.emit('device', { type: 'brush' });
     brush.socket = socket;
     socket.on('welcome', function (data) {
       brush.id = data.id;
@@ -107,7 +108,6 @@ var init = function(server) {
   }
 
   socket.on('brushAdd', function(data) {
-    console.log('adding ', data);
     var canvas = new Canvas(data.brushId);
     canvasWrapper.addView(data.brushId, canvas);
   });

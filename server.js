@@ -25,9 +25,8 @@ io.sockets.on('connection', function(socket) {
     var id;
     if (data.type === 'brush') {
       id = getUniqueID(brushes);
-      var brush = new Brush(socket, id, data.model);
+      var brush = new Brush(socket, id);
       brushes[id] = brush;
-      console.log(brushes);
       socket.broadcast.emit("brushAdd", { brushId:id } );
       socket.emit("welcome", { id : id });
     
@@ -53,8 +52,8 @@ io.sockets.on('disconnect', function(socket) {
 var Brush = function(socket, id, model) {
   this.socket = socket;
   this.id = id;
-  this.color = model.color;
-  this.brushSize = model.brushSize;
+  this.color = '#FF0000';
+  this.brushSize = 1;
 };
 
 var Canvas = function(socket, id) {
