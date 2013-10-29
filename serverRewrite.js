@@ -7,6 +7,8 @@ var io = require('socket.io').listen(server);
 var canvas = io.of('/canvas');
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
+io.set('log level', 1); // reduce logging
+
 
 app.use(express.static(__dirname + "/public"));
 
