@@ -3,11 +3,7 @@
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
 <script>
-var server = io.connect('/client');
-// server.emit('device', {
-//   id: 'hash',
-//   type: 'conductor'
-// })
+var server = io.connect('/conductor');
 server.on('welcome',function(data){
   console.log(data);
 })
