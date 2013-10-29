@@ -1,0 +1,10 @@
+{
+  "name": "phoneBrush",
+  "version": "0.0.1",
+  "description": "draw with phone motion",
+  "dependencies": {
+    "socket.io": "latest",
+    "express": "3.x",
+    "jade": "~0.35.0"
+  }
+}
