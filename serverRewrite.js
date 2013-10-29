@@ -8,6 +8,7 @@ var canvas = io.of('/canvas');
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
 io.set('log level', 1); // reduce logging
+io.set('browser client gzip', true);
 
 
 app.use(express.static(__dirname + "/public"));
