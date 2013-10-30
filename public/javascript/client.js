@@ -1,4 +1,8 @@
 var server = io.connect('/client');
+var brushSettings = {
+  brushSize: 5,
+  color: #000000
+}
 
 server.on('welcome', function(data){
   console.log(data);
@@ -15,6 +19,18 @@ server.on('randomColor', function(data){
   var color = data.color[i];
   console.log(color);
   $('body').css({'background-color': color});
+
+  $('#modelWindow button').on('click touchend', closeModelMessage, false);
+
+  $('#brushSize').on('touchend', function(e){
+    brushSettings.brushSize = this.value;
+  });
+
+  $('.colorBlock').on('touchstart', function(e) {
+    var color = $(this).data('color');
+    brushSettings.color = color;
+  });
+
 });
 
 $(document).ready(function() {
@@ -38,7 +54,9 @@ var initMotionListener = function() {
     server.emit('paint',{
       aX: aX,
       aY: aY,
-      aZ: aZ
+      aZ: aZ,
+      color: brushSettings.color,
+      brushSize: brushSettings.brushSize
     });
   }, false);
 };

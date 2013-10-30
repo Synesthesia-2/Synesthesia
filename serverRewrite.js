@@ -49,8 +49,8 @@ app.get('/canvas', function (req, res) {
 /// Canvas events
 //////////////////////////////////////////
 
-canvas.on('connection', function (canv) {
-  canv.emit("welcome","You're a canvas!");
+canvas.on('connection', function (canvas) {
+  canvas.emit("welcome","You're a canvas!");
 });
 
 //////////////////////////////////////////
@@ -81,6 +81,7 @@ conductor.on('connection', function (conductor) {
 /// Client events
 //////////////////////////////////////////
 clients.on('connection', function (client) {
+  console.log(client.id);
   var team = state["1"] - state["2"] >= 0 ? "2" : "1";
   client.join(team);
   state[team] += 1;
