@@ -72,9 +72,8 @@ clients.on('connection', function (cli) {
   var team = state["1"] - state["2"] >= 0 ? "2" : "1";
   cli.join(team);
   state[team] += 1;
-  state.last = team;
-  cli.emit("welcome","You're a client on team " + team + "!");
   state.connections += 1;
+  cli.emit("welcome","You're a client on team " + team + "!");
   // console.log("team 1 has ", state["1"], " team 2 has", state["2"], " and total is ", state.connections);
   cli.on('disconnect', function(){
     state[team] -= 1;
