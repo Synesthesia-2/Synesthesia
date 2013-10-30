@@ -1,4 +1,4 @@
-var express = require('express')
+var express = require('express');
 var app=express();
 var http=require('http');
 var server = http.createServer(app);
@@ -6,12 +6,20 @@ var io = require('socket.io').listen(server);
 
 server.listen(8080);
 
-app.use(express.static(__dirname + "/public"));
+app.set('views', __dirname + '/views');
+app.set("view engine", "jade");
+app.use(require('stylus').middleware({ src: __dirname + '/public'}));
+app.use(express.static(__dirname + '/public'));
+
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+  res.render('client');
 });
 
-io.sockets.on('connection', function (client) {
-  console.log(client)
+app.get('/conductor', function (req, res) {
+  res.render('conductor');
+});
+
+app.get('/canvas', function (req, res) {
+  res.render('canvas');
 });
