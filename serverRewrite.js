@@ -13,6 +13,7 @@ var state = {
   "2": 0
 };
 io.set('log level', 1); // reduce logging
+io.set('browser client gzip', true);
 
 
 app.use(express.static(__dirname + "/public"));
