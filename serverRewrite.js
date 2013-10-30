@@ -57,14 +57,18 @@ canvas.on('connection', function (canv) {
 //////////////////////////////////////////
 
 conductor.on('connection', function (conductor) {
+  console.log('conductor connected');
   conductor.emit("welcome","You're a conductor!");
   conductor.on('changeColor',function(data){
     clients.emit('changeColor', data);
   });
   conductor.on('splitColors', function(data){
-    clients("1").emit('changeColor', {color: (data.color)[0]});
-    clients("2").emit('changeColor', {color: (data.color)[1]});
+    clients.in("1").emit('changeColor', {color: (data.color)[0]});
+    clients.in("2").emit('changeColor', {color: (data.color)[1]});
   });
+  conductor.on('allRandomColors', function(data){
+    clients.emit('randomColor', {color: data.color});
+  })
 });
 
 //////////////////////////////////////////
