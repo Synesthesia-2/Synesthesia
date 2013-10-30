@@ -1,6 +1,5 @@
 // client.js
 
-
 $(document).ready(function() {
   // When socket is emiting accel data, trigger initMotionListener
 
