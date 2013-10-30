@@ -2,6 +2,10 @@
 
 var server = io.connect('/conductor');
 
+server.on('welcome', function(data){
+  console.log(data);
+})
+
 angular.module('conductorApp', [])
 
 .controller('conductorController', function($scope) {
@@ -21,7 +25,7 @@ $(document).ready(function() {
     $('.color').on('click touchend', function(e) {
       e.preventDefault();
       colorOptions = { color: $(this).data('color') };
-      server.emit('colorChange',colorOptions);
+      server.emit('changeColor',colorOptions);
       $('#optionPalette').hide();
       $('#optionBuilder h2').text("Please select an option below:");
       $('#currentBar h3').text("Currently Deployed: All One Color");
@@ -30,7 +34,7 @@ $(document).ready(function() {
 
   $('#allRandomColors').on('click touchend', function(e) {
     e.preventDefault();
-    colorOptions = { color: 'random' };
+    colorOptions = { color: ["#CC0000","#FFFFFF","#00CC00","#0000CC","#B5FC9B","#9BDAFC","#F50FF1","#F5AC0F","#FFE203","#000000"] };
     server.emit("allRandomColors",colorOptions);
     $('#currentBar h3').text("Currently Deployed: All Random Colors");
   });
@@ -39,7 +43,7 @@ $(document).ready(function() {
     e.preventDefault();
     $('#optionPalette').show();
     $('#optionBuilder h2').text("Pick colors to use:");
-    colorOptions = [];
+    var colorOptions = [];
     $('.color').on('click touchend', function(e) {
       e.preventDefault();
       colorOptions.push($(this).data('color'));
