@@ -17,20 +17,30 @@ html
         div#currentBar
           h3 Currently Deployed:
         div#optionBuilder
-          h2 Building for:
-            span.buildOption
-          div#optionPalette
+          h2 Please select an option below:
 
-          button#submitOption Go
+          div#optionPalette(style="display: none")
+            ul
+              li(class="color", data-color="#CC0000", style="background-color: #CC0000")
+              li(class="color", data-color="#FFFFFF", style="background-color: #FFFFFF")
+              li(class="color", data-color="#00CC00", style="background-color: #00CC00")
+              li(class="color", data-color="#0000CC", style="background-color: #0000CC")
+              li(class="color", data-color="#B5FC9B", style="background-color: #B5FC9B")
+              li(class="color", data-color="#9BDAFC", style="background-color: #9BDAFC")
+              li(class="color", data-color="#F50FF1", style="background-color: #F50FF1")
+              li(class="color", data-color="#F5AC0F", style="background-color: #F5AC0F")
+              li(class="color", data-color="#FFE203", style="background-color: #FFE203")
+              li(class="color", data-color="#000000", style="background-color: #000000")
+            button#submitOption Go
 
 
       div#specOptionList
         ul
-          li(class="specOption")
+          li(class="specOption", id="allOneColor")
             p All devices to one color
-          li(class="specOption")
+          li(class="specOption", id="allRandomColors")
             p All devices random colors
-          li(class="specOption")
+          li(class="specOption", id="splitColors")
             p Split colors between devices
           li(class="specOption")
             p OPTION FOUR
@@ -44,12 +54,6 @@ html
             p OPTION EIGHT
           li(class="specOption")
             p OPTION NINE
-          li(class="specOption")
-            p OPTION TEN
-          li(class="specOption")
-            p OPTION ELEVEN
-          li(class="specOption")
-            p OPTION TWELVE
 
 
     script(src="javascript/conductor.js")
