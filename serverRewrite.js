@@ -87,8 +87,9 @@ clients.on('connection', function (client) {
   state.connections += 1;
   client.emit("welcome","You're a client on team " + team + "!"); // notify client here whether app is in painting mode
   client.on('paint', function(data){
-    canvas.emit('paint',data)
-  }
+    console.log(data);
+    canvas.emit('paint',data);
+  });
   client.on('disconnect', function(){
     state[team] -= 1;
     state.connections -= 1;

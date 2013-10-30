@@ -5,16 +5,22 @@ server.on('welcome', function(data){
 });
 // TEST CODE
 server.on('changeColor', function(data){
-  console.log(data);
+  $("#wrapper").hide();
+  console.log(data.color);
+  $('body').css({'background-color': data.color});
 });
 
 server.on('randomColor', function(data){
   var i = Math.floor(Math.random() * 10);
-  console.log(data.color[i]);
+  var color = data.color[i];
+  console.log(color);
+  $('body').css({'background-color': color});
 });
 
-
 $(document).ready(function() {
+  $('body').on("touchstart",function(){
+      removeMotionListener();
+  });
   server.on('switchPainting', function(data){
     data.paint ? initMotionListener() : removeMotionListener();
   });
@@ -22,9 +28,8 @@ $(document).ready(function() {
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 });
 
-
-
 var initMotionListener = function() {
+  $('#wrapper').fadeIn();
   window.addEventListener('devicemotion', function(event) {
     var aX = Math.floor(event.acceleration.x);
     var aY = Math.floor(event.acceleration.y);
@@ -38,7 +43,10 @@ var initMotionListener = function() {
   }, false);
 };
 
+// TODO: Fix removeMotionListener
 var removeMotionListener = function() {
+  $('#wrapper').fadeOut();
+  alert('inside removeMotionListener')
   window.removeEventListener('devicemotion', function(event) {
     var aX = Math.floor(event.acceleration.x);
     var aY = Math.floor(event.acceleration.y);
@@ -62,4 +70,3 @@ var closeModelMessage = function(e) {
     $('#modelWindow p').text('');
   });
 };
-
