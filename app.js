@@ -18,7 +18,7 @@ app.set('views', __dirname + '/views');
 app.set("view engine", "jade");
 app.use(require('stylus').middleware({ src: __dirname + '/public'}));
 app.use(express.static(__dirname + '/public'));
-io.set('log level', 1); // reduce logging
+// io.set('log level', 1); // reduce logging
 io.set('browser client gzip', true);
 
 //////////////////////////////////////////
