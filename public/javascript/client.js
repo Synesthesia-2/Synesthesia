@@ -1,12 +1,29 @@
 // client.js
+var client;
 
 $(document).ready(function() {
-  // When socket is emiting accel data, trigger initMotionListener
+  client = new Client();
+  // pass in socket from socket.io and id from server to the above instance
+  
+  // when switching to paint mode just $('#wrapper').show()
 
+
+  // When socket is emiting accel data, trigger initMotionListener
   // WHen socket is just doing color disply, removeMotionListener
 
   // Close a model on OK click
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
+
+  $('#brushSize').on('touchend', function(e){
+    client.brushSize = this.value;
+    client.emit('brushChange', { brushSize: this.value });
+  });
+
+  $('.colorBlock').on('touchstart', function(e) {
+    var color = $(this).data('color');
+    client.color = color;
+    client.emit('colorChange', { color: color });
+  });
 });
 
 
