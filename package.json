@@ -1,19 +1,9 @@
-{
-  "name": "phoneBrush",
-  "version": "0.0.1",
-  "description": "draw with phone motion",
-  "dependencies": {
-    "socket.io": "latest",
-    "express": "3.x",
-    "jade": "~0.35.0"
-  }
-}
 { "name" : "kin",
   "version" : "0.0.1",
   "dependencies" : { 
-      "express" : "latest",
+      "express" : "3.x",
       "socket.io" : "latest",
-      "jade": "*",
+      "jade": "~0.35.0",
       "stylus": "*"
   }
 }

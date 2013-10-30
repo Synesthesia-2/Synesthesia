@@ -19,13 +19,13 @@ app.get('/', function (req, res) {
 });
 
 // <<<<<<< HEAD
-app.get('/canvas', function (req, res) {
-  res.sendfile(__dirname + '/canvas.html');
-});
+// app.get('/canvas', function (req, res) {
+//   res.sendfile(__dirname + '/canvas.html');
+// });
 
-app.get('/conductor', function (req, res) {
-  res.sendfile(__dirname + '/conductor.html');
-});
+// app.get('/conductor', function (req, res) {
+//   res.sendfile(__dirname + '/conductor.html');
+// });
 
 canvas.on('connection', function (canv) {
   canv.emit("welcome","You're a canvas!");
@@ -43,11 +43,11 @@ clients.on('connection', function (cli) {
 });
 
 // =======
-// app.get('/conductor', function (req, res) {
-//   res.render('conductor');
-// });
+app.get('/conductor', function (req, res) {
+  res.render('conductor');
+});
 
-// app.get('/canvas', function (req, res) {
-//   res.render('canvas');
-// });
+app.get('/canvas', function (req, res) {
+  res.render('canvas');
+});
 // >>>>>>> 4c90b9bc51edbfcb52157aacf91a91de464c70e6
