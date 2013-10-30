@@ -10,7 +10,8 @@ var clients = io.of('/client');
 var state = {
   connections: 0,
   "1": 0,
-  "2": 0
+  "2": 0,
+  painting: false
 };
 
 app.set('views', __dirname + '/views');
@@ -60,6 +61,7 @@ conductor.on('connection', function (conductor) {
   console.log('conductor connected');
   conductor.emit("welcome","You're a conductor!");
   conductor.on('changeColor',function(data){
+    console.log('changecolor event');
     clients.emit('changeColor', data);
   });
   conductor.on('splitColors', function(data){
@@ -68,7 +70,11 @@ conductor.on('connection', function (conductor) {
   });
   conductor.on('allRandomColors', function(data){
     clients.emit('randomColor', {color: data.color});
-  })
+  });
+  conductor.on('switchPainting', function(data){
+    state.painting = !state.painting;
+    clients.emit('switchPainting', data);
+  });
 });
 
 //////////////////////////////////////////
@@ -79,7 +85,10 @@ clients.on('connection', function (client) {
   client.join(team);
   state[team] += 1;
   state.connections += 1;
-  client.emit("welcome","You're a client on team " + team + "!");
+  client.emit("welcome","You're a client on team " + team + "!"); // notify client here whether app is in painting mode
+  client.on('paint', function(data){
+    canvas.emit('paint',data)
+  }
   client.on('disconnect', function(){
     state[team] -= 1;
     state.connections -= 1;

@@ -4,7 +4,7 @@ var server = io.connect('/conductor');
 
 server.on('welcome', function(data){
   console.log(data);
-})
+});
 
 angular.module('conductorApp', [])
 
@@ -21,7 +21,6 @@ $(document).ready(function() {
     specOption = "allOneColor";
     $('#optionPalette').show();
     $('#optionBuilder h2').text("Pick a color to transmit:");
-  
     $('.color').on('click touchend', function(e) {
       e.preventDefault();
       colorOptions = { color: $(this).data('color') };
@@ -58,8 +57,17 @@ $(document).ready(function() {
       $('#optionBuilder h2').text("Please select an option below:");
       $('#currentBar h3').text("Currently Deployed: Split Colors");
     });
-
   });
 
+  $('#clientPaint').on('click touchend', function(e) {
+    e.preventDefault();
+    if ($(this).text() === "TURN PAINTING ON") {
+      $(this).text('TURN PAINTING OFF');
+      server.emit('switchPainting',{paint: true});
+    } else {
+      server.emit('switchPainting',{paint: false});
+      $(this).text('TURN PAINTING ON');
+    }
+  });
 
 });
