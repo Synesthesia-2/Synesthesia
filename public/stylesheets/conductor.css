@@ -1,0 +1,119 @@
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #e02443), color-stop(100%, #8f0d23));
+/* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover, #e02443 0%, #8f0d23 100%);
+/* Chrome10+,Safari5.1+ */
+  background: radial-gradient(ellipse at center, #e02443 0%, #8f0d23 100%);
+/* W3C */
+}
+#conductor {
+  height: 1024px;
+  width: 769px;
+  border: 1px solid #fff;
+  overflow: hidden;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+header {
+  width: 100%;
+  height: 75px;
+  margin: 0;
+  padding: 0;
+  background-color: #ed2143;
+  border-bottom: 3px solid #ddd;
+}
+header h1 {
+  font-size: 40px;
+  color: #fff;
+  text-align: center;
+  margin: 0;
+  padding-top: 15px;
+}
+div#specController {
+  height: 400px;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8f0d23), color-stop(100%, rgba(143,13,35,0)));
+/* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #8f0d23 0%, rgba(143,13,35,0) 100%);
+/* Chrome10+,Safari5.1+ */
+  background: linear-gradient(to bottom, #8f0d23 0%, rgba(143,13,35,0) 100%);
+/* W3C */
+}
+div#specController div#currentBar {
+  height: 34px;
+  width: 100%;
+  background-color: #eee;
+  text-align: center;
+  opacity: 0.9;
+}
+div#specController div#currentBar h3 {
+  font-size: 20px;
+  margin: 0;
+  padding-top: 5px;
+}
+div#specController div#optionBuilder {
+  padding: 14px 0 14px 0;
+  height: 335px;
+  width: 700px;
+  margin: 0 auto;
+}
+div#specController div#optionBuilder h2 {
+  padding: 0 20px 0 0;
+  font-size: 40px;
+  text-align: center;
+  margin: 0;
+  color: #fff;
+}
+div#specController div#optionBuilder #optionPalette {
+  height: 220px;
+}
+div#specController div#optionBuilder button#submitOption {
+  height: 60px;
+  width: 160px;
+  margin-top: 20px;
+  margin-left: 250px;
+  border: 3px solid #ddd;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: inset 0 2px 3px #999;
+}
+div#specOptionList {
+  border: 3px solid #999;
+  width: 700px;
+  margin: 0 auto 20px auto;
+  height: 500px;
+  background-color: #eee;
+  border-radius: 15px;
+}
+div#specOptionList ul {
+  margin: 20px auto 0 auto;
+  width: 650px;
+}
+div#specOptionList ul li {
+  list-style: none;
+  float: left;
+  padding: 10px;
+  width: 163px;
+  height: 90px;
+  border-radius: 20px;
+  border: 2px solid #ed2143;
+  margin-right: 22px;
+  margin-bottom: 15px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e02443), color-stop(100%, #8f0d23));
+/* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #e02443 0%, #8f0d23 100%);
+/* Chrome10+,Safari5.1+ */
+  background: linear-gradient(to bottom, #e02443 0%, #8f0d23 100%);
+/* W3C */
+  box-shadow: 0px 4px 7px #999;
+  color: #fff;
+  text-align: center;
+}
