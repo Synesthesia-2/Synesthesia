@@ -69,5 +69,4 @@ $(document).ready(function() {
       $(this).text('TURN PAINTING ON');
     }
   });
-
 });

@@ -1,16 +1,7 @@
 {
   "name": "KineTech Performance System",
   "version": "0.0.1",
-  "authors": [
-    "David Ryan Hall <david.ryan.hall@gmail.com>",
-    "Joey Yang <joey@joeyyang.com>",
-    "Kate Jenkins <catherine.ann.jenkins@gmail.com>",
-    "George Bonner <g.e.bonner@gmail.com>",
-    "Weidong Yang <wdyangmail@yahoo.com>"
-  ],
   "description": "Kinetech live performance system to network phones to a common view screen through socket.IO and a NodeJS server",
-  "license": "MIT",
-  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",

@@ -1,5 +1,4 @@
 // client.js
-
 var server = io.connect('/client');
 server.on('welcome', function(data){
   console.log(data);
@@ -17,8 +16,8 @@ server.on('randomColor', function(data){
 
 $(document).ready(function() {
   server.on('switchPainting', function(data){
-    data.paint ? initMotionListener() : removeMotionListener()
-  })
+    data.paint ? initMotionListener() : removeMotionListener();
+  });
 
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 });
@@ -30,12 +29,12 @@ var initMotionListener = function() {
     var aX = Math.floor(event.acceleration.x);
     var aY = Math.floor(event.acceleration.y);
     var aZ = Math.floor(event.acceleration.z);
-    console.log(aX,aY,aZ)
+    console.log(aX,aY,aZ);
     server.emit('paint',{
       aX: aX,
       aY: aY,
       aZ: aZ
-    })
+    });
   }, false);
 };
 
