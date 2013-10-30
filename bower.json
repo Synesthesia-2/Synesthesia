@@ -1,0 +1,15 @@
+{
+  "name": "KineTech Performance System",
+  "version": "0.0.1",
+  "description": "Kinetech live performance system to network phones to a common view screen through socket.IO and a NodeJS server",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "jquery": "~1.9.0",
+    "normalize-css": "~2.1.3",
+    "angular": "1.0.8"
+  }
+}

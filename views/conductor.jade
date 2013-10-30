@@ -1,0 +1,59 @@
+doctype 5
+html
+  head
+    title Kinetech Performance Master Conductor
+    meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
+    link(rel='stylesheet', href='/bower_components/normalize-css/normalize.css')
+    link(rel='stylesheet', href='/stylesheets/conductor.css')
+    script(src="/socket.io/socket.io.js")
+    script(src="bower_components/jquery/jquery.min.js")
+    script(src="bower_components/angular/angular.min.js")
+
+  body
+    div#conductor(ng-app="conductorApp", ng-controller="conductorController")
+      header
+        h1 Master Controller
+      div#specController
+        div#currentBar
+          h3 Currently Deployed:
+        div#optionBuilder
+          h2 Please select an option below:
+
+          div#optionPalette(style="display: none")
+            ul
+              li(class="color", data-color="#CC0000", style="background-color: #CC0000")
+              li(class="color", data-color="#FFFFFF", style="background-color: #FFFFFF")
+              li(class="color", data-color="#00CC00", style="background-color: #00CC00")
+              li(class="color", data-color="#0000CC", style="background-color: #0000CC")
+              li(class="color", data-color="#B5FC9B", style="background-color: #B5FC9B")
+              li(class="color", data-color="#9BDAFC", style="background-color: #9BDAFC")
+              li(class="color", data-color="#F50FF1", style="background-color: #F50FF1")
+              li(class="color", data-color="#F5AC0F", style="background-color: #F5AC0F")
+              li(class="color", data-color="#FFE203", style="background-color: #FFE203")
+              li(class="color", data-color="#000000", style="background-color: #000000")
+            button#submitOption Go
+
+
+      div#specOptionList
+        ul
+          li(class="specOption", id="allOneColor")
+            p All devices to one color
+          li(class="specOption", id="allRandomColors")
+            p All devices random colors
+          li(class="specOption", id="splitColors")
+            p Split colors between devices
+          li(class="specOption")
+            p OPTION FOUR
+          li(class="specOption")
+            p OPTION FIVE
+          li(class="specOption")
+            p OPTION SIX
+          li(class="specOption")
+            p OPTION SEVEN
+          li(class="specOption")
+            p OPTION EIGHT
+          li(class="specOption")
+            p OPTION NINE
+
+
+    script(src="javascript/conductor.js")
