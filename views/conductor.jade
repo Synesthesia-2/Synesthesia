@@ -1,0 +1,55 @@
+doctype 5
+html
+  head
+    title Kinetech Performance Master Conductor
+    meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
+    link(rel='stylesheet', href='/bower_components/normalize-css/normalize.css')
+    link(rel='stylesheet', href='/stylesheets/conductor.css')
+    script(src="/socket.io/socket.io.js")
+    script(src="bower_components/jquery/jquery.min.js")
+    script(src="bower_components/angular/angular.min.js")
+
+  body
+    div#conductor(ng-app="conductorApp", ng-controller="conductorController")
+      header
+        h1 Master Controller
+      div#specController
+        div#currentBar
+          h3 Currently Deployed:
+        div#optionBuilder
+          h2 Building for:
+            span.buildOption
+          div#optionPalette
+
+          button#submitOption Go
+
+
+      div#specOptionList
+        ul
+          li(class="specOption")
+            p All devices to one color
+          li(class="specOption")
+            p All devices random colors
+          li(class="specOption")
+            p Split colors between devices
+          li(class="specOption")
+            p OPTION FOUR
+          li(class="specOption")
+            p OPTION FIVE
+          li(class="specOption")
+            p OPTION SIX
+          li(class="specOption")
+            p OPTION SEVEN
+          li(class="specOption")
+            p OPTION EIGHT
+          li(class="specOption")
+            p OPTION NINE
+          li(class="specOption")
+            p OPTION TEN
+          li(class="specOption")
+            p OPTION ELEVEN
+          li(class="specOption")
+            p OPTION TWELVE
+
+
+    script(src="javascript/conductor.js")
