@@ -2,7 +2,7 @@ var server = io.connect('/client');
 var brushSettings = {
   brushSize: 5,
   color: "#000000"
-}
+};
 
 server.on('welcome', function(data){
   brushSettings.id = data.id;
@@ -23,6 +23,13 @@ server.on('randomColor', function(data){
 
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 
+});
+
+$(document).ready(function() {
+  $('body').on("touchstart",function(){
+      removeMotionListener();
+  });
+
   $('#brushSize').on('touchend', function(e){
     brushSettings.brushSize = this.value;
   });
@@ -32,12 +39,6 @@ server.on('randomColor', function(data){
     brushSettings.color = color;
   });
 
-});
-
-$(document).ready(function() {
-  $('body').on("touchstart",function(){
-      removeMotionListener();
-  });
   server.on('switchPainting', function(data){
     data.paint ? initMotionListener() : removeMotionListener();
   });

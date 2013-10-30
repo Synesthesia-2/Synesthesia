@@ -50,7 +50,6 @@ Canvas.prototype.emit = function(event, args) {
 };
 
 Canvas.prototype.draw = function(color, brushSize) {
-  
   this.ctx.beginPath();
   this.ctx.strokeStyle = color;
   this.ctx.lineWidth = brushSize;
