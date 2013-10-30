@@ -65,8 +65,8 @@ var initMotionListener = function() {
 
 // TODO: Fix removeMotionListener
 var removeMotionListener = function() {
-  $('#wrapper').fadeOut();
-  alert('inside removeMotionListener')
+  // $('#wrapper').fadeOut();
+  // alert('inside removeMotionListener')
   window.removeEventListener('devicemotion', function(event) {
     var aX = Math.floor(event.acceleration.x);
     var aY = Math.floor(event.acceleration.y);
