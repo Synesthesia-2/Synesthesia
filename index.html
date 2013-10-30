@@ -1,15 +1,15 @@
 <html>
 <head>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script>
-var server = io.connect('/client');
-server.on('welcome',function(data){
-  console.log(data);
-})
-server.on('changeColor',function(data){
-  console.log(data);
-})
+  var server = io.connect('/client');
+  server.on('welcome',function(data){
+    $('body').append(data);
+  })
+  server.on('changeColor',function(data){
+    $('body').append(data);
+  })
 </script>
 </head>
 <body>

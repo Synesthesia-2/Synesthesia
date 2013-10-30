@@ -74,10 +74,10 @@ clients.on('connection', function (cli) {
   state[team] += 1;
   state.connections += 1;
   cli.emit("welcome","You're a client on team " + team + "!");
-  // console.log("team 1 has ", state["1"], " team 2 has", state["2"], " and total is ", state.connections);
+  console.log("team 1 has ", state["1"], " team 2 has", state["2"], " and total is ", state.connections);
   cli.on('disconnect', function(){
     state[team] -= 1;
     state.connections -= 1;
-    // console.log("team 1 has ", state["1"], " team 2 has", state["2"], " and total is ", state.connections);
+    console.log("team 1 has ", state["1"], " team 2 has", state["2"], " and total is ", state.connections);
   });
 });
