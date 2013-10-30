@@ -81,12 +81,16 @@ conductor.on('connection', function (conductor) {
 /// Client events
 //////////////////////////////////////////
 clients.on('connection', function (client) {
-  console.log(client.id);
   var team = state["1"] - state["2"] >= 0 ? "2" : "1";
   client.join(team);
   state[team] += 1;
   state.connections += 1;
-  client.emit("welcome","You're a client on team " + team + "!"); // notify client here whether app is in painting mode
+  canvas.emit('newBrush',{brushId: client.id})
+  client.emit("welcome", {
+    id: client.id,
+    message: "You're a client on team " + team + "!",
+    painting: state.painting
+  });
   client.on('paint', function(data){
     console.log(data);
     canvas.emit('paint',data);

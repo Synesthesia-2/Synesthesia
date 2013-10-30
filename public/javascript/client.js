@@ -1,11 +1,12 @@
 var server = io.connect('/client');
 var brushSettings = {
   brushSize: 5,
-  color: #000000
+  color: "#000000"
 }
 
 server.on('welcome', function(data){
-  console.log(data);
+  brushSettings.id = data.id;
+  console.log(data.message);
 });
 
 server.on('changeColor', function(data){
@@ -56,7 +57,8 @@ var initMotionListener = function() {
       aY: aY,
       aZ: aZ,
       color: brushSettings.color,
-      brushSize: brushSettings.brushSize
+      brushSize: brushSettings.brushSize,
+      brushId: brushSettings.id
     });
   }, false);
 };

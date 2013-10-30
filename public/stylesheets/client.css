@@ -4,6 +4,7 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
+  background-color: #111;
 }
 /* text and headline styles */
 h1 {
@@ -16,7 +17,7 @@ h1 {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #000;
+  background-color: #fff;
 }
 #drawOptions {
   height: 100%;

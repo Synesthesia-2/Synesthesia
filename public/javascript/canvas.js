@@ -15,7 +15,7 @@ $(document).ready(function() {
   // server sends a draw message with new accel
   // data. Takes a brush ID, and routes the
   // drawing to the appropriate canvas
-  socket.on('paint', function(data) {
+  server.on('paint', function(data) {
     canvasWrapper.assign(data);
   });
 });
