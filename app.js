@@ -39,6 +39,10 @@ app.get('/canvas', function (req, res) {
   res.render('canvas');
 });
 
+app.get('/fireworks', function (req, res) {
+  res.render('fireworks');
+});
+
 //////////////////////////////////////////
 ///
 /// EVENTS
