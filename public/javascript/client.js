@@ -1,9 +1,9 @@
-// client.js
 var server = io.connect('/client');
+
 server.on('welcome', function(data){
   console.log(data);
 });
-// TEST CODE
+
 server.on('changeColor', function(data){
   $("#wrapper").hide();
   console.log(data.color);
@@ -54,6 +54,8 @@ var removeMotionListener = function() {
   }, false);
 };
 
+
+// Message Functions for Later
 var makeModelMessage = function(headline, message) {
   $('#modelWindow h1').text(headline);
   $('#modelWindow p').text(message);
