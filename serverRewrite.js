@@ -12,11 +12,13 @@ var state = {
   "1": 0,
   "2": 0
 };
+
+app.set('views', __dirname + '/views');
+app.set("view engine", "jade");
+app.use(require('stylus').middleware({ src: __dirname + '/public'}));
+app.use(express.static(__dirname + '/public'));
 io.set('log level', 1); // reduce logging
 io.set('browser client gzip', true);
-
-
-app.use(express.static(__dirname + "/public"));
 
 //////////////////////////////////////////
 ///
@@ -25,15 +27,15 @@ app.use(express.static(__dirname + "/public"));
 //////////////////////////////////////////
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
-});
-
-app.get('/canvas', function (req, res) {
-  res.sendfile(__dirname + '/canvas.html');
+  res.render('client');
 });
 
 app.get('/conductor', function (req, res) {
-  res.sendfile(__dirname + '/conductor.html');
+  res.render('conductor');
+});
+
+app.get('/canvas', function (req, res) {
+  res.render('canvas');
 });
 
 //////////////////////////////////////////
@@ -54,31 +56,28 @@ canvas.on('connection', function (canv) {
 /// Conductor events
 //////////////////////////////////////////
 
-conductor.on('connection', function (cond) {
-  cond.emit("welcome","You're a conductor!");
-  cond.on('changeColor',function(data){
-    canvas.emit('changeColor', data);
+conductor.on('connection', function (conductor) {
+  conductor.emit("welcome","You're a conductor!");
+  conductor.on('changeColor',function(data){
     clients.emit('changeColor', data);
   });
-  cond.on('changeColorSplit', function(data){
-    // clients("1").emit(data[1].colors);   // presumes existence of data.colors
-    // clients("2").emit(data[1].colors);   // presumes existence of data.colors
+  conductor.on('splitColors', function(data){
+    clients("1").emit('changeColor', {color: (data.color)[0]});
+    clients("2").emit('changeColor', {color: (data.color)[1]});
   });
 });
 
 //////////////////////////////////////////
 /// Client events
 //////////////////////////////////////////
-clients.on('connection', function (cli) {
+clients.on('connection', function (client) {
   var team = state["1"] - state["2"] >= 0 ? "2" : "1";
-  cli.join(team);
+  client.join(team);
   state[team] += 1;
   state.connections += 1;
-  cli.emit("welcome","You're a client on team " + team + "!");
-  console.log("team 1 has ", state["1"], " team 2 has", state["2"], " and total is ", state.connections);
-  cli.on('disconnect', function(){
+  client.emit("welcome","You're a client on team " + team + "!");
+  client.on('disconnect', function(){
     state[team] -= 1;
     state.connections -= 1;
-    console.log("team 1 has ", state["1"], " team 2 has", state["2"], " and total is ", state.connections);
   });
 });
