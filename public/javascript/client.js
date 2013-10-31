@@ -66,14 +66,15 @@ var initMotionListener = function() {
     var aX = Math.floor(event.acceleration.x);
     var aY = Math.floor(event.acceleration.y);
     var aZ = Math.floor(event.acceleration.z);
-    console.log(aX,aY,aZ);
+    // var beta = Math.floor(event.orientation.beta);
     server.emit('paint',{
       aX: aX,
       aY: aY,
       aZ: aZ,
       color: brushSettings.color,
       brushSize: brushSettings.brushSize,
-      brushId: brushSettings.id
+      brushId: brushSettings.id//,
+      // beta: beta
     });
   }, false);
 };

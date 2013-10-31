@@ -20,6 +20,7 @@ var offset = 0,
 	cw, 
 	ch, 
 	cr = 0, cg = 0, cb = 0,
+	intensityTimeout,
 	tr, tg, tb,
 	rndX = 0,
 	rndY = 0,
@@ -31,13 +32,21 @@ var offset = 0,
 	touches = [],
 	totalLines = 30000,
 	renderMode = 0,
-	numLines = totalLines;
+	numLines = totalLines,
+	aZ,
+	brushSize;
 
 function initialize (data) {
-	px = data.aX+500;
-	py = data.aY+250;
-	normalize(px,py);
-	console.log(data.color);
+
+	if (Math.abs(data.aX) >2 && Math.abs(data.aZ) >2) {
+		px = data.aX+500;
+		py = data.aZ+250;
+		pz = data.aY;
+		brushSize = data.brushSize;
+		intensity(pz,brushSize,px,py);
+	}
+
+
 	if (data.color === "#8158D9") {
 		cr = 129/256;
 		cg = 88/256;
@@ -62,7 +71,8 @@ function initialize (data) {
 		cr = 235/256;
 		cg = 12/256;
 		cb = 64/256;
-	} 
+	}
+
 }
 		/*
           #8158D9 .
@@ -111,6 +121,20 @@ function onMouseUp(e) {
 	document.removeEventListener( "mouseup", onMouseUp );
 }
 
+function intensity(aZ, brushSize, px, py) {
+    if (!intensityTimeout) {
+	     if (aZ>50) {
+	      normalize(0,300);
+	      intensityTimeout = setTimeout( function() {
+	      	intensityTimeout=0;
+	      }, 1000 + Math.random() * 4000 );
+	    } else {
+	      normalize(px,py);
+	    }
+	}
+	
+}
+
 function animate() {
 	requestAnimationFrame( animate );
 	redraw();
@@ -124,16 +148,15 @@ function redraw()
 	var player, dx, dy, d,
 			tx, ty, bp, p, 
 			i = 0, nt, j,
-			now = new Date().getTime();
+			// now = new Date().getTime();
 	
 	nt = touches.length;
-	console.log(nt);
 	
 	// animate color
 	cr = cr * .99 + tr * .01;
 	cg = cg * .99 + tg * .01;
 	cb = cb * .99 + tb * .01;
-	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.5 );
+	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.3 );
 	// gl.uniform4f( colorLoc, 1, 0, 0, Math.random()+0.5 );
 	
 	// animate and attract particles
@@ -198,7 +221,11 @@ function redraw()
 						dy /= d;
 						d = ( 2 - d ) / 2;
 						d *= d;
-						velocities[bp] += dx * d * 0.03;
+						if (Math.abs(aZ)<10) {
+    						velocities[bp] += dx * d * 0.03;
+    					} else {
+    						velocities[bp] += Math.random() * dx * d * 0.03;
+    					}
 						velocities[bp+1] += dy * d * .01;
 					}
 				}
@@ -337,7 +364,7 @@ function loadScene()
 	
 	// get the color uniform location
 	colorLoc = gl.getUniformLocation( gl.program, "color" );
-	gl.uniform4f( colorLoc, 0.4, 0.01, 0.08, 0.5 );
+	gl.uniform4f( colorLoc, 0.4, 0.01, 0.08, 0.3 );
 	
 	
 	//    Get the vertexPosition attribute from the linked shader program
@@ -387,7 +414,7 @@ function loadScene()
 	for ( var i=0; i<totalLines; i++ )
 	{
 		vertices.push( 0, 0, 1.83 );
-		velocities.push( (Math.random() * 2 - 1)*.05, (Math.random() * 2 - 1)*.05, .93 + Math.random()*.02 );
+		velocities.push( (Math.random() * 2 - 1)*.05, (Math.random() * 2 - 1)*.05, .93 + Math.random()*.03 );
 	}
 	vertices = new Float32Array( vertices );
 	velocities = new Float32Array( velocities );
@@ -474,7 +501,7 @@ function loadScene()
 }
 
 function onKey( e ) {
-	setRenderMode( ++renderMode % 4 );
+	// setRenderMode( ++renderMode % 4 );
 }
 
 function setRenderMode( n ) {
