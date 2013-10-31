@@ -20,4 +20,8 @@ $(document).ready(function() {
     canvasWrapper.assign(data);
   });
 
+  // brushServer.on('clearAll', function(){
+  //   canvasWrapper.removeViews();
+  // });
+
 });

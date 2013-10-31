@@ -90,8 +90,13 @@ conductor.on('connection', function (conductor) {
   });
   conductor.on('switchPainting', function(data){
     var clients = io.of('/client');
-    state.mode = "switchPainting";
-    clients.emit('switchPainting', data);
+    if (data.paint) {
+      state.mode = "switchPaintingOn";
+    } else if (!data.paint) {
+      state.mode = "switchPaintingOff";
+      canvas.emit("clearAll");
+    }
+    clients.emit('switchPainting', data);      
   });
   // conductor.on('')
 });

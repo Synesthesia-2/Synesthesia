@@ -7,32 +7,28 @@ server.on('welcome', function(data){
 });
 
 angular.module('conductorApp', [])
-.controller('conductorController', function($scope) {
-});
 
-var specOption, colorOptions;
+.controller('conductorController', function($scope) {
+
+});
 
 $(document).ready(function() {
   
+  var specOption, colorOptions;
 
   $('#allOneColor').on('click touchend', function(e) {
     e.preventDefault();
     specOption = "allOneColor";
     $('#optionPalette').show();
     $('#optionBuilder h2').text("Pick a color to transmit:");
-
-    $('.color').on('click touchend', toggleSingleColor);
-
-    $('#submitOption').on('click touchend', function(e){
+    $('.color').on('click touchend', function(e) {
       e.preventDefault();
+      colorOptions = { color: $(this).data('color') };
       server.emit('changeColor',colorOptions);
       $('#optionPalette').hide();
       $('#optionBuilder h2').text("Please select an option below:");
       $('#currentBar h3').text("Currently Deployed: All One Color");
-      $('.color').off('click touchend', toggleSingleColor);
-      $('.color').css({ 'border-color': '#fff' });
     });
-
   });
 
   $('#allRandomColors').on('click touchend', function(e) {
@@ -47,8 +43,11 @@ $(document).ready(function() {
     $('#optionPalette').show();
     $('#optionBuilder h2').text("Pick colors to use:");
     var colorOptions = [];
-    
-    $('.color').on('click touchend', { colors: colorOptions }, toggleMultiColors);
+    $('.color').on('click touchend', function(e) {
+      e.preventDefault();
+      colorOptions.push($(this).data('color'));
+      $(this).css({ 'border-color': '#000'});
+    });
 
     $('#submitOption').on('click touchend', function(e){
       e.preventDefault();
@@ -57,11 +56,6 @@ $(document).ready(function() {
       $('#optionPalette').hide();
       $('#optionBuilder h2').text("Please select an option below:");
       $('#currentBar h3').text("Currently Deployed: Split Colors");
-
-      $('.color').off('click touchend', { colors: colorOptions }, toggleMultiColors);
-      
-      $('.color').css({ 'border-color': '#fff' });
-      colorOptions = [];
     });
   });
 
@@ -75,16 +69,4 @@ $(document).ready(function() {
       $(this).text('TURN PAINTING ON');
     }
   });
-
 });
-
-var toggleSingleColor = function(e) {
-  colorOptions = { color: $(this).data('color') };
-  $('.color').css({ 'border-color': '#fff' });
-  $(this).css({ 'border-color': '#000'});
-};
-
-var toggleMultiColors = function(e) {
-  e.data.colors.push($(this).data('color'));
-  $(this).css({ 'border-color': '#000'});
-};
