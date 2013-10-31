@@ -59,8 +59,9 @@ canvas.on('connection', function (canvas) {
   canvas.emit("welcome","You're a canvas!");
 });
 
-fireworks.on('connection', function (fireworks) {
-  fireworks.emit("welcome","You're a fireworks!");
+fireworks.on('connection', function (firework) {
+  console.log("new firework connected!!!!!!!!!")
+  firework.emit("welcome","You're a fireworks!");
 });
 
 //////////////////////////////////////////

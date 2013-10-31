@@ -1,6 +1,8 @@
 // (function(){
 	function initialize (data) {
-		console.log("Data from fire server: ", data);
+		px = data.aX+500;
+		py = data.aY+250;
+		normalize(px,py);
 	};	
 
 	var offset = 0,
@@ -33,11 +35,7 @@
 
 	// add listeners
 	window.addEventListener( "resize", onResize, false );
-	// window.addEventListener( "paint", function(data) {
- //    	console.log("Painting in the window: ", data);
- //    }, false);
     document.addEventListener( "mousedown", onMouseDown, false );
-    // document.addEventListener( "paint", onPhoneMove, false);
 	onResize();
 
 	// start animation
@@ -49,7 +47,6 @@
 	}  
 
 	function normalize(px, py){
-		console.log("normalize is called");
 		touches[0] = (px/cw-.5)*3;
 		touches[1] = (py/ch-.5)*-2;
 	}
@@ -101,8 +98,8 @@
 		cr = cr * .99 + tr * .01;
 		cg = cg * .99 + tg * .01;
 		cb = cb * .99 + tb * .01;
-		//gl.uniform4f( colorLoc, cr, cg, cb, .5 );
-				gl.uniform4f( colorLoc, 1, 0, 0, .5 );
+		gl.uniform4f( colorLoc, cr, cg, cb, .5 );
+				// gl.uniform4f( colorLoc, 1, 0, 0, .5 );
 
 		// animate and attract particles
 		for( i = 0; i < numLines; i+=2 )

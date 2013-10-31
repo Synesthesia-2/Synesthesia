@@ -17,7 +17,7 @@ $(document).ready(function() {
   // data. Takes a brush ID, and routes the
   // drawing to the appropriate canvas
   server.on('paint', function(data) {
-    console.log('Within fireworks.js ',data);
+    // console.log('Within fireworks.js ',data);
     initialize(data);
   });
 
