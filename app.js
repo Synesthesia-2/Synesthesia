@@ -7,6 +7,7 @@ var io = require('socket.io').listen(server);
 var canvas = io.of('/canvas');
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
+var fireworks = io.of('/fireworks');
 var state = {
   connections: 0,
   "1": 0,
@@ -96,8 +97,9 @@ clients.on('connection', function (client) {
     painting: state.painting
   });
   client.on('paint', function(data){
-    console.log(data);
+    // console.log(data);
     canvas.emit('paint',data);
+    fireworks.emit('paint', data);
   });
   client.on('disconnect', function(){
     state[team] -= 1;
