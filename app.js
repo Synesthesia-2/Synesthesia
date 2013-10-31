@@ -11,7 +11,8 @@ var state = {
   connections: 0,
   "1": 0,
   "2": 0,
-  painting: false
+  mode: "default"
+  // painting: false
 };
 
 app.set('views', __dirname + '/views');
@@ -63,20 +64,23 @@ conductor.on('connection', function (conductor) {
   conductor.on('changeColor',function(data){
     console.log('changecolor event');
     var clients = io.of('/client');
+    state.mode = "changeColor";
     clients.emit('changeColor', data);
   });
   conductor.on('splitColors', function(data){
     var clients = io.of('/client');    
+    state.mode = "splitColors";
     clients.in("1").emit('changeColor', {color: (data.color)[0]});
     clients.in("2").emit('changeColor', {color: (data.color)[1]});
   });
   conductor.on('allRandomColors', function(data){
     var clients = io.of('/client');
+    state.mode = "allRandomColors";
     clients.emit('randomColor', {color: data.color});
   });
   conductor.on('switchPainting', function(data){
     var clients = io.of('/client');
-    state.painting = !state.painting;
+    state.mode = "switchPainting";
     clients.emit('switchPainting', data);
   });
 });
@@ -94,7 +98,8 @@ clients.on('connection', function (client) {
   client.emit("welcome", {
     id: client.id,
     message: "You're a client on team " + team + "!",
-    painting: state.painting
+    mode: state.mode
+    // painting: state.painting
   });
   client.on('paint', function(data){
     console.log(data);

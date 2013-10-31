@@ -4,25 +4,38 @@ var brushSettings = {
   color: "#000000"
 };
 
-server.on('welcome', function(data){
-  brushSettings.id = data.id;
-  console.log(data.message);
-});
-
-server.on('changeColor', function(data){
+var changeColor = function(data){
   $("#wrapper").hide();
   console.log(data.color);
   $('body').css({'background-color': data.color});
-});
+};
 
-server.on('randomColor', function(data){
+var randomColor = function(data){
   var i = Math.floor(Math.random() * 10);
   var color = data.color[i];
   console.log(color);
   $('body').css({'background-color': color});
+  $('#modelWindow button').on('click touchend', closeModelMessage, false);  
+};
 
-  $('#modelWindow button').on('click touchend', closeModelMessage, false);
+var switchPainting = function(data){
+  data.paint ? initMotionListener() : removeMotionListener();
+}
 
+server.on('welcome', function(data){
+  brushSettings.id = data.id;
+  console.log(data.message);
+  if (data.mode === "switchPainting") {
+    switchPainting({paint: true});
+  }
+});
+
+server.on('changeColor', function(data){
+  changeColor(data);
+});
+
+server.on('randomColor', function(data){
+  randomColor(data);
 });
 
 $(document).ready(function() {
@@ -40,7 +53,7 @@ $(document).ready(function() {
   });
 
   server.on('switchPainting', function(data){
-    data.paint ? initMotionListener() : removeMotionListener();
+    switchPainting(data);
   });
 
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
