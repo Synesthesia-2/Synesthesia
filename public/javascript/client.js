@@ -57,8 +57,16 @@ $(document).ready(function() {
   server.on('switchPainting', function(data){
     switchPainting(data);
   });
-  
 
+  server.on('refresh', function(data){
+    if (data.mode === "switchPaintingOn") {
+      switchPainting({paint: true});
+    } else if (data.mode === "switchPaintingOff") {
+      switchPainting({paint: false});    
+    }
+    server.emit('refresh', {brushId: brushSettings.id});
+  });
+  
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 });
 
@@ -84,7 +92,6 @@ var initMotionListener = function() {
 
 // TODO: Fix removeMotionListener
 var removeMotionListener = function() {
-  console.log("off");
   $('#wrapper').fadeOut();
   window.removeEventListener('devicemotion', emitMove, false);
 };

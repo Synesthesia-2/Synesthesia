@@ -8,6 +8,10 @@ $(document).ready(function() {
   // notify the canvas change below to whatever
   // you need - data should contain a unique
   // id for each brush
+  brushServer.on('refresh', function(data){
+    canvasWrapper.addView(data.brushId);
+  });
+
   brushServer.on('newBrush', function(data) {
     canvasWrapper.addView(data.brushId);
   });

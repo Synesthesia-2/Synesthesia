@@ -20,11 +20,11 @@ CanvasWrapper.prototype.addView = function(brushId) {
   this.canvases[brushId] = canvas;
 };
 
-CanvasWrapper.prototype.removeViews = function(){
+// CanvasWrapper.prototype.removeViews = function(){
   // for (keys in this.canvases) {
   //   delete this.canvases[keys];
   // }
-}
+// }
 
 CanvasWrapper.prototype.assign = function(data) {
   // routes a command to draw to the correct canvas
