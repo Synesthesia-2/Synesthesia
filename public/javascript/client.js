@@ -55,6 +55,7 @@ $(document).ready(function() {
   server.on('switchPainting', function(data){
     switchPainting(data);
   });
+  
 
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 });

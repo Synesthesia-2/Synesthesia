@@ -59,6 +59,11 @@ canvas.on('connection', function (canvas) {
   canvas.emit("welcome","You're a canvas!");
 });
 
+fireworks.on('connection', function (firework) {
+  console.log("new firework connected!!!!!!!!!")
+  firework.emit("welcome","You're a fireworks!");
+});
+
 //////////////////////////////////////////
 /// Conductor events
 //////////////////////////////////////////
@@ -88,6 +93,7 @@ conductor.on('connection', function (conductor) {
     state.mode = "switchPainting";
     clients.emit('switchPainting', data);
   });
+  // conductor.on('')
 });
 
 //////////////////////////////////////////
@@ -99,7 +105,8 @@ clients.on('connection', function (client) {
   client.join(team);
   state[team] += 1;
   state.connections += 1;
-  canvas.emit('newBrush',{brushId: client.id})
+  canvas.emit('newBrush',{brushId: client.id});
+  // fireworks.emit('newBrush',{brushId: client.id});
   client.emit("welcome", {
     id: client.id,
     message: "You're a client on team " + team + "!",
@@ -108,6 +115,7 @@ clients.on('connection', function (client) {
   });
   client.on('paint', function(data){
     // console.log(data);
+    console.log('painted');
     canvas.emit('paint',data);
     fireworks.emit('paint', data);
   });
