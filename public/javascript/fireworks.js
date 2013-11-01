@@ -16,7 +16,7 @@ $(document).ready(function() {
   // brushServer sends a draw message with new accel
   // data. Takes a brush ID, and routes the
   // drawing to the appropriate canvas
-  server.on('paint', function(data) {
+  server.on('gyro', function(data) {
     // console.log('Within fireworks.js ',data);
     initialize(data);
   });

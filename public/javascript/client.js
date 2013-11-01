@@ -88,7 +88,23 @@ var emitMove = function(event){
 var initMotionListener = function() {
   $('#wrapper').fadeIn();
   window.addEventListener('devicemotion', emitMove, false);
-};
+
+  window.ondeviceorientation = function(event) {
+    var alpha = Math.round(event.alpha);
+    var beta = Math.round(event.beta);
+    var gamma = Math.round(event.gamma);
+    // alert(server.toString());
+    var data = {
+      alpha: alpha,
+      beta: beta,
+      gamma: gamma,
+      color: brushSettings.color,
+      brushSize: brushSettings.brushSize,
+      brushId: brushSettings.id//,
+    };
+    server.emit('gyro', data);
+
+  };
 
 // TODO: Fix removeMotionListener
 var removeMotionListener = function() {
