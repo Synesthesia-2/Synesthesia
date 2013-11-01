@@ -103,8 +103,8 @@ var initMotionListener = function() {
       brushId: brushSettings.id//,
     };
     server.emit('gyro', data);
-
   };
+};
 
 // TODO: Fix removeMotionListener
 var removeMotionListener = function() {
