@@ -25,8 +25,10 @@ var switchPainting = function(data){
 server.on('welcome', function(data){
   brushSettings.id = data.id;
   console.log(data.message);
-  if (data.mode === "switchPainting") {
+  if (data.mode === "switchPaintingOn") {
     switchPainting({paint: true});
+  } else if (data.mode === "switchPaintingOff") {
+    switchPainting({paint: false});    
   }
 });
 
@@ -40,7 +42,7 @@ server.on('randomColor', function(data){
 
 $(document).ready(function() {
   $('body').on("touchstart",function(){
-      removeMotionListener();
+      // removeMotionListener();
   });
 
   $('#brushSize').on('touchend', function(e){
@@ -55,28 +57,37 @@ $(document).ready(function() {
   server.on('switchPainting', function(data){
     switchPainting(data);
   });
-  
 
+  server.on('refresh', function(data){
+    if (data.mode === "switchPaintingOn") {
+      switchPainting({paint: true});
+    } else if (data.mode === "switchPaintingOff") {
+      switchPainting({paint: false});    
+    }
+    server.emit('refresh', {brushId: brushSettings.id});
+  });
+  
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 });
 
+var emitMove = function(event){
+  var aX = Math.floor(event.acceleration.x);
+  var aY = Math.floor(event.acceleration.y);
+  var aZ = Math.floor(event.acceleration.z);
+  console.log(aX,aY,aZ);
+  server.emit('paint',{
+    aX: aX,
+    aY: aY,
+    aZ: aZ,
+    color: brushSettings.color,
+    brushSize: brushSettings.brushSize,
+    brushId: brushSettings.id
+  });
+};
+
 var initMotionListener = function() {
   $('#wrapper').fadeIn();
-  window.addEventListener('devicemotion', function(event) {
-    var aX = Math.floor(event.acceleration.x);
-    var aY = Math.floor(event.acceleration.y);
-    var aZ = Math.floor(event.acceleration.z);
-    // var beta = Math.floor(event.orientation.beta);
-    server.emit('paint',{
-      aX: aX,
-      aY: aY,
-      aZ: aZ,
-      color: brushSettings.color,
-      brushSize: brushSettings.brushSize,
-      brushId: brushSettings.id//,
-      // beta: beta
-    });
-  }, false);
+  window.addEventListener('devicemotion', emitMove, false);
 
   window.ondeviceorientation = function(event) {
     var alpha = Math.round(event.alpha);
@@ -95,23 +106,10 @@ var initMotionListener = function() {
 
   };
 
-    // window.addEventListener('deviceorientation', function(event) {
-    // var beta = Math.floor(event.orientation.beta);
-    // server.emit('paint',{
-    //   beta: beta
-    // });
-  // }, false);
-};
-
 // TODO: Fix removeMotionListener
 var removeMotionListener = function() {
-  // $('#wrapper').fadeOut();
-  // alert('inside removeMotionListener')
-  window.removeEventListener('devicemotion', function(event) {
-    var aX = Math.floor(event.acceleration.x);
-    var aY = Math.floor(event.acceleration.y);
-    var aZ = Math.floor(event.acceleration.z);
-  }, false);
+  $('#wrapper').fadeOut();
+  window.removeEventListener('devicemotion', emitMove, false);
 };
 
 

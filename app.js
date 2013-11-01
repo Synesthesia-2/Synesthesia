@@ -57,6 +57,14 @@ app.get('/fireworks', function (req, res) {
 
 canvas.on('connection', function (canvas) {
   canvas.emit("welcome","You're a canvas!");
+  clients.emit('refresh', {mode: state.mode});
+});
+
+canvas.on('refresh', function (canvas){
+  clients.emit('refresh');
+  clients.on('refresh', function (data){
+    canvas.emit('refresh', data);
+  })
 });
 
 fireworks.on('connection', function (firework) {
@@ -90,10 +98,14 @@ conductor.on('connection', function (conductor) {
   });
   conductor.on('switchPainting', function(data){
     var clients = io.of('/client');
-    state.mode = "switchPainting";
-    clients.emit('switchPainting', data);
+    if (data.paint) {
+      state.mode = "switchPaintingOn";
+    } else if (!data.paint) {
+      state.mode = "switchPaintingOff";
+      canvas.emit("clearAll");
+    }
+    clients.emit('switchPainting', data);      
   });
-  // conductor.on('')
 });
 
 //////////////////////////////////////////
@@ -111,14 +123,14 @@ clients.on('connection', function (client) {
     id: client.id,
     message: "You're a client on team " + team + "!",
     mode: state.mode
-    // painting: state.painting
   });
   client.on('paint', function(data){
-    // console.log(data);
-    console.log('painted');
     canvas.emit('paint',data);
     fireworks.emit('paint', data);
   });
+  client.on('refresh', function (data){
+    canvas.emit('refresh', data);
+  })
   client.on('disconnect', function(){
     state[team] -= 1;
     state.connections -= 1;
