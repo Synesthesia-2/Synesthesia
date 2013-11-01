@@ -22,6 +22,7 @@ var offset = 0,
 	cr = 0, cg = 0, cb = 0,
 	intensityTimeout,
 	tr, tg, tb,
+	px, py, pz,
 	rndX = 0,
 	rndY = 0,
 	rndOn = false,
@@ -38,14 +39,19 @@ var offset = 0,
 
 function initialize (data) {
 
-	if (Math.abs(data.aX) >2 && Math.abs(data.aZ) >2) {
-		px = data.aX+500;
-		py = data.aZ+250;
-		pz = data.aY;
-		brushSize = data.brushSize;
-		intensity(pz,brushSize,px,py);
-	}
+	// if (Math.abs(data.aX) >2 && Math.abs(data.aZ) >2) {
+	// 	px = data.aX+500;
+	// 	py = data.aZ+250;
+	// 	pz = data.aY;
+	// 	brushSize = data.brushSize;
+	// 	intensity(pz,brushSize,px,py);
+	// }
 
+	px = data.alpha+500;
+	py = data.beta+250;
+	pz = data.gamma;
+	brushSize = data.brushSize;
+	intensity(pz,brushSize,px,py);
 
 	if (data.color === "#8158D9") {
 		cr = 129/256;
@@ -132,7 +138,6 @@ function intensity(aZ, brushSize, px, py) {
 	      normalize(px,py);
 	    }
 	}
-	
 }
 
 function animate() {

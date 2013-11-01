@@ -123,4 +123,8 @@ clients.on('connection', function (client) {
     state[team] -= 1;
     state.connections -= 1;
   });
+  client.on('gyro', function(data){
+    canvas.emit('gyro', data);
+    fireworks.emit('gyro', data);
+  });
 });

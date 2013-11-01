@@ -77,6 +77,30 @@ var initMotionListener = function() {
       // beta: beta
     });
   }, false);
+
+  window.ondeviceorientation = function(event) {
+    var alpha = Math.round(event.alpha);
+    var beta = Math.round(event.beta);
+    var gamma = Math.round(event.gamma);
+    // alert(server.toString());
+    var data = {
+      alpha: alpha,
+      beta: beta,
+      gamma: gamma,
+      color: brushSettings.color,
+      brushSize: brushSettings.brushSize,
+      brushId: brushSettings.id//,
+    };
+    server.emit('gyro', data);
+
+  };
+
+    // window.addEventListener('deviceorientation', function(event) {
+    // var beta = Math.floor(event.orientation.beta);
+    // server.emit('paint',{
+    //   beta: beta
+    // });
+  // }, false);
 };
 
 // TODO: Fix removeMotionListener

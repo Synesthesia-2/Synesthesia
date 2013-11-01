@@ -16,8 +16,14 @@ $(document).ready(function() {
   // data. Takes a brush ID, and routes the
   // drawing to the appropriate canvas
   brushServer.on('paint', function(data) {
-    console.log(data);
+    // console.log(brushServer);
+    // console.log(data);
     canvasWrapper.assign(data);
   });
+
+  // brushServer.on('gyro', function(data) {
+  //   //now receiving data
+  //   console.log(data);
+  // });
 
 });
