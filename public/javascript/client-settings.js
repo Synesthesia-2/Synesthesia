@@ -1,7 +1,8 @@
 var server = io.connect('/client');
-var brushSettings = {
+var state = {
   brushSize: 5,
-  color: "#000000"
+  color: "#000000",
+  hz: 0
 };
 
 var changeColor = function(data){
@@ -23,7 +24,7 @@ var switchPainting = function(data){
 };
 
 server.on('welcome', function(data){
-  brushSettings.id = data.id;
+  state.id = data.id;
   console.log(data.message);
   if (data.mode === "switchPaintingOn") {
     switchPainting({paint: true});
@@ -46,12 +47,12 @@ $(document).ready(function() {
   });
 
   $('#brushSize').on('touchend', function(e){
-    brushSettings.brushSize = this.value;
+    state.brushSize = this.value;
   });
 
   $('.colorBlock').on('touchstart', function(e) {
     var color = $(this).data('color');
-    brushSettings.color = color;
+    state.color = color;
   });
 
   server.on('switchPainting', function(data){
@@ -64,7 +65,7 @@ $(document).ready(function() {
     } else if (data.mode === "switchPaintingOff") {
       switchPainting({paint: false}); 
     }
-    server.emit('refresh', {brushId: brushSettings.id});
+    server.emit('refresh', {brushId: state.id});
   });
   
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
