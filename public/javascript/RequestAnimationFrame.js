@@ -17,8 +17,9 @@ var offset = 0,
 	vertices,
 	velocities,
 	colorLoc,
-	cw, 
-	ch, 
+	oa, ob, og, //for old alpha, old beta, old gamma
+	cw,
+	ch,
 	cr = 0, cg = 0, cb = 0,
 	intensityTimeout,
 	tr, tg, tb,
@@ -31,11 +32,12 @@ var offset = 0,
 	lastUpdate = 0,
 	IDLE_DELAY = 6000,
 	touches = [],
-	totalLines = 30000,
+	totalLines = 50000,
 	renderMode = 0,
 	numLines = totalLines,
 	aZ,
-	brushSize;
+	brushSize,
+	brushId;
 
 function initialize (data) {
 
@@ -47,11 +49,33 @@ function initialize (data) {
 	// 	intensity(pz,brushSize,px,py);
 	// }
 
-	px = data.alpha+500;
-	py = data.beta+250;
+    brushSize = data.brushSize;
+    brushId = data.brushId;
+	px = data.alpha;
+	py = data.beta;
 	pz = data.gamma;
-	brushSize = data.brushSize;
-	intensity(pz,brushSize,px,py);
+
+    if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+      px = (px*(5+Math.random()))%cw;
+      py = (py*(5+Math.random()))%ch;
+      pz *= 5;
+    } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+      px = (px*(10+Math.random()))%cw;
+      py = (py*(10+Math.random()))%ch;
+      pz *= 10;
+    } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
+      px = (px*(15+Math.random()))%cw;
+      py = (py*(15+Math.random()))%ch;
+      pz *= 15;
+    } else {
+      px = (px*(20+Math.random()))%cw;
+      py = (py*(20+Math.random()))%ch;
+      pz *= 20;
+    }
+	
+	if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
+		intensity(px,py,pz);
+	} 
 
 	if (data.color === "#8158D9") {
 		cr = 129/256;
@@ -78,6 +102,10 @@ function initialize (data) {
 		cg = 12/256;
 		cb = 64/256;
 	}
+
+	oa = px;
+	ob = py;
+	og = pz;
 
 }
 		/*
@@ -127,17 +155,17 @@ function onMouseUp(e) {
 	document.removeEventListener( "mouseup", onMouseUp );
 }
 
-function intensity(aZ, brushSize, px, py) {
-    if (!intensityTimeout) {
-	     if (aZ>50) {
-	      normalize(0,300);
-	      intensityTimeout = setTimeout( function() {
-	      	intensityTimeout=0;
-	      }, 1000 + Math.random() * 4000 );
-	    } else {
-	      normalize(px,py);
-	    }
-	}
+function intensity(px, py, pz) {
+    // if (!intensityTimeout) {
+	//   if (pz>50) {
+	//    normalize(0,pz*10);
+	//    intensityTimeout = setTimeout( function() {
+	// intensityTimeout=0;
+	//    }, 1000 + Math.random() * 1000 );
+	//  } else {
+	normalize(px,py);
+	//     }
+	// }
 }
 
 function animate() {
@@ -205,8 +233,8 @@ function redraw()
 		{
 			for( j=0; j<nt; j+=2 )
 			{
-				dx = touches[j] - vertices[bp];
-				dy = touches[j+1] - vertices[bp+1];
+				dx = touches[j+1] - vertices[bp];
+				dy = touches[j] - vertices[bp+1];
 				d = Math.sqrt(dx * dx + dy * dy);
 				
 				if ( d < 2.5 )
