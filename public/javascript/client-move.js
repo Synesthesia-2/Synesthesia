@@ -7,9 +7,9 @@ var emitMove = function(event){
     aX: aX,
     aY: aY,
     aZ: aZ,
-    color: brushSettings.color,
-    brushSize: brushSettings.brushSize,
-    brushId: brushSettings.id
+    color: brushSbrrettings.color,
+    brushSize: state.brushSize,
+    brushId: state.id
   };
   server.emit('paint',data);
 };
@@ -22,9 +22,9 @@ var emitGyro = function(event){
       alpha: alpha,
       beta: beta,
       gamma: gamma,
-      color: brushSettings.color,
-      brushSize: brushSettings.brushSize,
-      brushId: brushSettings.id
+      color: state.color,
+      brushSize: state.brushSize,
+      brushId: state.id
     };
     server.emit('gyro', data);
 };
