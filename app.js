@@ -141,4 +141,9 @@ clients.on('connection', function (client) {
     console.log('client.on(gyro)');
     fireworks.emit('gyro', data);
   });
+  client.on('audio', function(data){
+    console.log(data);
+    canvas.emit('audio',data);
+    fireworks.emit('audio',data);
+  })
 });
