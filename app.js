@@ -153,4 +153,9 @@ clients.on('connection', function (client) {
     soulwire.emit('gyro',data);
     console.log('client.on(gyro)');
   });
+  client.on('audio', function(data){
+    console.log(data);
+    canvas.emit('audio',data);
+    fireworks.emit('audio',data);
+  })
 });
