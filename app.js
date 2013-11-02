@@ -127,6 +127,7 @@ clients.on('connection', function (client) {
   client.on('paint', function(data){
     canvas.emit('paint',data);
     fireworks.emit('paint', data);
+    console.log('client.on(paint)');
   });
   client.on('refresh', function (data){
     canvas.emit('refresh', data);
@@ -137,6 +138,7 @@ clients.on('connection', function (client) {
   });
   client.on('gyro', function(data){
     canvas.emit('gyro', data);
+    console.log('client.on(gyro)');
     fireworks.emit('gyro', data);
   });
 });

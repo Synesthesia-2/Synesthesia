@@ -35,7 +35,8 @@ var offset = 0,
 	renderMode = 0,
 	numLines = totalLines,
 	aZ,
-	brushSize;
+	brushSize,
+	brushId;
 
 function initialize (data) {
 
@@ -47,11 +48,35 @@ function initialize (data) {
 	// 	intensity(pz,brushSize,px,py);
 	// }
 
-	px = data.alpha+500;
-	py = data.beta+250;
+    brushSize = data.brushSize;
+    brushId = data.brushId;
+	px = data.alpha;
+	py = data.beta;
 	pz = data.gamma;
-	brushSize = data.brushSize;
-	intensity(pz,brushSize,px,py);
+
+    if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+      px = (px*5)%cw;
+      py = (py*5)%ch;
+      pz *= 5;
+    } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+      px = (px*10)%cw;
+      py = (py*10)%ch;
+      pz *= 10;
+    } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
+      px = (px*15)%cw;
+      py = (py*15)%ch;
+      pz *= 15;
+    } else {
+      px = (px*20)%cw;
+      py = (py*20)%ch;
+      pz *= 20;
+    }
+	
+	if (Math.abs(px)>5 && Math.abs(py)>5 && Math.abs(pz)>5){
+		intensity(px,py,pz);
+	} else {
+		console.log(px,py,pz);
+	}
 
 	if (data.color === "#8158D9") {
 		cr = 129/256;
@@ -127,17 +152,17 @@ function onMouseUp(e) {
 	document.removeEventListener( "mouseup", onMouseUp );
 }
 
-function intensity(aZ, brushSize, px, py) {
-    if (!intensityTimeout) {
-	     if (aZ>50) {
-	      normalize(0,300);
-	      intensityTimeout = setTimeout( function() {
-	      	intensityTimeout=0;
-	      }, 1000 + Math.random() * 4000 );
-	    } else {
-	      normalize(px,py);
-	    }
-	}
+function intensity(px, py, pz) {
+    // if (!intensityTimeout) {
+	//   if (pz>50) {
+	//    normalize(0,pz*10);
+	//    intensityTimeout = setTimeout( function() {
+	// intensityTimeout=0;
+	//    }, 1000 + Math.random() * 1000 );
+	//  } else {
+	normalize(px,py);
+	//     }
+	// }
 }
 
 function animate() {
