@@ -55,20 +55,20 @@ function initialize (data) {
 	pz = data.gamma;
 
     if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-      px = (px*5)%cw;
-      py = (py*5)%ch;
+      px = (px*(5+Math.random()))%cw;
+      py = (py*(5+Math.random()))%ch;
       pz *= 5;
     } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-      px = (px*10)%cw;
-      py = (py*10)%ch;
+      px = (px*(10+Math.random()))%cw;
+      py = (py*(10+Math.random()))%ch;
       pz *= 10;
     } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
-      px = (px*15)%cw;
-      py = (py*15)%ch;
+      px = (px*(15+Math.random()))%cw;
+      py = (py*(15+Math.random()))%ch;
       pz *= 15;
     } else {
-      px = (px*20)%cw;
-      py = (py*20)%ch;
+      px = (px*(20+Math.random()))%cw;
+      py = (py*(20+Math.random()))%ch;
       pz *= 20;
     }
 	
