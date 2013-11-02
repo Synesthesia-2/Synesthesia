@@ -75,35 +75,36 @@ var emitMove = function(event){
   var aY = Math.floor(event.acceleration.y);
   var aZ = Math.floor(event.acceleration.z);
   console.log(aX,aY,aZ);
-  server.emit('paint',{
+  var data = {
     aX: aX,
     aY: aY,
     aZ: aZ,
     color: brushSettings.color,
     brushSize: brushSettings.brushSize,
     brushId: brushSettings.id
-  });
+  };
+  server.emit('paint',data);
 };
 
-var initMotionListener = function() {
-  $('#wrapper').fadeIn();
-  window.addEventListener('devicemotion', emitMove, false);
-
-  window.ondeviceorientation = function(event) {
-    var alpha = Math.round(event.alpha);
+var emitGyro = function(event){
+  var alpha = Math.round(event.alpha);
     var beta = Math.round(event.beta);
     var gamma = Math.round(event.gamma);
-    // alert(server.toString());
     var data = {
       alpha: alpha,
       beta: beta,
       gamma: gamma,
       color: brushSettings.color,
       brushSize: brushSettings.brushSize,
-      brushId: brushSettings.id//,
+      brushId: brushSettings.id
     };
     server.emit('gyro', data);
-  };
+};
+
+var initMotionListener = function() {
+  $('#wrapper').fadeIn();
+  window.addEventListener('devicemotion', emitMove, false);
+  window.addEventListener('deviceorientation', emitGyro, false)
 };
 
 // TODO: Fix removeMotionListener
