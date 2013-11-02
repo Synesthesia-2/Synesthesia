@@ -20,7 +20,7 @@ var randomColor = function(data){
 
 var switchPainting = function(data){
   data.paint ? initMotionListener() : removeMotionListener();
-}
+};
 
 server.on('welcome', function(data){
   brushSettings.id = data.id;
@@ -62,72 +62,10 @@ $(document).ready(function() {
     if (data.mode === "switchPaintingOn") {
       switchPainting({paint: true});
     } else if (data.mode === "switchPaintingOff") {
-      switchPainting({paint: false});    
+      switchPainting({paint: false}); 
     }
     server.emit('refresh', {brushId: brushSettings.id});
   });
   
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 });
-
-var emitMove = function(event){
-  var aX = Math.floor(event.acceleration.x);
-  var aY = Math.floor(event.acceleration.y);
-  var aZ = Math.floor(event.acceleration.z);
-  console.log(aX,aY,aZ);
-  var data = {
-    aX: aX,
-    aY: aY,
-    aZ: aZ,
-    color: brushSettings.color,
-    brushSize: brushSettings.brushSize,
-    brushId: brushSettings.id
-  };
-  server.emit('paint',data);
-};
-
-var emitGyro = function(event){
-  var alpha = Math.round(event.alpha);
-    var beta = Math.round(event.beta);
-    var gamma = Math.round(event.gamma);
-    var data = {
-      alpha: alpha,
-      beta: beta,
-      gamma: gamma,
-      color: brushSettings.color,
-      brushSize: brushSettings.brushSize,
-      brushId: brushSettings.id
-    };
-    server.emit('gyro', data);
-};
-
-var initMotionListener = function() {
-  $('#wrapper').fadeIn();
-  window.addEventListener('devicemotion', emitMove, false);
-  window.addEventListener('deviceorientation', emitGyro, false)
-};
-
-// TODO: Fix removeMotionListener
-var removeMotionListener = function() {
-  $('#wrapper').fadeOut();
-  window.removeEventListener('devicemotion', emitMove, false);
-};
-
-
-// Message Functions for Later
-var makeModelMessage = function(headline, message) {
-  $('#modelWindow h1').text(headline);
-  $('#modelWindow p').text(message);
-  $('#modelMask').fadeIn(300, function() {
-    $('#modelWindow').fadeIn(400);
-  });
-};
-
-var closeModelMessage = function(e) {
-  e.preventDefault();
-  $('#modelWindow').fadeOut(300, function() {
-    $('#modelMask').fadeOut(200);
-    $('#modelWindow h1').text('');
-    $('#modelWindow p').text('');
-  });
-};
