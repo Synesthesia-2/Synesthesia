@@ -17,8 +17,9 @@ var offset = 0,
 	vertices,
 	velocities,
 	colorLoc,
-	cw, 
-	ch, 
+	oa, ob, og, //for old alpha, old beta, old gamma
+	cw,
+	ch,
 	cr = 0, cg = 0, cb = 0,
 	intensityTimeout,
 	tr, tg, tb,
@@ -31,7 +32,7 @@ var offset = 0,
 	lastUpdate = 0,
 	IDLE_DELAY = 6000,
 	touches = [],
-	totalLines = 30000,
+	totalLines = 50000,
 	renderMode = 0,
 	numLines = totalLines,
 	aZ,
@@ -72,11 +73,9 @@ function initialize (data) {
       pz *= 20;
     }
 	
-	if (Math.abs(px)>5 && Math.abs(py)>5 && Math.abs(pz)>5){
+	if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
 		intensity(px,py,pz);
-	} else {
-		console.log(px,py,pz);
-	}
+	} 
 
 	if (data.color === "#8158D9") {
 		cr = 129/256;
@@ -103,6 +102,10 @@ function initialize (data) {
 		cg = 12/256;
 		cb = 64/256;
 	}
+
+	oa = px;
+	ob = py;
+	og = pz;
 
 }
 		/*
@@ -230,8 +233,8 @@ function redraw()
 		{
 			for( j=0; j<nt; j+=2 )
 			{
-				dx = touches[j] - vertices[bp];
-				dy = touches[j+1] - vertices[bp+1];
+				dx = touches[j+1] - vertices[bp];
+				dy = touches[j] - vertices[bp+1];
 				d = Math.sqrt(dx * dx + dy * dy);
 				
 				if ( d < 2.5 )
