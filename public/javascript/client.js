@@ -5,15 +5,13 @@ var brushSettings = {
 };
 
 var changeColor = function(data){
-  $("#wrapper").hide();
-  console.log(data.color);
+  $('#wrapper').hide();
   $('body').css({'background-color': data.color});
 };
 
 var randomColor = function(data){
   var i = Math.floor(Math.random() * 10);
   var color = data.color[i];
-  console.log(color);
   $('body').css({'background-color': color});
   $('#modelWindow button').on('click touchend', closeModelMessage, false);  
 };
@@ -70,30 +68,38 @@ $(document).ready(function() {
   $('#modelWindow button').on('click touchend', closeModelMessage, false);
 });
 
+var alpha=0;
+var beta=0;
+var gamma=0;
+
 var emitMove = function(event){
   var aX = Math.floor(event.acceleration.x);
   var aY = Math.floor(event.acceleration.y);
   var aZ = Math.floor(event.acceleration.z);
-  console.log(aX,aY,aZ);
   server.emit('paint',{
     aX: aX,
     aY: aY,
     aZ: aZ,
+    // alpha: alpha,
+    // beta: beta,
+    // gamma: gamma,
     color: brushSettings.color,
     brushSize: brushSettings.brushSize,
     brushId: brushSettings.id
   });
+  // console.log(aX,aY,aZ,alpha,beta,gamma);
+  console.log(aX,aY,aZ);
 };
+
 
 var initMotionListener = function() {
   $('#wrapper').fadeIn();
   window.addEventListener('devicemotion', emitMove, false);
 
   window.ondeviceorientation = function(event) {
-    var alpha = Math.round(event.alpha);
-    var beta = Math.round(event.beta);
-    var gamma = Math.round(event.gamma);
-    // alert(server.toString());
+    alpha = Math.round(event.alpha);
+    beta = Math.round(event.beta);
+    gamma = Math.round(event.gamma);
     var data = {
       alpha: alpha,
       beta: beta,
