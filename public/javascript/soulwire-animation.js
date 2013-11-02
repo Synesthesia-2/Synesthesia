@@ -237,11 +237,6 @@ Demo
 ------------------------------------------------------------
 */
 
-initialize = function(data) {
-  //we get alpha, beta, gamma, color, brushSize.
-
-}
-
 gl.setup = function() {
 
     // Add Stats.js so we can monitor the FPS
@@ -480,28 +475,51 @@ gl.draw = function() {
     stats.end();
 };
 
-gl.mousemove = function() {
+
+gl.initialize = function(data) {
+  var phone_alpha,phone_beta,phone_gamma;
+  var phone_brushSize=5;
+
+  phone_alpha = data.alpha;
+  phone_beta = data.beta;
+  phone_gamma = data.gamma;
+  // color = data.color
+  phone_brushSize = data.brushSize;
+  // console.log("From inside: ", phone_alpha, phone_beta, phone_gamma);
+  gl.makeitgo(phone_alpha,phone_beta,phone_gamma);
+}
+
+// gl.mousemove = function() {
+gl.makeitgo = function(first,second,third) {
 
     if ( gl.running && !gl.lastEmit || gl.millis - gl.lastEmit > 16 ) {
 
         gl.lastEmit = gl.millis;
 
-        var i, n, x, y, touch, limit = PARTICLE_EMIT_RATE / gl.touches.length;
+        // console.log(gl.touches);
 
-        for ( i = 0, n = gl.touches.length; i < n; i++ ) {
+        var i, n, x, y, touch, limit;
+        // limit = PARTICLE_EMIT_RATE / gl.touches.length;
+        limit = PARTICLE_EMIT_RATE;
 
-            touch = gl.touches[i];
-
+        // for ( i = 0, n = gl.touches.length; i < n; i++ ) {
+            // touch = gl.touches[0];
+            // console.log(touch.x,touch.y);
             // Convert mouse screen coordinates into clipspace coordinates
-            x = map( touch.x, 0, gl.width, -1, 1 );
-            y = map( touch.y, 0, gl.height, 1, -1 );
+            // x = map( 5, 0, gl.width, -1, 1 );
+            // x = map( touch.x, 0, gl.width, -1, 1 );
+            // y = map( touch.y, 0, gl.height, 1, -1 );
+            x = 10*Math.cos(first*Math.PI/360);
+            y = 10*Math.cos(second*Math.PI/180);
+            console.log("Inside mousemove: ",first,second,third);
+            console.log("Mapped: ",x,y);
 
             // Emit some particles!
             emitParticles( limit, {
-                x: x,
-                y: y,
-                z: 0.0
+                x: 20*Math.random()-10,
+                y: 20*Math.random()-10,
+                z: 20*Math.random()-10
             });
-        }
+        // }
     }
 };

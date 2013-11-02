@@ -17,7 +17,8 @@ $(document).ready(function() {
   // data. Takes a brush ID, and routes the
   // drawing to the appropriate canvas
   server.on('gyro', function(data) {
-    initialize(data);
+    // debugger;
+    gl.initialize(data);
   });
 
 });
