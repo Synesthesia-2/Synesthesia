@@ -142,7 +142,7 @@ clients.on('connection', function (client) {
   });
   client.on('refresh', function (data){
     canvas.emit('refresh', data);
-  })
+  });
   client.on('disconnect', function(){
     state[team] -= 1;
     state.connections -= 1;
@@ -157,5 +157,5 @@ clients.on('connection', function (client) {
     console.log(data);
     canvas.emit('audio',data);
     fireworks.emit('audio',data);
-  })
+  });
 });
