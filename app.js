@@ -8,6 +8,7 @@ var canvas = io.of('/canvas');
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
+var soulwire = io.of('/soulwire');
 var state = {
   connections: 0,
   "1": 0,
@@ -45,6 +46,10 @@ app.get('/fireworks', function (req, res) {
   res.render('fireworks');
 });
 
+app.get('/soulwire', function (req, res) {
+  res.render('soulwire');
+});
+
 //////////////////////////////////////////
 ///
 /// EVENTS
@@ -70,6 +75,12 @@ canvas.on('refresh', function (canvas){
 fireworks.on('connection', function (firework) {
   console.log("new firework connected!!!!!!!!!")
   firework.emit("welcome","You're a fireworks!");
+});
+
+
+soulwire.on('connection', function (soulwire) {
+  console.log("my soul is wIrEd!!!")
+  soulwire.emit("welcome","You're wIrEd!");
 });
 
 //////////////////////////////////////////
@@ -126,7 +137,7 @@ clients.on('connection', function (client) {
   });
   client.on('paint', function(data){
     canvas.emit('paint',data);
-    fireworks.emit('paint', data);
+    // fireworks.emit('paint', data);
     console.log('client.on(paint)');
   });
   client.on('refresh', function (data){
@@ -137,9 +148,10 @@ clients.on('connection', function (client) {
     state.connections -= 1;
   });
   client.on('gyro', function(data){
-    canvas.emit('gyro', data);
-    console.log('client.on(gyro)');
+    // canvas.emit('gyro', data);
     fireworks.emit('gyro', data);
+    soulwire.emit('gyro',data);
+    console.log('client.on(gyro)');
   });
   client.on('audio', function(data){
     console.log(data);

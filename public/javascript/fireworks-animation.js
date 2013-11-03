@@ -134,8 +134,8 @@ function onResize(e) {
 }  
 
 function normalize(px, py){
-	touches[0] = (px/cw-.5)*3;
-	touches[1] = (py/ch-.5)*-2;
+	touches[0] = (px/cw-.65)*3;
+	touches[1] = (py/ch-.4)*-2;
 }
 
 function onMouseDown(e){
