@@ -39,7 +39,7 @@ var streamLoaded = function(stream) {
     var highDifference = ((bucket[1][1])-(bucket[2][1]));
     var shift = (lowDifference < highDifference ? -(highDifference - lowDifference) : (lowDifference - highDifference));
     var adjShift = (shift*0.5)*0.1;
-    return Math.round((targetRange + adjShift) / analyser.frequencyBinCount * (audioContext.sampleRate * 0.5));
+    return (targetRange + adjShift) / analyser.frequencyBinCount * (audioContext.sampleRate * 0.5);
   };
 
   // TODO: Initalization loop gets ambient room sound and implements noise canceling
@@ -61,7 +61,7 @@ var streamLoaded = function(stream) {
   FFTData.indexOf = Array.prototype.indexOf;
   microphone.connect(hiPass);
   hiPass.connect(loPass);
-  microphone.connect(analyser);
+  loPass.connect(analyser);
   process();
 };
 
