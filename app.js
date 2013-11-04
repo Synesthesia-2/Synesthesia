@@ -9,6 +9,7 @@ var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
 var soulwire = io.of('/soulwire');
+var dancer = io.of('/dancer');
 var state = {
   connections: 0,
   "1": 0,
@@ -50,6 +51,10 @@ app.get('/soulwire', function (req, res) {
   res.render('soulwire');
 });
 
+app.get('/dancer', function(req,res) {
+  res.render('dancer');
+});
+
 //////////////////////////////////////////
 ///
 /// EVENTS
@@ -81,6 +86,11 @@ fireworks.on('connection', function (firework) {
 soulwire.on('connection', function (soulwire) {
   console.log("my soul is wIrEd!!!")
   soulwire.emit("welcome","You're wIrEd!");
+});
+
+dancer.on('connection', function(dancer) {
+  console.log('dancing the night away');
+  dancer.emit("welcome","*dance* *dance*");
 });
 
 //////////////////////////////////////////
@@ -157,5 +167,6 @@ clients.on('connection', function (client) {
     console.log(data);
     canvas.emit('audio',data);
     fireworks.emit('audio',data);
+    dancer.emit('audio',data);
   });
 });
