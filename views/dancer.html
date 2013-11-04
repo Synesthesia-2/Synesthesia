@@ -13,6 +13,7 @@
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 			})();
 		</script>
+		<script src="/bower_components/jquery/jquery.min.js"></script>
 	</head>
 	<body>
 		<div id="info">
@@ -35,17 +36,20 @@
 			var loading = document.getElementById('loading');
 			loading.style.marginLeft = (( window.outerWidth - 500 ) / 2) + 'px';
 		</script>
-		<script src="lib/Three.js"></script>
-		<script src="lib/Stats.js"></script>
-		<script src="lib/Detector.js"></script>
+		<script src="javascript/lib/three.min.js"></script>
+		<script src="javascript/lib/stats.min.js"></script>
+		<script src="javascript/lib/detector.js"></script>
 
 		<!-- Dancer.js -->
-		<script src="dancer.js"></script>
-		<script src="plugins/dancer.fft.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="javascript/dancer-animation.js"></script>
+		<script src="javascript/dancer.js"></script>
+
 
 		<!-- Demo stuff -->
-		<script src="js/scene.js"></script>
-		<script src="js/player.js"></script>
+		<script src="javascript/lib/dancer-fft.js"></script>
+		<script src="javascript/dancer-scene.js"></script>
+		<script src="javascript/dancer-player.js"></script>
 		<script>
 			(function () {
 				var fft = document.getElementById( 'fft' ),
