@@ -8,36 +8,44 @@ if (contextClass) {
   server.send("audio Context created!"); // For development testing only.
 } else {
   server.send("web audio is not enabled, sorry."); // For development testing only.
-};
+}
 
 var streamLoaded = function(stream) {
   var process = function(){
     setInterval(function(){
       analyser.getFloatFrequencyData(FFTData);
-      var bucket = findMaxWithIndex(FFTData);
-      var targetRange = bucket[1][0];
-      var lowDifference = ((bucket[1][1])-(bucket[0][1]));
-      var highDifference = ((bucket[1][1])-(bucket[2][1]));
-      var shift = (lowDifference < highDifference ? -(highDifference - lowDifference) : (lowDifference - highDifference));
-      var adjShift = (shift*0.5)*0.1;
-      var hz = Math.round((targetRange + adjShift) / analyser.frequencyBinCount * (audioContext.sampleRate * 0.5));
-      // $('body').html("hz " + hz);
-      state.hz = hz
+      var targetRange = findMaxWithIndex(FFTData)
+      var volume = targetRange[1][1];
+      var hz = convertToHz(targetRange);
+      state.volume = volume;
+      state.hz = hz;
       var data = {
         hz: hz,
-        amp: 0
-      }
+        volume: volume
+      };
       server.emit('audio',data);
-    },60);
+    },20);
   };
 
   var findMaxWithIndex = function(array) {
     var max = Math.max.apply(Math, array);
     var index = Array.prototype.indexOf.call(array,max);
-    return [[index-1,array[index-1]],[index,max],[index+1,array[index+1]]]
+    return [[index-1,array[index-1]],[index,max],[index+1,array[index+1]]];
   };
 
-  // Initalization loop will get ambient room sound for noise canceling
+  var convertToHz = function(bucket) {
+    var targetRange = bucket[1][0];
+    var lowDifference = ((bucket[1][1])-(bucket[0][1]));
+    var highDifference = ((bucket[1][1])-(bucket[2][1]));
+    var shift = (lowDifference < highDifference ? -(highDifference - lowDifference) : (lowDifference - highDifference));
+    var adjShift = (shift*0.5)*0.1;
+    return Math.round((targetRange + adjShift) / analyser.frequencyBinCount * (audioContext.sampleRate * 0.5));
+  };
+
+  // TODO: Initalization loop gets ambient room sound and implements noise canceling
+
+  // adjust as needed:
+  // analyser.smoothingTimeConstant = 0.9;
 
   var microphone = audioContext.createMediaStreamSource(stream);
   var analyser = audioContext.createAnalyser();
@@ -48,14 +56,23 @@ var streamLoaded = function(stream) {
   loPass.type = loPass.LOWPASS;
   loPass.frequency.value = 1200;
   analyser.fftSize = 2048;
-  analyser.smoothingTimeConstant = 0.9;
+  analyser.minDecibels = -144;
   var FFTData = new Float32Array(analyser.frequencyBinCount);
   FFTData.indexOf = Array.prototype.indexOf;
   microphone.connect(hiPass);
   hiPass.connect(loPass);
-  loPass.connect(analyser);
+  microphone.connect(analyser);
   process();
 };
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
 navigator.getUserMedia( {audio:true}, streamLoaded );
+
+  // var findVolume = function(array) {
+  //   var i = array.length;
+  //   var sum = 0;
+  //   while (i--) {
+  //     sum+= array[i]-analyser.minDecibels;
+  //   }
+  //   return (sum/1024);
+  // };
