@@ -35,7 +35,7 @@
         decay();
       } else {
         for ( i = PARTICLE_COUNT; i--; ) {
-          particles[ i ].scale.addSelf( GROWTH_VECTOR );
+          particles[ i ].scale.add( GROWTH_VECTOR );
         }
       }
       if ( !beamGroup.children[ 0 ].visible ) {
@@ -110,7 +110,7 @@
 
     for ( var i = PARTICLE_COUNT; i--; ) {
       if ( particles[i].scale.x - DECAY_RATE > MIN_PARTICLE_SIZE ) {
-        particles[ i ].scale.subSelf( DECAY_VECTOR );
+        particles[ i ].scale.sub( DECAY_VECTOR );
       }
     }
   }
