@@ -53,113 +53,55 @@ function initialize (data) {
 
 	var now = new Date();
 	var when = now.getTime();
-	console.log(when-then);
+	console.log(when-then, data.hz, data.volume);
 	then = when;
 
 
 	if (data.hz && data.volume>-85) {
-		numLines = (5000/7)*data.volume + 75000;
+		numLines = Math.floor((5000/7)*data.volume) + 65000;
 		// console.log(Math.floor(numLines), data.volume);
 		
-		if (data.hz%55<4) {
+		if (data.hz%55<2) {
 			cr=255/256;
 			cg=0;
 			cb=255/256;
-		} else if (data.hz%62<3) {
+		} else if (data.hz%62<2) {
 			cr=255/256;
 			cg=165/256;
 			cb=0;
-		} else if (data.hz%65<3) {
+		} else if (data.hz%65<2) {
 			cr=34/256;
 			cg=255/256;
 			cb=34/256;
-		} else if (data.hz%73<3) {
+		} else if (data.hz%73<2) {
 			cr=187/256;
 			cg=0;
 			cb=255/256;
-		} else if (data.hz%41<3) {
+		} else if (data.hz%41<2) {
 			cr=255/256;
 			cg=0;
 			cb=0;
-		} else if (data.hz%44<3) {
+		} else if (data.hz%44<2) {
 			cr=255/256;
 			cg=187/256;
 			cb=0;
-		} else if (data.hz%49<3) {
+		} else if (data.hz%49<2) {
 			cr=85/256;
 			cg=85/256;
 			cb=255/256;
 		}
 
-		// touches[0] = (px/cw-.65)*3;
-		// touches[1] = (py/ch-.4)*-2;
-
-		// if (lastTenX.length>10) {
-		// 	lastTenX.shift();
-		// }
-		// lastTenX.push(Math.floor(data.hz));
-		// var sum=0;
-		// for (var j=0;j<lastTenX.length;j++){
-		// 	sum+=(j/(lastTenX.length-1))*lastTenX[j];
-		// }
-		// var recentPitch = sum/lastTenX.length;
-		// tempX = 1.25*Math.log(sum/55)/Math.log(2)-3.75;
-		// console.log(sum,tempX);
-
-		//lastX means the weighting function of all previous frequencies
-
 		var tempX, tempY;
 		lastX = lastX || 0;
-		var moving_avg = 0.9;
+		var moving_avg = 0.1;
 		var filterFreq = moving_avg*data.hz +(1-moving_avg)*lastX;
 		lastX = filterFreq;
-		tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-3.75;
+		tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-4.5;
 
-		lastY = lastY || [];
-		lastY.push(data.volume);
-		if (lastY.length>3) {
-			lastY.shift();
-			if (lastY[2]>lastY[1]+5) {
-				tempX =0;
-				// tempY = Math.random();
-			} else if (lastY[2]<lastY[1]-5) {
-				tempX =0;
-				// tempY = -Math.random();
-			}
-			tempY = (1/30)*data.volume + 2;
-		}
-
-
-
-		// tempX = 1.25*Math.log(data.hz/55)/Math.log(2)-3.75;
-		// var filteredRecentPitch = moving_avg * data.hz;
-		// for (var i = lastTenX.length - 2; i >= 0; i--) {
-		// 	// filteredRecentPitch += lastTenX[i]*Math.pow(((data.hz-lastTenX[i])/data.hz),lastTenX.length-i);
-		// 	filteredRecentPitch += moving_avg* (Math.pow((1-moving_avg),i)*lastTenX[i]);
-		// };
-		// console.log('filteredRecentPitch',filteredRecentPitch);
-
-		//a = Math.pow(base,power)
-		//power =(Math.log(a))/(Math.log(base)) 
-		
-		// var tempY = touches[0] || 0;
-		// var tempX = touches[1] || 0;
-		// lastTenY.push();
-
-		// if (tempX>2.5) {
-		// 	tempX -= Math.random()*0.05;
-		// } else if (tempX<(-2.5)) {
-		// 	tempX += Math.random()*0.05;
-		// } else {
-		// 	tempX += Math.random()*0.1-0.05;			
-		// }
-		// if (tempY>1) {
-		// 	tempY -= Math.random()*0.03;
-		// } else if (tempY<(-1)) {
-		// 	tempY += Math.random()*0.03;
-		// } else {
-		// 	tempY += Math.random()*0.1-0.05;			
-		// }		
+		lastY = lastY || 0;
+		var filterVol = moving_avg*data.volume +(1-moving_avg)*lastY;
+		lastY = filterVol;
+		tempY = (filterVol/30)+2;
 		touches[0] = tempY;
 		touches[1] = tempX;
 	}

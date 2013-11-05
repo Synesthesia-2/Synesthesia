@@ -1,4 +1,3 @@
-
 var server = io.connect('/fireworks');
 
 $(document).ready(function() {
