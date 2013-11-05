@@ -17,15 +17,15 @@ var streamLoaded = function(stream) {
       var targetRange = findMaxWithIndex(FFTData)
       var volume = targetRange[1][1];
       var hz = convertToHz(targetRange);
-      state.volume = volume;
-      state.hz = hz;
+      // state.volume = volume;
+      // state.hz = hz;
       var data = {
         hz: hz,
         volume: volume
       };
-      console.log(data);
+      // console.log(data);
       server.emit("audio",data);
-    },50);
+    },60);
   };
 
   var findMaxWithIndex = function(array) {
@@ -40,16 +40,14 @@ var streamLoaded = function(stream) {
     var highDifference = ((bucket[1][1])-(bucket[2][1]));
     var shift = (lowDifference < highDifference ? -(highDifference - lowDifference) : (lowDifference - highDifference));
     var adjShift = (shift*0.5)*0.1;
-    return (targetRange + adjShift) / analyser.frequencyBinCount * (audioContext.sampleRate * 0.5);
+    return (targetRange + adjShift) / 1024 * (44100 * 0.5);
   };
 
   // TODO: Initalization loop gets ambient room sound and implements noise canceling
 
-  // adjust as needed:
-  // analyser.smoothingTimeConstant = 0.9;
-
   var microphone = audioContext.createMediaStreamSource(stream);
   var analyser = audioContext.createAnalyser();
+  analyser.smoothingTimeConstant = 0;
   var hiPass = audioContext.createBiquadFilter();
   hiPass.type = hiPass.HIGHPASS;
   hiPass.frequency.value = 200;
@@ -60,6 +58,7 @@ var streamLoaded = function(stream) {
   analyser.minDecibels = -144;
   var FFTData = new Float32Array(analyser.frequencyBinCount);
   FFTData.indexOf = Array.prototype.indexOf;
+  analyser.getFloatFrequencyData(FFTData)
   microphone.connect(hiPass);
   hiPass.connect(loPass);
   loPass.connect(analyser);
