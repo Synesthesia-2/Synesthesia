@@ -17,15 +17,15 @@ var streamLoaded = function(stream) {
       var targetRange = findMaxWithIndex(FFTData)
       var volume = targetRange[1][1];
       var hz = convertToHz(targetRange);
-      // state.volume = volume;
-      // state.hz = hz;
+      state.volume = volume;
+      state.hz = hz;
       var data = {
         hz: hz,
         volume: volume
       };
-      console.log(data.hz,data.volume);
+      console.log(data);
       server.emit("audio",data);
-    },20);
+    },50);
   };
 
   var findMaxWithIndex = function(array) {
