@@ -4,7 +4,6 @@
  * comes from this tutorial by Dennis Ippel (thanks!) :
  * http://www.rozengain.com/blog/2010/02/22/beginning-webgl-step-by-step-tutorial/
  * 
- * OK data: aX, aY, aZ, color, brushId
  */
 
 
@@ -23,7 +22,7 @@ var offset = 0,
 	cr = 0, cg = 0, cb = 0,
 	intensityTimeout,
 	tr, tg, tb,
-	px, py, pz,
+	px, py=0, pz,
 	rndX = 0,
 	rndY = 0,
 	rndOn = false,
@@ -32,6 +31,7 @@ var offset = 0,
 	lastUpdate = 0,
 	IDLE_DELAY = 6000,
 	touches = [],
+	totalOriginalLines = 50000,
 	totalLines = 50000,
 	renderMode = 0,
 	numLines = totalLines,
@@ -49,63 +49,82 @@ function initialize (data) {
 	// 	intensity(pz,brushSize,px,py);
 	// }
 
-    brushSize = data.brushSize;
-    brushId = data.brushId;
-	px = data.alpha;
-	py = data.beta;
-	pz = data.gamma;
+	if (data.hz) {
+		numLines = totalOriginalLines * (-40/data.volume);
+		console.log(Math.floor(numLines));
+		
+		py++;
+		
+		if (data.hz%55<4) {
+			cr=255/256;
+			cg=0;
+			cb=255/256;
+		}
 
-    if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-      px = (px*(5+Math.random()))%cw;
-      py = (py*(5+Math.random()))%ch;
-      pz *= 5;
-    } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-      px = (px*(10+Math.random()))%cw;
-      py = (py*(10+Math.random()))%ch;
-      pz *= 10;
-    } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
-      px = (px*(15+Math.random()))%cw;
-      py = (py*(15+Math.random()))%ch;
-      pz *= 15;
-    } else {
-      px = (px*(20+Math.random()))%cw;
-      py = (py*(20+Math.random()))%ch;
-      pz *= 20;
-    }
-	
-	if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
-		intensity(px,py,pz);
-	} 
-
-	if (data.color === "#8158D9") {
-		cr = 129/256;
-		cg = 88/256;
-		cb = 217/256;
-	} else if (data.color === "#D958B1") {
-		cr = 217/256;
-		cg = 88/256;
-		cb = 177/256;
-	} else if (data.color === "#82F5E7") {
-		cr = 130/256;
-		cg = 245/256;
-		cb = 231/256;
-	} else if (data.color === "#4B61F2") {
-		cr = 75/256;
-		cg = 97/256;
-		cb = 242/256;
-	} else if (data.color === "#40DB2C") {
-		cr = 64/256;
-		cg = 219/256;
-		cb = 44/256;
-	} else if (data.color === "#EB0C40") {
-		cr = 235/256;
-		cg = 12/256;
-		cb = 64/256;
+		touches[0] = (px/cw-.65)*3;
+		touches[1] = (py/ch-.4)*-2;
 	}
 
-	oa = px;
-	ob = py;
-	og = pz;
+    if (data.brushSize) {
+		brushSize = data.brushSize;
+		brushId = data.brushId;
+		px = data.alpha;
+		py = data.beta;
+		pz = data.gamma;
+
+	    if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+	      px = (px*(5+Math.random()))%cw;
+	      py = (py*(5+Math.random()))%ch;
+	      pz *= 5;
+	    } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+	      px = (px*(10+Math.random()))%cw;
+	      py = (py*(10+Math.random()))%ch;
+	      pz *= 10;
+	    } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
+	      px = (px*(15+Math.random()))%cw;
+	      py = (py*(15+Math.random()))%ch;
+	      pz *= 15;
+	    } else {
+	      px = (px*(20+Math.random()))%cw;
+	      py = (py*(20+Math.random()))%ch;
+	      pz *= 20;
+	    }
+		
+		if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
+			intensity(px,py,pz);
+		} 
+		if (data.color === "#8158D9") {
+			cr = 129/256;
+			cg = 88/256;
+			cb = 217/256;
+		} else if (data.color === "#D958B1") {
+			cr = 217/256;
+			cg = 88/256;
+			cb = 177/256;
+		} else if (data.color === "#82F5E7") {
+			cr = 130/256;
+			cg = 245/256;
+			cb = 231/256;
+		} else if (data.color === "#4B61F2") {
+			cr = 75/256;
+			cg = 97/256;
+			cb = 242/256;
+		} else if (data.color === "#40DB2C") {
+			cr = 64/256;
+			cg = 219/256;
+			cb = 44/256;
+		} else if (data.color === "#EB0C40") {
+			cr = 235/256;
+			cg = 12/256;
+			cb = 64/256;
+		}
+
+		oa = px;
+		ob = py;
+		og = pz;
+	}
+
+
 
 }
 		/*

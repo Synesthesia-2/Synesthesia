@@ -491,7 +491,7 @@ gl.initialize = function(data) {
   } else if (data.hz) {
     hz = data.hz;
     volume = data.volume;
-    gl.makeitgo(hz, volume, hz);
+    gl.makeitgo(hz, volume, true);
     console.log("audio data received", hz, volume);
   }
 }
