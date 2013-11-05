@@ -168,14 +168,7 @@ function initialize (data) {
 
 
 }
-		/*
-          #8158D9 .
-          #D958B1 .
-          #82F5E7 .
-          #4B61F2
-          #EB0C40
-          #40DB2C
-		*/
+
 // setup webGL
 loadScene();
 
