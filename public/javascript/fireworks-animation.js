@@ -22,7 +22,7 @@ var offset = 0,
 	cr = 0, cg = 0, cb = 0,
 	intensityTimeout,
 	tr, tg, tb,
-	px, py=0, pz,
+	px, py, pz,
 	rndX = 0,
 	rndY = 0,
 	rndOn = false,
@@ -53,16 +53,45 @@ function initialize (data) {
 		numLines = totalOriginalLines * (-40/data.volume);
 		console.log(Math.floor(numLines));
 		
-		py++;
+		py=py||1;
+		px=data.hz;
 		
 		if (data.hz%55<4) {
 			cr=255/256;
 			cg=0;
 			cb=255/256;
+		} else if (data.hz%62<4) {
+			cr=255/256;
+			cg=165/256;
+			cb=0;
+		} else if (data.hz%65<4) {
+			cr=34/256;
+			cg=255/256;
+			cb=34/256;
+		} else if (data.hz%73<5) {
+			cr=187/256;
+			cg=0;
+			cb=255/256;
+		} else if (data.hz%41<4) {
+			cr=255/256;
+			cg=0;
+			cb=0;
+		} else if (data.hz%44<4) {
+			cr=255/256;
+			cg=187/256;
+			cb=0;
+		} else if (data.hz%49<4) {
+			cr=85/256;
+			cg=85/256;
+			cb=255/256;
 		}
 
-		touches[0] = (px/cw-.65)*3;
-		touches[1] = (py/ch-.4)*-2;
+		// touches[0] = (px/cw-.65)*3;
+		// touches[1] = (py/ch-.4)*-2;
+		var tempY = touches[0] || 0;
+		var tempX = touches[1] || 0;
+		touches[0] = tempY + (Math.random()-0.5);
+		touches[1] = tempX + (Math.random()-0.5);
 	}
 
     if (data.brushSize) {
