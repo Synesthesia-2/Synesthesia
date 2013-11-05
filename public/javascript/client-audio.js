@@ -23,8 +23,9 @@ var streamLoaded = function(stream) {
         hz: hz,
         volume: volume
       };
-      server.emit('audio',data);
-    },20);
+      console.log(data);
+      server.emit("audio",data);
+    },50);
   };
 
   var findMaxWithIndex = function(array) {
@@ -63,6 +64,7 @@ var streamLoaded = function(stream) {
   hiPass.connect(loPass);
   loPass.connect(analyser);
   process();
+  // console.log(microphone);
 };
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;

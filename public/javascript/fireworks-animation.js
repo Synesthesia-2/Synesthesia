@@ -4,7 +4,6 @@
  * comes from this tutorial by Dennis Ippel (thanks!) :
  * http://www.rozengain.com/blog/2010/02/22/beginning-webgl-step-by-step-tutorial/
  * 
- * OK data: aX, aY, aZ, color, brushId
  */
 
 
@@ -35,6 +34,9 @@ var offset = 0,
 	totalLines = 50000,
 	renderMode = 0,
 	numLines = totalLines,
+	then=0,
+	lastX,
+	lastY=[],
 	aZ,
 	brushSize,
 	brushId;
@@ -49,63 +51,179 @@ function initialize (data) {
 	// 	intensity(pz,brushSize,px,py);
 	// }
 
-    brushSize = data.brushSize;
-    brushId = data.brushId;
-	px = data.alpha;
-	py = data.beta;
-	pz = data.gamma;
+	var now = new Date();
+	var when = now.getTime();
+	console.log(when-then);
+	then = when;
 
-    if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-      px = (px*(5+Math.random()))%cw;
-      py = (py*(5+Math.random()))%ch;
-      pz *= 5;
-    } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-      px = (px*(10+Math.random()))%cw;
-      py = (py*(10+Math.random()))%ch;
-      pz *= 10;
-    } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
-      px = (px*(15+Math.random()))%cw;
-      py = (py*(15+Math.random()))%ch;
-      pz *= 15;
-    } else {
-      px = (px*(20+Math.random()))%cw;
-      py = (py*(20+Math.random()))%ch;
-      pz *= 20;
-    }
-	
-	if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
-		intensity(px,py,pz);
-	} 
 
-	if (data.color === "#8158D9") {
-		cr = 129/256;
-		cg = 88/256;
-		cb = 217/256;
-	} else if (data.color === "#D958B1") {
-		cr = 217/256;
-		cg = 88/256;
-		cb = 177/256;
-	} else if (data.color === "#82F5E7") {
-		cr = 130/256;
-		cg = 245/256;
-		cb = 231/256;
-	} else if (data.color === "#4B61F2") {
-		cr = 75/256;
-		cg = 97/256;
-		cb = 242/256;
-	} else if (data.color === "#40DB2C") {
-		cr = 64/256;
-		cg = 219/256;
-		cb = 44/256;
-	} else if (data.color === "#EB0C40") {
-		cr = 235/256;
-		cg = 12/256;
-		cb = 64/256;
+	if (data.hz && data.volume>-85) {
+		numLines = (5000/7)*data.volume + 75000;
+		// console.log(Math.floor(numLines), data.volume);
+		
+		if (data.hz%55<4) {
+			cr=255/256;
+			cg=0;
+			cb=255/256;
+		} else if (data.hz%62<3) {
+			cr=255/256;
+			cg=165/256;
+			cb=0;
+		} else if (data.hz%65<3) {
+			cr=34/256;
+			cg=255/256;
+			cb=34/256;
+		} else if (data.hz%73<3) {
+			cr=187/256;
+			cg=0;
+			cb=255/256;
+		} else if (data.hz%41<3) {
+			cr=255/256;
+			cg=0;
+			cb=0;
+		} else if (data.hz%44<3) {
+			cr=255/256;
+			cg=187/256;
+			cb=0;
+		} else if (data.hz%49<3) {
+			cr=85/256;
+			cg=85/256;
+			cb=255/256;
+		}
+
+		// touches[0] = (px/cw-.65)*3;
+		// touches[1] = (py/ch-.4)*-2;
+
+		// if (lastTenX.length>10) {
+		// 	lastTenX.shift();
+		// }
+		// lastTenX.push(Math.floor(data.hz));
+		// var sum=0;
+		// for (var j=0;j<lastTenX.length;j++){
+		// 	sum+=(j/(lastTenX.length-1))*lastTenX[j];
+		// }
+		// var recentPitch = sum/lastTenX.length;
+		// tempX = 1.25*Math.log(sum/55)/Math.log(2)-3.75;
+		// console.log(sum,tempX);
+
+		//lastX means the weighting function of all previous frequencies
+
+		var tempX, tempY;
+		lastX = lastX || 0;
+		var moving_avg = 0.9;
+		var filterFreq = moving_avg*data.hz +(1-moving_avg)*lastX;
+		lastX = filterFreq;
+		tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-3.75;
+
+		lastY = lastY || [];
+		lastY.push(data.volume);
+		if (lastY.length>3) {
+			lastY.shift();
+			if (lastY[2]>lastY[1]+5) {
+				tempX =0;
+				// tempY = Math.random();
+			} else if (lastY[2]<lastY[1]-5) {
+				tempX =0;
+				// tempY = -Math.random();
+			}
+			tempY = (1/30)*data.volume + 2;
+		}
+
+
+
+		// tempX = 1.25*Math.log(data.hz/55)/Math.log(2)-3.75;
+		// var filteredRecentPitch = moving_avg * data.hz;
+		// for (var i = lastTenX.length - 2; i >= 0; i--) {
+		// 	// filteredRecentPitch += lastTenX[i]*Math.pow(((data.hz-lastTenX[i])/data.hz),lastTenX.length-i);
+		// 	filteredRecentPitch += moving_avg* (Math.pow((1-moving_avg),i)*lastTenX[i]);
+		// };
+		// console.log('filteredRecentPitch',filteredRecentPitch);
+
+		//a = Math.pow(base,power)
+		//power =(Math.log(a))/(Math.log(base)) 
+		
+		// var tempY = touches[0] || 0;
+		// var tempX = touches[1] || 0;
+		// lastTenY.push();
+
+		// if (tempX>2.5) {
+		// 	tempX -= Math.random()*0.05;
+		// } else if (tempX<(-2.5)) {
+		// 	tempX += Math.random()*0.05;
+		// } else {
+		// 	tempX += Math.random()*0.1-0.05;			
+		// }
+		// if (tempY>1) {
+		// 	tempY -= Math.random()*0.03;
+		// } else if (tempY<(-1)) {
+		// 	tempY += Math.random()*0.03;
+		// } else {
+		// 	tempY += Math.random()*0.1-0.05;			
+		// }		
+		touches[0] = tempY;
+		touches[1] = tempX;
 	}
 
-	oa = px;
-	ob = py;
-	og = pz;
+    if (data.brushSize) {
+		brushSize = data.brushSize;
+		brushId = data.brushId;
+		px = data.alpha;
+		py = data.beta;
+		pz = data.gamma;
+
+	    if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+	      px = (px*(5+Math.random()))%cw;
+	      py = (py*(5+Math.random()))%ch;
+	      pz *= 5;
+	    } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+	      px = (px*(10+Math.random()))%cw;
+	      py = (py*(10+Math.random()))%ch;
+	      pz *= 10;
+	    } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
+	      px = (px*(15+Math.random()))%cw;
+	      py = (py*(15+Math.random()))%ch;
+	      pz *= 15;
+	    } else {
+	      px = (px*(20+Math.random()))%cw;
+	      py = (py*(20+Math.random()))%ch;
+	      pz *= 20;
+	    }
+		
+		if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
+			intensity(px,py,pz);
+		} 
+		if (data.color === "#8158D9") {
+			cr = 129/256;
+			cg = 88/256;
+			cb = 217/256;
+		} else if (data.color === "#D958B1") {
+			cr = 217/256;
+			cg = 88/256;
+			cb = 177/256;
+		} else if (data.color === "#82F5E7") {
+			cr = 130/256;
+			cg = 245/256;
+			cb = 231/256;
+		} else if (data.color === "#4B61F2") {
+			cr = 75/256;
+			cg = 97/256;
+			cb = 242/256;
+		} else if (data.color === "#40DB2C") {
+			cr = 64/256;
+			cg = 219/256;
+			cb = 44/256;
+		} else if (data.color === "#EB0C40") {
+			cr = 235/256;
+			cg = 12/256;
+			cb = 64/256;
+		}
+
+		oa = px;
+		ob = py;
+		og = pz;
+	}
+
+
 
 }
 		/*

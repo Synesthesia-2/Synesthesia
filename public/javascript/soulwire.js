@@ -21,4 +21,9 @@ $(document).ready(function() {
     gl.initialize(data);
   });
 
+  server.on('audio', function(data) {
+    gl.initialize(data);
+    console.log('audio data received to client');
+  })
+
 });

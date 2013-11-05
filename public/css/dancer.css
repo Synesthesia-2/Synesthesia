@@ -14,7 +14,7 @@ body {
     font-family: Arial;
 }
 #info {
-    width: 100%;
+    width: 0;
     position: absolute;
     top: 0;
     height: 52px;
@@ -78,6 +78,7 @@ body {
 }
 
 #togglefft {
+    display: none;
     float: left;
     margin: 20px 0 0 10px;
     color: #ff0077;
@@ -90,6 +91,7 @@ body {
 }
 
 #stats {
+    display: none;
     margin: 0 0 0 10px;
     float: left;
 }

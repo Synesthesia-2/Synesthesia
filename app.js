@@ -165,9 +165,10 @@ clients.on('connection', function (client) {
   });
   client.on('audio', function(data){
     console.log(data);
-    canvas.emit('audio',data);
+    // canvas.emit('audio',data);
     fireworks.emit('audio',data);
     soulwire.emit('audio',data);
     dancer.emit('audio',data);
+    console.log('audio enabled on the client');
   });
 });
