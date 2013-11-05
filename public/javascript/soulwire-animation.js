@@ -349,7 +349,7 @@ gl.setup = function() {
 
         // Load the particle asset into the texture
         var particleTextureImage = new Image();
-        particleTextureImage.src = 'css/particle.png';
+        particleTextureImage.src = 'css/sparkles/particle.png';
         particleTextureImage.onload = function() {
 
             // Activate the correct texture unit and bind the texture to it
@@ -480,13 +480,20 @@ gl.initialize = function(data) {
   var phone_alpha,phone_beta,phone_gamma;
   var phone_brushSize=5;
 
-  phone_alpha = data.alpha;
-  phone_beta = data.beta;
-  phone_gamma = data.gamma;
-  // color = data.color
-  phone_brushSize = data.brushSize;
-  // console.log("From inside: ", phone_alpha, phone_beta, phone_gamma);
-  gl.makeitgo(phone_alpha,phone_beta,phone_gamma);
+  if (data.alpha) {
+      phone_alpha = data.alpha;
+      phone_beta = data.beta;
+      phone_gamma = data.gamma;
+      // color = data.color
+      phone_brushSize = data.brushSize;
+      // console.log("From inside: ", phone_alpha, phone_beta, phone_gamma);
+      gl.makeitgo(phone_alpha,phone_beta,phone_gamma);
+  } else if (data.hz) {
+    hz = data.hz;
+    volume = data.volume;
+    gl.makeitgo(hz, volume, hz);
+    console.log("audio data received", hz, volume);
+  }
 }
 
 // gl.mousemove = function() {

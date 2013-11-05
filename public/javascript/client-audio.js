@@ -17,13 +17,14 @@ var streamLoaded = function(stream) {
       var targetRange = findMaxWithIndex(FFTData)
       var volume = targetRange[1][1];
       var hz = convertToHz(targetRange);
-      state.volume = volume;
-      state.hz = hz;
+      // state.volume = volume;
+      // state.hz = hz;
       var data = {
         hz: hz,
         volume: volume
       };
-      server.emit('audio',data);
+      console.log(data.hz,data.volume);
+      server.emit("audio",data);
     },20);
   };
 
@@ -63,6 +64,7 @@ var streamLoaded = function(stream) {
   hiPass.connect(loPass);
   microphone.connect(analyser);
   process();
+  // console.log(microphone);
 };
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
