@@ -9,6 +9,7 @@ var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
 var soulwire = io.of('/soulwire');
+var dancer = io.of('/dancer');
 var state = {
   connections: 0,
   "1": 0,
@@ -50,6 +51,10 @@ app.get('/soulwire', function (req, res) {
   res.render('soulwire');
 });
 
+app.get('/dancer', function(req,res) {
+  res.render('dancer');
+});
+
 //////////////////////////////////////////
 ///
 /// EVENTS
@@ -69,18 +74,23 @@ canvas.on('refresh', function (canvas){
   clients.emit('refresh');
   clients.on('refresh', function (data){
     canvas.emit('refresh', data);
-  })
+  });
 });
 
 fireworks.on('connection', function (firework) {
-  console.log("new firework connected!!!!!!!!!")
+  console.log("new firework connected!!!!!!!!!");
   firework.emit("welcome","You're a fireworks!");
 });
 
 
 soulwire.on('connection', function (soulwire) {
-  console.log("my soul is wIrEd!!!")
+  console.log("my soul is wIrEd!!!");
   soulwire.emit("welcome","You're wIrEd!");
+});
+
+dancer.on('connection', function(dancer) {
+  console.log('dancing the night away');
+  dancer.emit("welcome","*dance* *dance*");
 });
 
 //////////////////////////////////////////
@@ -97,7 +107,7 @@ conductor.on('connection', function (conductor) {
     clients.emit('changeColor', data);
   });
   conductor.on('splitColors', function(data){
-    var clients = io.of('/client');    
+    var clients = io.of('/client');
     state.mode = "splitColors";
     clients.in("1").emit('changeColor', {color: (data.color)[0]});
     clients.in("2").emit('changeColor', {color: (data.color)[1]});
@@ -115,7 +125,7 @@ conductor.on('connection', function (conductor) {
       state.mode = "switchPaintingOff";
       canvas.emit("clearAll");
     }
-    clients.emit('switchPainting', data);      
+    clients.emit('switchPainting', data);
   });
 });
 
@@ -158,5 +168,6 @@ clients.on('connection', function (client) {
     canvas.emit('audio',data);
     fireworks.emit('audio',data);
     soulwire.emit('audio',data);
+    dancer.emit('audio',data);
   });
 });
