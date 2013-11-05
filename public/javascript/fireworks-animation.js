@@ -35,6 +35,8 @@ var offset = 0,
 	totalLines = 50000,
 	renderMode = 0,
 	numLines = totalLines,
+	lastTenX = [];
+	lastTenY = [];
 	aZ,
 	brushSize,
 	brushId;
@@ -50,8 +52,8 @@ function initialize (data) {
 	// }
 
 	if (data.hz) {
-		numLines = totalOriginalLines * (-40/data.volume);
-		console.log(Math.floor(numLines));
+		numLines = (5000/7)*data.volume + 75000;
+		console.log(Math.floor(numLines), data.volume);
 		
 		py=py||1;
 		px=data.hz;
@@ -90,8 +92,23 @@ function initialize (data) {
 		// touches[1] = (py/ch-.4)*-2;
 		var tempY = touches[0] || 0;
 		var tempX = touches[1] || 0;
-		touches[0] = tempY + (Math.random()-0.5);
-		touches[1] = tempX + (Math.random()-0.5);
+
+		if (tempX>2.5) {
+			tempX -= Math.random()*0.05;
+		} else if (tempX<(-2.5)) {
+			tempX += Math.random()*0.05;
+		} else {
+			tempX += Math.random()*0.1-0.05;			
+		}
+		if (tempY>1) {
+			tempY -= Math.random()*0.03;
+		} else if (tempY<(-1)) {
+			tempY += Math.random()*0.03;
+		} else {
+			tempY += Math.random()*0.1-0.05;			
+		}		
+		touches[0] = tempY;
+		touches[1] = tempX;
 	}
 
     if (data.brushSize) {
