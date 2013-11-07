@@ -87,8 +87,8 @@ var streamLoaded = function(stream) {
       var targetRange = findMaxWithIndex(FFTData);
       var volume = targetRange[1][1];
       var hz = convertToHz(targetRange);
-      // state.volume = volume;
-      // state.hz = hz;
+      state.volume = volume;
+      state.hz = hz;
       var data = {
         hz: hz,
         volume: volume
@@ -96,6 +96,28 @@ var streamLoaded = function(stream) {
       if (volume > threshold) { server.emit("audio",data); }
     },60);
   };
+
+  /* Kicks are detected when the amplitude (normalized 
+  values between 0 and 1) of a specified frequency, or 
+  the max amplitude over a range, is greater than the 
+  minimum threshold, as well as greater than the previously 
+  registered kick's amplitude, which is decreased by the 
+  decay rate per frame.
+
+  createKick( options ) creates a new kick instance tied 
+  to the dancer instance, with an options object passed 
+  as an argument. Options listed below.
+  frequency the frequency (element of the spectrum) to 
+  check for a spike. Can be a single frequency (number) 
+  or a range (2 element array) that uses the frequency 
+  with highest amplitude. Default: [ 0, 10 ]
+  threshold the minimum amplitude of the frequency range 
+  in order for a kick to occur. Default: 0.3
+  decay the rate that the previously registered kick's 
+  amplitude is reduced by on every frame. Default: 0.02
+  onKick the callback to be called when a kick is detected.
+  offKick the callback to be called when there is no kick 
+  on the current frame.*/
 
   var findMaxWithIndex = function(array) {
     var max = Math.max.apply(Math, array);
