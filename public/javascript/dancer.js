@@ -10,7 +10,8 @@ $(document).ready(function() {
   });
 
   server.on('audio', function(data) {
-    console.log("BANANAS FOR THE DANCER");
+    console.log("dancer receiving audio");
+
   });
 
 });

@@ -12,17 +12,12 @@ $(document).ready(function() {
     canvasWrapper.addView(data.brushId);
   });
 
-  // brushServer sends a draw message with new accel
-  // data. Takes a brush ID, and routes the
-  // drawing to the appropriate canvas
   server.on('gyro', function(data) {
-    // console.log('Within fireworks.js ',data);
     initialize(data);
   });
 
   server.on('audio', function(data) {
     initialize(data);
-    // console.log('audio data received to client');
   })
 
 });

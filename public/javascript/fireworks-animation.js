@@ -31,7 +31,7 @@ var offset = 0,
 	lastUpdate = 0,
 	IDLE_DELAY = 6000,
 	touches = [],
-	totalLines = 50000,
+	totalLines = 60000,
 	renderMode = 0,
 	numLines = totalLines,
 	then=0,
@@ -43,23 +43,10 @@ var offset = 0,
 
 function initialize (data) {
 
-	// if (Math.abs(data.aX) >2 && Math.abs(data.aZ) >2) {
-	// 	px = data.aX+500;
-	// 	py = data.aZ+250;
-	// 	pz = data.aY;
-	// 	brushSize = data.brushSize;
-	// 	intensity(pz,brushSize,px,py);
-	// }
-
-	var now = new Date();
-	var when = now.getTime();
-	console.log(when-then, data.hz, data.volume);
-	then = when;
-
-
+	//when initialized by audio data
 	if (data.hz && data.volume>-85) {
 		numLines = Math.floor((5000/7)*data.volume) + 65000;
-		// console.log(Math.floor(numLines), data.volume);
+		if (numLines>totalLines) {numLines=totalLines;}
 		
 		if (data.hz%55<2) {
 			cr=255/256;
@@ -96,7 +83,7 @@ function initialize (data) {
 		var moving_avg = 0.1;
 		var filterFreq = moving_avg*data.hz +(1-moving_avg)*lastX;
 		lastX = filterFreq;
-		tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-4.5;
+		tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-3.75;
 
 		lastY = lastY || 0;
 		var filterVol = moving_avg*data.volume +(1-moving_avg)*lastY;
@@ -106,34 +93,35 @@ function initialize (data) {
 		touches[1] = tempX;
 	}
 
-    if (data.brushSize) {
+	// When initialized by gyro data:
+	if (data.brushSize) {
 		brushSize = data.brushSize;
 		brushId = data.brushId;
 		px = data.alpha;
 		py = data.beta;
 		pz = data.gamma;
 
-	    if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-	      px = (px*(5+Math.random()))%cw;
-	      py = (py*(5+Math.random()))%ch;
-	      pz *= 5;
-	    } else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-	      px = (px*(10+Math.random()))%cw;
-	      py = (py*(10+Math.random()))%ch;
-	      pz *= 10;
-	    } else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
-	      px = (px*(15+Math.random()))%cw;
-	      py = (py*(15+Math.random()))%ch;
-	      pz *= 15;
-	    } else {
-	      px = (px*(20+Math.random()))%cw;
-	      py = (py*(20+Math.random()))%ch;
-	      pz *= 20;
-	    }
+		if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+			px = (px*(5+Math.random()))%cw;
+			py = (py*(5+Math.random()))%ch;
+			pz *= 5;
+		} else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
+			px = (px*(10+Math.random()))%cw;
+			py = (py*(10+Math.random()))%ch;
+			pz *= 10;
+		} else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
+			px = (px*(15+Math.random()))%cw;
+			py = (py*(15+Math.random()))%ch;
+			pz *= 15;
+		} else {
+			px = (px*(20+Math.random()))%cw;
+			py = (py*(20+Math.random()))%ch;
+			pz *= 20;
+		}
 		
 		if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
 			intensity(px,py,pz);
-		} 
+		}
 		if (data.color === "#8158D9") {
 			cr = 129/256;
 			cg = 88/256;
@@ -164,16 +152,13 @@ function initialize (data) {
 		ob = py;
 		og = pz;
 	}
-
-
-
 }
 
 // setup webGL
 loadScene();
 
 // add listeners
-window.addEventListener( "resize", onResize, false )
+window.addEventListener( "resize", onResize, false );
 document.addEventListener( "mousedown", onMouseDown, false );
 document.addEventListener( "keydown", onKey, false );
 onResize();
@@ -182,13 +167,13 @@ onResize();
 animate();
 
 function onResize(e) {
-	cw = window.innerWidth; 
+	cw = window.innerWidth;
 	ch = window.innerHeight;
-}  
+}
 
 function normalize(px, py){
-	touches[0] = (px/cw-.65)*3;
-	touches[1] = (py/ch-.4)*-2;
+	touches[0] = (px/cw-0.65)*3;
+	touches[1] = (py/ch-0.4)*-2;
 }
 
 function onMouseDown(e){
@@ -209,16 +194,8 @@ function onMouseUp(e) {
 }
 
 function intensity(px, py, pz) {
-    // if (!intensityTimeout) {
-	//   if (pz>50) {
-	//    normalize(0,pz*10);
-	//    intensityTimeout = setTimeout( function() {
-	// intensityTimeout=0;
-	//    }, 1000 + Math.random() * 1000 );
-	//  } else {
+	//This function exists to allow for thresholding.
 	normalize(px,py);
-	//     }
-	// }
 }
 
 function animate() {
@@ -230,20 +207,15 @@ function animate() {
 function redraw()
 {
 
-	// declarations
 	var player, dx, dy, d,
-			tx, ty, bp, p, 
-			i = 0, nt, j,
-			// now = new Date().getTime();
-	
-	nt = touches.length;
+			tx, ty, bp, p,
+			i = 0, nt = touches.length, j;
 	
 	// animate color
-	cr = cr * .99 + tr * .01;
-	cg = cg * .99 + tg * .01;
-	cb = cb * .99 + tb * .01;
+	cr = cr * 0.99 + tr * 0.01;
+	cg = cg * 0.99 + tg * 0.01;
+	cb = cb * 0.99 + tb * 0.01;
 	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.3 );
-	// gl.uniform4f( colorLoc, 1, 0, 0, Math.random()+0.5 );
 	
 	// animate and attract particles
 	for( i = 0; i < numLines; i+=2 )
@@ -292,27 +264,25 @@ function redraw()
 				
 				if ( d < 2.5 )
 				{
-					if ( d < .03 )
+					if ( d < 0.03 )
 					{
-						//vertices[bp] = vertices[bp+3] = (Math.random() * 2 - 1)*ratio;
-						//vertices[bp+1] = vertices[bp+4] = Math.random() * 2 - 1;
 						vertices[bp] = (Math.random() * 2 - 1)*ratio;
 						vertices[bp+1] = Math.random() * 2 - 1;
-						vertices[bp+3] = (vertices[bp+3] + vertices[bp]) * .5;
-						vertices[bp+4] = (vertices[bp+4] + vertices[bp+1]) * .5;
-						velocities[bp] = Math.random()*.4-.2;
-						velocities[bp+1] = Math.random()*.4-.2;
+						vertices[bp+3] = (vertices[bp+3] + vertices[bp]) * 0.5;
+						vertices[bp+4] = (vertices[bp+4] + vertices[bp+1]) * 0.5;
+						velocities[bp] = Math.random()*0.4-0.2;
+						velocities[bp+1] = Math.random()*0.4-0.2;
 					} else {
 						dx /= d;
 						dy /= d;
 						d = ( 2 - d ) / 2;
 						d *= d;
 						if (Math.abs(aZ)<10) {
-    						velocities[bp] += dx * d * 0.03;
-    					} else {
-    						velocities[bp] += Math.random() * dx * d * 0.03;
-    					}
-						velocities[bp+1] += dy * d * .01;
+							velocities[bp] += dx * d * 0.03;
+						} else {
+							velocities[bp] += Math.random() * dx * d * 0.03;
+						}
+						velocities[bp+1] += dy * d * 0.01;
 					}
 				}
 			}
@@ -323,23 +293,23 @@ function redraw()
 	gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
 		
 	switch( renderMode ) {
-		case 0 :
-			gl.lineWidth(1);
-			gl.drawArrays( gl.LINES, 0, numLines );
-			break;
+	case 0 :
+		gl.lineWidth(1);
+		gl.drawArrays( gl.LINES, 0, numLines );
+		break;
 			
-		case 1:
-			gl.drawArrays( gl.TRIANGLE_STRIP, 0, numLines ); 
-			break;
-			
-		case 2 :
-			gl.lineWidth(1);
-			gl.drawArrays( gl.LINE_STRIP, 0, numLines );
-			break;
-			
-		case 3:
-			gl.drawArrays( gl.TRIANGLE_FAN, 0, numLines ); 
-			break;
+	case 1:
+		gl.drawArrays( gl.TRIANGLE_STRIP, 0, numLines );
+		break;
+		
+	case 2 :
+		gl.lineWidth(1);
+		gl.drawArrays( gl.LINE_STRIP, 0, numLines );
+		break;
+		
+	case 3:
+		gl.drawArrays( gl.TRIANGLE_FAN, 0, numLines );
+		break;
 	}
 	
 	gl.flush();
@@ -348,34 +318,34 @@ function redraw()
 var colorTimeout;
 
 function switchColor() {
-	var a = .5,
-		c1 = .3+Math.random()*.2,
-		c2 = Math.random()*.06+0.01,
-		c3 = Math.random()*.06+0.02;
+	var a = 0.5,
+		c1 = 0.3+Math.random()*0.2,
+		c2 = Math.random()*0.06+0.01,
+		c3 = Math.random()*0.06+0.02;
 
 		
 	switch( Math.floor( Math.random() * 3 ) ) {
-		case 0 :
-			//gl.uniform4f( colorLoc, c1, c2, c3, a );
-			tr = c1;
-			tg = c2;
-			tb = c3;
-			break;
-		case 1 :
-			//gl.uniform4f( colorLoc, c2, c1, c3, a );
-			tr = c2;
-			tg = c1;
-			tb = c3;
-			break;
-		case 2 :
-			//gl.uniform4f( colorLoc, c3, c2, c1, a );
-			tr = c3;
-			tg = c2;
-			tb = c1;
-			break;
+	case 0 :
+		//gl.uniform4f( colorLoc, c1, c2, c3, a );
+		tr = c1;
+		tg = c2;
+		tb = c3;
+		break;
+	case 1 :
+		//gl.uniform4f( colorLoc, c2, c1, c3, a );
+		tr = c2;
+		tg = c1;
+		tb = c3;
+		break;
+	case 2 :
+		//gl.uniform4f( colorLoc, c3, c2, c1, a );
+		tr = c3;
+		tg = c2;
+		tb = c1;
+		break;
 	}
 
-	if ( colorTimeout ) clearTimeout( colorTimeout );
+	if ( colorTimeout ) {clearTimeout( colorTimeout );}
 	colorTimeout = setTimeout( switchColor, 500 + Math.random() * 4000 );
 }
 
@@ -587,24 +557,24 @@ function loadScene()
 }
 
 function onKey( e ) {
-	// setRenderMode( ++renderMode % 4 );
+	setRenderMode( ++renderMode % 4 );
 }
 
 function setRenderMode( n ) {
 	renderMode = n;
 	switch(renderMode) {
-		case 0: // lines
-			numLines = totalLines;
-			break;
-		case 1: // triangle strip
-			numLines = 600;
-			break;
-		case 2: // lines strip
-			numLines = 7000;
-			break;
-		case 3: // quad strip
-			numLines = 400;
-			break;
+	case 0: // lines
+		numLines = totalLines;
+		break;
+	case 1: // triangle strip
+		numLines = 600;
+		break;
+	case 2: // lines strip
+		numLines = 7000;
+		break;
+	case 3: // quad strip
+		numLines = 400;
+		break;
 	}
 }
 // }());
