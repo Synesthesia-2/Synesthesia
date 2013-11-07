@@ -114,7 +114,7 @@ clients.on('connection', function (client) {
 
   client.emit("welcome", {
     id: client.id,
-    message: "You're a client on team " + team + "!",
+    message: "welcome!",
     mode: state.mode
   });
 

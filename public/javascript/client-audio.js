@@ -42,7 +42,7 @@ var streamLoaded = function(stream) {
         console.log("adding filter at " + freq);
         var filter = audioContext.createBiquadFilter();
         filter.type = filter.PEAKING;
-        filter.gain.value = data.avg-ptAvg;
+        filter.gain.value = (data.avg-ptAvg)*0.7;
         filter.connect(analyser);
         var lastFilter = dynamicFilters.length;
         if (lastFilter) {
