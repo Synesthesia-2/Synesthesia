@@ -11,6 +11,11 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     sound = !sound;
     this.trigger('toggleSound', { sound: sound });
     this.set('sound', sound);
+    if (sound) {
+      $('#toggleSound').addClass('toggled');
+    } else {
+      $('#toggleSound').removeClass('toggled');
+    }
   },
 
   togglePaint: function() {
@@ -18,6 +23,11 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     paint = !paint;
     this.trigger('togglePaint', { paint: paint });
     this.set('paint', paint);
+    if (paint) {
+      $('#togglePaint').addClass('toggled');
+    } else {
+      $('#togglePaint').removeClass('toggled');
+    }
   },
 
   toggleStrobe: function() {
@@ -25,6 +35,11 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     strobe = !strobe;
     this.trigger('toggleStrobe', { strobe: strobe });
     this.set('strobe', strobe);
+    if (strobe) {
+      $('#toggleStrobe').addClass('toggled');
+    } else {
+      $('#toggleStrobe').removeClass('toggled');
+    }
   },
 
   sendColor: function(color, fadeTime) {

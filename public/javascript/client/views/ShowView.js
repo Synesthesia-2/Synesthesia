@@ -41,21 +41,23 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   initMotionListener: function() {
+    console.log('motion on');
     this.$el.animate({
       backgroundColor: '#000000'
-    }, 1000);
-    this.$el.find('.controls').fadeIn(500);
+    }, 500);
+    this.$el.find('#wrapper').fadeIn(500);
     window.addEventListener('deviceorientation', this.emitGyro);
     window.addEventListener('devicemotion', this.onDeviceMotion);
   },
 
   removeMotionListener: function(colorChange) {
     var that = this;
-    this.$el.find('.controls').fadeOut(500);
+    console.log('motion off');
+    this.$el.find('#wrapper').fadeOut(500);
     if (colorChange === false) {
       this.$el.animate({
         backgroundColor: that.currentColor
-      }, 1000);
+      }, 500);
     }
     window.removeEventListener('deviceorientation', this.emitGyro);
     window.removeEventListener('devicemotion', this.emitGyro);

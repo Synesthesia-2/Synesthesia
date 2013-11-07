@@ -8,7 +8,6 @@ ConductorSpace.Server = Backbone.Model.extend({
   },
 
   emit: function(event, data) {
-    console.log(event, data);
     this.connection.emit(event, data);
   },
 
