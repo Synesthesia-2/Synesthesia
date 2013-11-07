@@ -32,9 +32,8 @@ ConductorSpace.MainView = Backbone.View.extend({
   },
 
   sendRandomColor: function(e) {
-    console.log('random');
     var colorOptions = { color: ["#CC0000","#FFFFFF","#00CC00","#0000CC","#B5FC9B","#9BDAFC","#F50FF1","#F5AC0F","#FFE203","#000000", "#AA84E0", "#7A0014"] };
-    this.model.sendColor(colorOptions, this.fadeTime);
+    this.model.randomColor(colorOptions, this.fadeTime);
   },
 
   toggleSound: function() {

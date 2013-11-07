@@ -29,6 +29,10 @@ ConductorSpace.Conductor = Backbone.Model.extend({
 
   sendColor: function(color, fadeTime) {
     this.trigger('changeColor', { color: color, fadeTime: fadeTime });
+  },
+
+  randomColor: function(colors,fadeTime) {
+    this.trigger('randomColor', { colors: colors, fadeTime: fadeTime });
   }
 
 });

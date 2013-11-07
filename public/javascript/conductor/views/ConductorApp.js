@@ -11,7 +11,9 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.model.on('toggleSound', this.toggleSound.bind(this));
     this.model.on('togglePaint', this.togglePaint.bind(this));
     this.model.on('toggleStrobe', this.toggleStrobe.bind(this));
-    this.model.on('sendColor', this.sendColor.bind(this));
+    this.model.on('changeColor', this.sendColor.bind(this));
+    this.model.on('randomColor', this.randomColor.bind(this));
+
   },
 
   render: function(){
@@ -32,7 +34,11 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
   },
 
   sendColor: function(data) {
-    this.server.emit('sendColor', data);
+    this.server.emit('changeColor', data);
+  },
+
+  randomColor: function(data) {
+    this.server.emit('randomColor', data);
   }
 
 });

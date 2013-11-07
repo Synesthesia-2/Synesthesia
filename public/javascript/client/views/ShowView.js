@@ -30,17 +30,17 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.model.set('brushId', id);
   },
 
-  updateBackgroundColor: function(color) {
+  updateBackgroundColor: function(data) {
+    var color = data.color;
+    var fadeTime = parseFloat(data.fadeTime);
     this.removeMotionListener(false);
-    console.log('updating color');
     this.currentColor = color;
     this.$el.animate({
       backgroundColor: color
-    }, 1500);
+    }, fadeTime);
   },
 
   initMotionListener: function() {
-    console.log('init');
     this.$el.animate({
       backgroundColor: '#000000'
     }, 1000);
@@ -50,7 +50,6 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   removeMotionListener: function(colorChange) {
-    console.log('remove');
     var that = this;
     this.$el.find('.controls').fadeOut(500);
     if (colorChange === false) {

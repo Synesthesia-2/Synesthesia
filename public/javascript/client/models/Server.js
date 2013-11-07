@@ -23,13 +23,16 @@ ClientSpace.Server = Backbone.Model.extend({
   },
 
   setBackgroundColor: function(data) {
-    this.trigger('changeBG', data.color);
+    this.trigger('changeBG', data);
   },
 
   randomBackgroundColor: function(data) {
-    var i = Math.floor(Math.random() * 10);
-    var color = data.color[i];
-    this.setBackgroundColor({ color: color });
+    console.log(data.colors.color);
+    var i = Math.floor(Math.random() * data.colors.color.length);
+    console.log(i);
+    var color = data.colors.color[i];
+    console.log(color);
+    this.setBackgroundColor({ color: color, fadeTime: data.fadeTime });
   },
 
   emit: function(event, data) {
