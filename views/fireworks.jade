@@ -1,3 +1,35 @@
 doctype 5
 html
-  include fireworks.html
+  head
+    title Sound Visualization 
+    meta(http-equiv="content-type", content="text/html; charset=utf-8")
+    link(type="text/css", rel="stylesheet", href="stylesheets/fireworks.css")
+
+    script(src="/bower_components/jquery/jquery.min.js")
+    script#shader-fs(type="x-shader/x-fragment").
+        #ifdef GL_ES
+          precision highp float;
+          #endif
+          
+         uniform vec4 color;
+         
+        void main(void) {
+         gl_FragColor = color;
+        }
+    
+    script#shader-vs(type="x-shader/x-vertex").
+      attribute vec3 vertexPosition;
+
+      uniform mat4 modelViewMatrix;
+      uniform mat4 perspectiveMatrix;
+
+      void main(void) {
+        gl_Position = perspectiveMatrix * modelViewMatrix * vec4(vertexPosition, 1.0);
+      }
+  body
+    canvas#webGLCanvas
+    div#instructions
+
+    script(src="javascript/fireworks-animation.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="javascript/fireworks.js")

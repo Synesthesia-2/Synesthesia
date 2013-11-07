@@ -1,9 +1,6 @@
-SocketTest
+##KineTech Performance Visualizer
 ==========
 
-Socket Test for KineTech project
+Sound and movement visualizer for Kine-Tech, mixing motion input from mobile device and audio input from desktop browers to be visualized on a separate canvas. Uses websockets to allow multiple device to communicate in real time across a single server.
 
-Testing use of Socket.IO with Node.JS for device communication
 =======
-kin
-===
