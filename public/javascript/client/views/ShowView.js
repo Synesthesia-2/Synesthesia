@@ -57,19 +57,11 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   updateBackgroundColor: function(data) {
-    // if (this.strobeInt !== null) {
-
-    //   clearInterval(this.strobeInt);
-    //   this.strobeInt = null;
-    // }
     this.currentColor = data.color;
     this.fadeTime = parseFloat(data.fadeTime);
-    this.removeMotionListener(false);
     this.$el.animate({
       backgroundColor: this.currentColor
     }, this.fadeTime);
-    // if (this.model.get('strobe')) {
-    // }
   },
 
   strobe: function(on) {
@@ -105,15 +97,13 @@ ClientSpace.ShowView = Backbone.View.extend({
     window.addEventListener('devicemotion', this.onDeviceMotion);
   },
 
-  removeMotionListener: function(colorChange) {
+  removeMotionListener: function() {
     var that = this;
     console.log('motion off');
     this.$el.find('#wrapper').fadeOut(500);
-    if (colorChange === true) {
-      this.$el.animate({
-        backgroundColor: that.currentColor
-      }, 500);
-    }
+    this.$el.animate({
+      backgroundColor: that.currentColor
+    }, 500);
     window.removeEventListener('deviceorientation', this.emitGyro);
     window.removeEventListener('devicemotion', this.emitGyro);
   },
@@ -157,7 +147,7 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   exitShow: function(event) {
-    this.removeMotionListener(false);
+    this.removeMotionListener();
     this.model.loadIndex();
   }
 

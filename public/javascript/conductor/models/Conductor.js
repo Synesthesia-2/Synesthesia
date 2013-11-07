@@ -47,6 +47,9 @@ ConductorSpace.Conductor = Backbone.Model.extend({
   },
 
   sendColor: function(color, fadeTime) {
+    if ($('#togglePaint').hasClass("toggled")) {
+      this.togglePaint();
+    }
     this.trigger('changeColor', { color: color, fadeTime: fadeTime });
   },
 
