@@ -5,6 +5,7 @@ html
     meta(http-equiv="content-type", content="text/html; charset=utf-8")
     link(type="text/css", rel="stylesheet", href="stylesheets/fireworks.css")
 
+    script(src="/socket.io/socket.io.js")
     script(src="/bower_components/jquery/jquery.min.js")
     script#shader-fs(type="x-shader/x-fragment").
         #ifdef GL_ES
@@ -30,6 +31,5 @@ html
     canvas#webGLCanvas
     div#instructions
 
-    script(src="javascript/fireworks-animation.js")
-    script(src="/socket.io/socket.io.js")
-    script(src="javascript/fireworks.js")
+    script(src="javascript/fireworks/fireworks-animation.js")
+    script(src="javascript/fireworks/fireworks.js")
