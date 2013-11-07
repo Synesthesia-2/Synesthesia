@@ -18,6 +18,10 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     }
   },
 
+  sendNewFadeTime: function(newFadeTime) {
+    this.trigger('newFadeTime', { fadeTime: newFadeTime });
+  },
+
   togglePaint: function() {
     var paint = this.get('paint');
     paint = !paint;

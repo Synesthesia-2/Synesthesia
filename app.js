@@ -9,6 +9,7 @@ var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
 var state = {
+  strobe: false,
   connections: 0,
   mode: "default"
 };
@@ -83,10 +84,10 @@ conductor.on('connection', function (conductor) {
     clients.emit('changeColor', data);
   });
 
-  conductor.on('allRandomColors', function (data){
+  conductor.on('randomColor', function (data){
     var clients = io.of('/client');
-    state.mode = "allRandomColors";
-    clients.emit('randomColor', {color: data.color});
+    state.mode = "randomColor";
+    clients.emit('randomColor', data);
   });
 
   conductor.on('switchPainting', function (data){
@@ -99,6 +100,22 @@ conductor.on('connection', function (conductor) {
     }
     clients.emit('switchPainting', data);
   });
+
+  conductor.on('toggleStrobe', function (data){
+    var clients = io.of('/client');
+    if (data.strobe) {
+      state.strobe = true;
+    } else if (!data.toggleStrobe) {
+      state.strobe = false;
+    }
+    clients.emit('toggleStrobe');
+  });
+
+  conductor.on('newFadeTime', function (data) {
+    var clients = io.of('/client');
+    clients.emit('newFadeTime', data);
+  })
+  
 });
 
 //////////////////////////////////////////
@@ -109,18 +126,18 @@ clients.on('connection', function (client) {
   var clients = io.of('/client');
   state.connections += 1;
 
-  canvas.emit('newBrush',{brushId: client.id});
+//  canvas.emit('newBrush',{brushId: client.id});
   // fireworks.emit('newBrush',{brushId: client.id});
 
   client.emit("welcome", {
     id: client.id,
-    message: "You're a client on team " + team + "!",
-    mode: state.mode
+    message: 'Connected.',
+    mode: state.mode,
+    strobe: state.strobe
   });
 
   client.on('paint', function (data){
     canvas.emit('paint',data);
-    // fireworks.emit('paint', data);
     console.log('client.on(paint)');
   });
 
@@ -136,20 +153,16 @@ clients.on('connection', function (client) {
     // canvas.emit('refresh', data);
     // client.emit("welcome", {
     //   id: client.id,
-    //   message: "You're a client on team " + team + "!",
     //   mode: state.mode
     // });
-  })
+  });
 
   client.on('gyro', function (data){
-    // canvas.emit('gyro', data);
     fireworks.emit('gyro', data);
-    console.log(data);
   });
 
   client.on('audio', function (data){
     console.log(data);
-    // canvas.emit('audio',data);
     fireworks.emit('audio',data);
   });
 });

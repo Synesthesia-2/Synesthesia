@@ -20,6 +20,7 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.server.on('removeMotionListener', this.removeMotionListener.bind(this));
     this.server.on('setClientDetails', this.setClientDetails.bind(this));
     this.server.on('toggleStrobe', this.toggleStrobe.bind(this));
+    this.server.on('newFadeTime', this.newFadeTime.bind(this));
     this.emitGyro = this.emitGyro.bind(this); // bind for context
     this.onDeviceMotion = this.onDeviceMotion.bind(this);
   },
@@ -27,6 +28,15 @@ ClientSpace.ShowView = Backbone.View.extend({
   render: function() {
     this.$el.html( this.template() );
     return this;
+  },
+
+  newFadeTime: function(data) {
+    this.fadeTime = data.fadeTime;
+    if (this.strobeInt !== null) {
+      clearInterval(this.strobeInt);
+      this.strobeInt = null;
+      this.strobe(true);
+    }
   },
 
   setClientDetails: function(data) {
@@ -47,15 +57,19 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   updateBackgroundColor: function(data) {
-    if (this.strobeInt !== null) {
-      clearInterval(this.strobeInt);
-    }
+    // if (this.strobeInt !== null) {
+
+    //   clearInterval(this.strobeInt);
+    //   this.strobeInt = null;
+    // }
     this.currentColor = data.color;
     this.fadeTime = parseFloat(data.fadeTime);
     this.removeMotionListener(false);
     this.$el.animate({
       backgroundColor: this.currentColor
     }, this.fadeTime);
+    // if (this.model.get('strobe')) {
+    // }
   },
 
   strobe: function(on) {
@@ -77,7 +91,7 @@ ClientSpace.ShowView = Backbone.View.extend({
     } else {
       console.log('off');
       clearInterval(this.strobeInt);
-      this.$el.css({ 'backgroundColor': this.currentColor });
+      this.strobeInt = null;
     }
   },
 

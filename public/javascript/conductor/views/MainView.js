@@ -24,6 +24,7 @@ ConductorSpace.MainView = Backbone.View.extend({
     var rounded = this.fadeTime / 1000;
     rounded = rounded.toFixed(1);
     $('#fadeTimeText').text('FADE: ' + rounded + ' Seconds');
+    this.model.sendNewFadeTime(this.fadeTime);
   },
 
   sendColor: function(e) {
