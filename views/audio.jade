@@ -1,0 +1,16 @@
+doctype 5
+html
+  head
+    title Audio Input - Kinetech Performance
+    meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
+    link(rel='stylesheet', href='/bower_components/normalize-css/normalize.css')
+    link(rel='stylesheet', href='/stylesheets/audio.css')
+
+    script(src="/socket.io/socket.io.js")
+    script(src="bower_components/jquery/jquery.min.js")
+    script(src="bower_components/angular/angular.min.js")
+
+  body
+    div#content
+      h1 Click "allow" above to enable audio.
+    script(src="javascript/audio.js")

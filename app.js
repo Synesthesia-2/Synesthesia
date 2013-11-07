@@ -8,6 +8,7 @@ var canvas = io.of('/canvas');
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
+var audio = io.of('/audio');
 var state = {
   connections: 0,
   mode: "default"
@@ -40,6 +41,10 @@ app.get('/canvas', function (req, res) {
 
 app.get('/fireworks', function (req, res) {
   res.render('fireworks');
+});
+
+app.get('/audio', function (req, res) {
+  res.render('audio');
 });
 
 //////////////////////////////////////////
@@ -89,6 +94,10 @@ conductor.on('connection', function (conductor) {
     clients.emit('randomColor', {color: data.color});
   });
 
+  conductor.on('startAudio', function (data){
+    audio.emit('startAudio',data);
+  });
+
   conductor.on('switchPainting', function (data){
     var clients = io.of('/client');
     if (data.paint) {
@@ -114,7 +123,7 @@ clients.on('connection', function (client) {
 
   client.emit("welcome", {
     id: client.id,
-    message: "You're a client on team " + team + "!",
+    message: "welcome!",
     mode: state.mode
   });
 
@@ -147,7 +156,7 @@ clients.on('connection', function (client) {
     console.log(data);
   });
 
-  client.on('audio', function (data){
+  audio.on('audio', function (data){
     console.log(data);
     // canvas.emit('audio',data);
     fireworks.emit('audio',data);

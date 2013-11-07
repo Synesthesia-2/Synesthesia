@@ -1,3 +1,6 @@
+var server = io.connect('/audio');
+var h1 = $('h1');
+
 var contextClass = (window.AudioContext || 
   window.webkitAudioContext || 
   window.mozAudioContext || 
@@ -5,9 +8,8 @@ var contextClass = (window.AudioContext ||
   window.msAudioContext);
 if (contextClass) {
   var audioContext = new contextClass();
-  server.send("audio Context created!"); // For development testing only.
 } else {
-  server.send("web audio is not enabled, sorry."); // For development testing only.
+  h1.text("web audio is not enabled, sorry."); // For development testing only.
 }
 
 var getPeaks = function(array) {
@@ -32,7 +34,9 @@ var getPeaks = function(array) {
 };
 
 var streamLoaded = function(stream) {
+  h1.text("Audio input enabled. Waiting for command from server.")
   var calibrate = function() {
+    h1.text("Calibrating...")
     analyser.smoothingTimeConstant = 0.9;
     var start = new Date().getTime();
     var e = start+4000;
@@ -42,7 +46,7 @@ var streamLoaded = function(stream) {
         console.log("adding filter at " + freq);
         var filter = audioContext.createBiquadFilter();
         filter.type = filter.PEAKING;
-        filter.gain.value = data.avg-ptAvg;
+        filter.gain.value = (data.avg-ptAvg)*0.7;
         filter.connect(analyser);
         var lastFilter = dynamicFilters.length;
         if (lastFilter) {
@@ -81,14 +85,15 @@ var streamLoaded = function(stream) {
   };
 
   var process = function(){
+    h1.text('Streaming started.')
     analyser.smoothingTimeConstant = 0;
     setInterval(function(){
       analyser.getFloatFrequencyData(FFTData);
       var targetRange = findMaxWithIndex(FFTData);
       var volume = targetRange[1][1];
       var hz = convertToHz(targetRange);
-      state.volume = volume;
-      state.hz = hz;
+      // state.volume = volume;
+      // state.hz = hz;
       var data = {
         hz: hz,
         volume: volume
@@ -96,28 +101,6 @@ var streamLoaded = function(stream) {
       if (volume > threshold) { server.emit("audio",data); }
     },60);
   };
-
-  /* Kicks are detected when the amplitude (normalized 
-  values between 0 and 1) of a specified frequency, or 
-  the max amplitude over a range, is greater than the 
-  minimum threshold, as well as greater than the previously 
-  registered kick's amplitude, which is decreased by the 
-  decay rate per frame.
-
-  createKick( options ) creates a new kick instance tied 
-  to the dancer instance, with an options object passed 
-  as an argument. Options listed below.
-  frequency the frequency (element of the spectrum) to 
-  check for a spike. Can be a single frequency (number) 
-  or a range (2 element array) that uses the frequency 
-  with highest amplitude. Default: [ 0, 10 ]
-  threshold the minimum amplitude of the frequency range 
-  in order for a kick to occur. Default: 0.3
-  decay the rate that the previously registered kick's 
-  amplitude is reduced by on every frame. Default: 0.02
-  onKick the callback to be called when a kick is detected.
-  offKick the callback to be called when there is no kick 
-  on the current frame.*/
 
   var findMaxWithIndex = function(array) {
     var max = Math.max.apply(Math, array);
@@ -157,9 +140,37 @@ var streamLoaded = function(stream) {
   hiPass.connect(loPass);
   loPass.connect(loShelf);
   loShelf.connect(analyser);
-  calibrate();
-  setTimeout(process, 6000);
+  server.on("startAudio",function() {
+    calibrate();
+    setTimeout(process, 4500);
+  });
 };
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
 navigator.getUserMedia( {audio:true}, streamLoaded );
+
+
+
+
+/* Kicks are detected when the amplitude (normalized 
+  values between 0 and 1) of a specified frequency, or 
+  the max amplitude over a range, is greater than the 
+  minimum threshold, as well as greater than the previously 
+  registered kick's amplitude, which is decreased by the 
+  decay rate per frame.
+
+  createKick( options ) creates a new kick instance tied 
+  to the dancer instance, with an options object passed 
+  as an argument. Options listed below.
+  frequency the frequency (element of the spectrum) to 
+  check for a spike. Can be a single frequency (number) 
+  or a range (2 element array) that uses the frequency 
+  with highest amplitude. Default: [ 0, 10 ]
+  threshold the minimum amplitude of the frequency range 
+  in order for a kick to occur. Default: 0.3
+  decay the rate that the previously registered kick's 
+  amplitude is reduced by on every frame. Default: 0.02
+  onKick the callback to be called when a kick is detected.
+  offKick the callback to be called when there is no kick 
+  on the current frame.*/
+
