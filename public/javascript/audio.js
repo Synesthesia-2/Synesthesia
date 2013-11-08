@@ -27,25 +27,17 @@ var state = {
   threshold: -80
 };
 var server = io.connect('/audio');
+var microphone;
 var hiPass = makeFilter(audioContext,"HIGHPASS",80);
 var loPass = makeFilter(audioContext,"LOWPASS",1200);
-// loShelf not needed with current mic setup, not added to chain.
-var loShelf = makeFilter(audioContext,"LOWSHELF",330,-10);
 var filters = makeFilterChain();
-filters.addFilter(hiPass,loPass);
-var analyser = makeAnalyser(audioContext,2048);
-
-var microphone;
-var analyser = audioContext.createAnalyser();
-analyser.fftSize = 2048;
-analyser.minDecibels = -144;
+var analyser = makeAnalyser(audioContext,2048,-30,-144);
 var FFTData = new Float32Array(analyser.frequencyBinCount);
 FFTData.indexOf = Array.prototype.indexOf;
 analyser.getFloatFrequencyData(FFTData);
-microphone.connect(hiPass);
-hiPass.connect(loPass);
-loPass.connect(analyser);
-// loShelf.connect(analyser);
+filters.addFilter(hiPass,loPass);
+microphone.connect(filters.first);
+filters.connect(analyser);
 
 server.on("welcome",function(data){
   console.log(data);
@@ -74,16 +66,19 @@ var streamLoaded = function(stream) {
 
 var startEmitting = function() {
   state.emitting = true;
+  h1.text("Calibrating...");
   calibrate();
-  setTimeout(process, 4500);
+  setTimeout(function(){
+    h1.text('Emitting audio stream.');
+    process();
+  }, 4500);
 };
 
 var addFilter = function(filter) {
   staticFilters
-}
+} 
 
 var calibrate = function() {
-  h1.text("Calibrating...");
   analyser.smoothingTimeConstant = 0.9;
   var start = new Date().getTime();
   var e = start+4000;
@@ -140,7 +135,6 @@ var calibrate = function() {
 };
 
 var process = function(){
-  h1.text('Emitting audio stream.');
   analyser.smoothingTimeConstant = 0;
   setInterval(function(){
     analyser.getFloatFrequencyData(FFTData);
