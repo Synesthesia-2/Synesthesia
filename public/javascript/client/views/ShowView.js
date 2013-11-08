@@ -41,9 +41,14 @@ ClientSpace.ShowView = Backbone.View.extend({
 
   setClientDetails: function(data) {
     this.model.set('strobe', data.strobe);
-    this.model.set('brushId', data.id);
     this.model.set('mode', data.mode);
+<<<<<<< HEAD
     this.strobe(false);
+=======
+    if (!this.model.get('brushId')){
+      this.model.set('brushId', data.id);
+    };
+>>>>>>> master
   },
 
   toggleStrobe: function() {
