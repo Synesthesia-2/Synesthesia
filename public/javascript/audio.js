@@ -1,10 +1,12 @@
 var server = io.connect('/audio');
 var h1 = $('h1');
 
-var contextClass = (window.AudioContext || 
-  window.webkitAudioContext || 
-  window.mozAudioContext || 
-  window.oAudioContext || 
+var soundInterval = null;
+
+var contextClass = (window.AudioContext ||
+  window.webkitAudioContext ||
+  window.mozAudioContext ||
+  window.oAudioContext ||
   window.msAudioContext);
 if (contextClass) {
   var audioContext = new contextClass();
@@ -34,9 +36,9 @@ var getPeaks = function(array) {
 };
 
 var streamLoaded = function(stream) {
-  h1.text("Audio input enabled. Waiting for command from server.")
+  h1.text("Audio input enabled. Waiting for command from server.");
   var calibrate = function() {
-    h1.text("Calibrating...")
+    h1.text("Calibrating...");
     analyser.smoothingTimeConstant = 0.9;
     var start = new Date().getTime();
     var e = start+4000;
@@ -85,9 +87,9 @@ var streamLoaded = function(stream) {
   };
 
   var process = function(){
-    h1.text('Streaming started.')
+    h1.text('Streaming started.');
     analyser.smoothingTimeConstant = 0;
-    setInterval(function(){
+    soundInterval = setInterval(function(){
       analyser.getFloatFrequencyData(FFTData);
       var targetRange = findMaxWithIndex(FFTData);
       var volume = targetRange[1][1];
@@ -140,9 +142,15 @@ var streamLoaded = function(stream) {
   hiPass.connect(loPass);
   loPass.connect(loShelf);
   loShelf.connect(analyser);
-  server.on("startAudio",function() {
-    calibrate();
-    setTimeout(process, 4500);
+  
+  server.on("startAudio", function(data) {
+    if (data.sound) { // toggle on
+      calibrate();
+      setTimeout(process, 4500);
+    } else { // toggle off
+      clearInterval(soundInterval);
+      h1.text('Audio stream paused by controller.');
+    }
   });
 };
 

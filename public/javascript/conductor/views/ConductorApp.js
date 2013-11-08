@@ -14,11 +14,17 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.model.on('changeColor', this.sendColor.bind(this));
     this.model.on('randomColor', this.randomColor.bind(this));
     this.model.on('newFadeTime', this.newFadeTime.bind(this));
+
+    this.server.on('resetSelf', this.resetSelf.bind(this));
   },
 
   render: function(){
     this.$el.html( this.template() );
     return this;
+  },
+
+  resetSelf: function() {
+    this.model.reset();
   },
 
   toggleStrobe: function(data) {

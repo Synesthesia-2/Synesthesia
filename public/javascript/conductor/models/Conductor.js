@@ -18,6 +18,13 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     }
   },
 
+  reset: function() {
+    this.initialize();
+    $('#toggleSound').removeClass('toggled');
+    $('#togglePaint').removeClass('toggled');
+    $('#toggleStrobe').removeClass('toggled');
+  },
+
   sendNewFadeTime: function(newFadeTime) {
     this.trigger('newFadeTime', { fadeTime: newFadeTime });
   },

@@ -12,7 +12,8 @@ var audio = io.of('/audio');
 var state = {
   strobe: false,
   connections: 0,
-  mode: "default"
+  mode: "default",
+  audio: false
 };
 
 app.set('views', __dirname + '/views');
@@ -79,8 +80,11 @@ fireworks.on('connection', function (firework) {
 //////////////////////////////////////////
 
 conductor.on('connection', function (conductor) {
+  // reset on connection
+  state.audio = false;
+  state.strobe = false;
 
-  conductor.emit("welcome", "You're a conductor!");
+  conductor.emit("welcome");
 
   conductor.on('changeColor',function (data){
     var clients = io.of('/client');
@@ -95,7 +99,8 @@ conductor.on('connection', function (conductor) {
   });
 
   conductor.on('toggleSound', function (data){
-    audio.emit('startAudio',data);
+    state.audio = data.sound;
+    audio.emit('startAudio', data);
   });
 
   conductor.on('switchPainting', function (data){
@@ -141,7 +146,7 @@ clients.on('connection', function (client) {
     id: client.id,
     message: "welcome!",
     mode: state.mode,
-    strobe: state.strobe
+    strobe: false
   });
 
   client.on('paint', function (data){
@@ -174,8 +179,10 @@ clients.on('connection', function (client) {
 audio.on('connection', function (audio) {
 
   audio.on('audio', function (data){
+    var clients = io.of('/client');
     console.log(data);
-    fireworks.emit('audio',data);
+    clients.emit('audio', data);
+    fireworks.emit('audio', data);
   });
 
 });

@@ -10,7 +10,7 @@ ClientSpace.Server = Backbone.Model.extend({
     this.connection.on('switchPainting', this.routePaintSwitch.bind(this));
     this.connection.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.connection.on('newFadeTime', this.newFadeTime.bind(this));
-
+    this.connection.on('audio', this.audioColor.bind(this));
   },
 
   setID: function(data) {
@@ -41,6 +41,10 @@ ClientSpace.Server = Backbone.Model.extend({
 
   newFadeTime: function(data) {
     this.trigger('newFadeTime', data);
+  },
+
+  audioColor: function(data) {
+    console.log(data);
   },
 
   emit: function(event, data) {
