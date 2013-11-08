@@ -4,6 +4,7 @@
 // Under this setup most inputs should avg between -40 and -5 dB.
 var server = io.connect('/audio');
 var h1 = $('h1');
+var streaming = false;
 
 var contextClass = (window.AudioContext || 
   window.webkitAudioContext || 
@@ -38,9 +39,25 @@ var getPeaks = function(array) {
 };
 
 var streamLoaded = function(stream) {
-  h1.text("Audio input enabled. Waiting for command from server.")
+  h1.text("Audio input enabled. Waiting for command from server.");
+  server.on("welcome",function(data){
+    if (data.start && !streaming) {
+      streaming = true;
+      startStreaming();
+    }
+  });
+  server.on("startAudio",function() {
+    if (!streaming) {
+      streaming = true;
+      startStreaming();
+    }
+  });
+  var startStreaming = function() {
+    calibrate();
+    setTimeout(process, 4500);
+  };
   var calibrate = function() {
-    h1.text("Calibrating...")
+    h1.text("Calibrating...");
     analyser.smoothingTimeConstant = 0.9;
     var start = new Date().getTime();
     var e = start+4000;
@@ -153,10 +170,6 @@ var streamLoaded = function(stream) {
   hiPass.connect(loPass);
   loPass.connect(analyser);
   // loShelf.connect(analyser);
-  server.on("startAudio",function() {
-    calibrate();
-    setTimeout(process, 4500);
-  });
 };
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;

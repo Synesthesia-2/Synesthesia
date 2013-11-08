@@ -10,6 +10,7 @@ var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
 var audio = io.of('/audio');
 var state = {
+  audioInput: false,
   strobe: false,
   connections: 0,
   mode: "default"
@@ -168,14 +169,15 @@ clients.on('connection', function (client) {
   client.on('gyro', function (data){
     fireworks.emit('gyro', data);
   });
-
 });
 
 audio.on('connection', function (audio) {
-
+  audio.emit("welcome", {
+    id: audio.id,
+    start: state.audioInput
+  });
   audio.on('audio', function (data){
     console.log(data);
     fireworks.emit('audio',data);
   });
-
 });
