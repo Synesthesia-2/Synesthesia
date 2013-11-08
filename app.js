@@ -147,7 +147,7 @@ clients.on('connection', function (client) {
 
   client.on('paint', function (data){
     canvas.emit('paint',data);
-    console.log('client.on(paint)');
+    console.log(data);
   });
 
   client.on('refresh', function (data){
