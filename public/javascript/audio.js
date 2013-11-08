@@ -28,17 +28,8 @@ var inputEnabled = false;
 var emitting = false;
 var server = io.connect('/audio');
 var threshold = -80;
-
-var makeFilter = function(context,type,freq,q,gain) {
-  if (!context) { throw "context required"; }
-  if (!type || typeof(type) !== "string") { throw "type must be string"; }
-  var filter = context.createBiquadFilter();
-  filter.type = filter[type];
-  if (freq) { filter.frequency.value = freq; }
-  if (q) { filter.Q.value = q; }
-  if (gain) { filter.gain.value = gain; }
-  return filter;
-};
+var filters = [];
+var hiPass = makeFilter(audioContext,"highpass",80);
 
 var filters = [];
 var microphone;
