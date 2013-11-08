@@ -9,7 +9,7 @@ var makeFilter = function(context,type,freq,gain,q) {
   return filter;
 };
 
-var filterChain = function(){
+var makeFilterChain = function(){
   var chain = {
     first: null,
     last: null,
@@ -41,6 +41,20 @@ var filterChain = function(){
     return this;
   };
   return chain;
+};
+
+var makeAnalyser = function(context,fftSize,maxdec,mindec,smoothing) {
+  if (arguments.length === 3) {
+    smoothing = maxdec;
+    maxdec = undefined;
+  }
+  if (!context) {throw new Error("context argument required");}
+  var analyser = context.createAnalyser();
+  if (fftSize) {analyser.fftSize = fftSize;}
+  if (maxdec) {analyser.maxDecibels = maxdec;}
+  if (mindec) {analyser.minDecibels = mindec;}
+  if (smoothing) {analyser.smoothingTimeConstant = smoothing;}
+  return analyser;
 };
 
 // // HOW TO USE THESE HELPER FUNCTIONS:

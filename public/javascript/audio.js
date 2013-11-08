@@ -1,12 +1,8 @@
-// 1. make filter-creating function
-// 2. build addFilter function that adds to filter array
 // 3. Refactor dynamic filter adding to use addFilter
 // 4. Fix microphone hooking-up
 // 5. Test stream loading
 // 6. Move helper functions out if possible.
 // 7. Gist for making filters
-
-
 
 // Tip: If you have access to soundcard settings, adjust input gain so that microphone input
 // averages between 50% and 75% on soundcard.
@@ -23,28 +19,24 @@ if (contextClass) {
 } else {
   h1.text("web audio is not enabled, sorry."); // For development testing only.
 }
-var serverReady = false;
-var inputEnabled = false;
-var emitting = false;
-var server = io.connect('/audio');
-var threshold = -80;
-var filters = [];
-var hiPass = makeFilter(audioContext,"highpass",80);
 
-var filters = [];
+var state = {
+  serverReady: false,
+  inputEnabled: false,
+  emitting: false,
+  threshold: -80
+};
+var server = io.connect('/audio');
+var hiPass = makeFilter(audioContext,"HIGHPASS",80);
+var loPass = makeFilter(audioContext,"LOWPASS",1200);
+// loShelf not needed with current mic setup, not added to chain.
+var loShelf = makeFilter(audioContext,"LOWSHELF",330,-10);
+var filters = makeFilterChain();
+filters.addFilter(hiPass,loPass);
+var analyser = makeAnalyser(audioContext,2048);
+
 var microphone;
 var analyser = audioContext.createAnalyser();
-var hiPass = audioContext.createBiquadFilter();
-hiPass.type = hiPass.HIGHPASS;
-hiPass.frequency.value = 80;
-var loPass = audioContext.createBiquadFilter();
-loPass.type = loPass.LOWPASS;
-loPass.frequency.value = 1200;
-// Not needed with our current mic setup
-// var loShelf = audioContext.createBiquadFilter();
-// loShelf.type = loShelf.LOWSHELF;
-// loShelf.frequency.value = 330;
-// loShelf.gain.value = -10;
 analyser.fftSize = 2048;
 analyser.minDecibels = -144;
 var FFTData = new Float32Array(analyser.frequencyBinCount);
@@ -57,15 +49,15 @@ loPass.connect(analyser);
 
 server.on("welcome",function(data){
   console.log(data);
-  if (data.start && !serverReady) {
-    serverReady = true;
+  if (data.start && !state.serverReady) {
+    state.serverReady = true;
   }
 });
 server.on("startAudio",function() {
-  if (!serverReady) {
-    serverReady = true;
+  if (!state.serverReady) {
+    state.serverReady = true;
   }
-  if (!emitting && inputEnabled) {
+  if (!state.emitting && state.inputEnabled) {
     startEmitting();
   }
 });
@@ -75,13 +67,13 @@ navigator.getUserMedia( {audio:true}, streamLoaded);
 
 var streamLoaded = function(stream) {
   h1.text("Audio input enabled. Waiting for command from server.");
-  inputEnabled = true;
+  state.inputEnabled = true;
   microphone = audioContext.createMediaStreamSource(stream);
-  if (serverReady) { startEmitting(); }
+  if (state.serverReady) { startEmitting(); }
 };
 
 var startEmitting = function() {
-  emitting = true;
+  state.emitting = true;
   calibrate();
   setTimeout(process, 4500);
 };
@@ -141,7 +133,7 @@ var calibrate = function() {
       } else if (data.avg > -40) {
         offset = 0;
       }
-      threshold = data.avg+offset;
+      state.threshold = data.avg+offset;
     }
   };
   analyze();
@@ -161,7 +153,7 @@ var process = function(){
       hz: hz,
       volume: volume
     };
-    if (volume > threshold) { server.emit("audio",data); }
+    if (volume > state.threshold) { server.emit("audio",data); }
   },60);
 };
 
