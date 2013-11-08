@@ -1,3 +1,7 @@
+// Tip: If you have access to soundcard settings, adjust input gain so that microphone input
+// averages between 50% and 75% on soundcard.
+// Good rule of thumb for analyser is that -100dB is a very quiet room and 0 is a loud input.
+// Under this setup most inputs should avg between -40 and -5 dB.
 var server = io.connect('/audio');
 var h1 = $('h1');
 
@@ -41,12 +45,14 @@ var streamLoaded = function(stream) {
     var start = new Date().getTime();
     var e = start+4000;
     var results = [];
+    var offset = 20;
     var analyze = function(){
       var addFilter = function(freq) {
-        console.log("adding filter at " + freq);
+        console.log("adding filter at " + freq,data.avg);
         var filter = audioContext.createBiquadFilter();
         filter.type = filter.PEAKING;
         filter.gain.value = (data.avg-ptAvg)*0.7;
+        filter.Q.value = 1;
         filter.connect(analyser);
         var lastFilter = dynamicFilters.length;
         if (lastFilter) {
@@ -54,8 +60,9 @@ var streamLoaded = function(stream) {
           dynamicFilters[lastFilter-1].connect(filter);
           dynamicFilters.push(filter);
         } else {
-          loShelf.disconnect(analyser);
-          loShelf.connect(filter);
+          // the last static filter in line to the analyser
+          loPass.disconnect(analyser);
+          loPass.connect(filter);
           dynamicFilters.push(filter);
         }
       };
@@ -78,7 +85,12 @@ var streamLoaded = function(stream) {
             addFilter(f);
           }
         }
-        threshold = data.avg+20;
+        if (data.avg >= -60 && data.avg <= -40) {
+          offset = 10;
+        } else if (data.avg > -40) {
+          offset = 0;
+        }
+        threshold = data.avg+offset;
       }
     };
     analyze();
@@ -123,14 +135,15 @@ var streamLoaded = function(stream) {
   var analyser = audioContext.createAnalyser();
   var hiPass = audioContext.createBiquadFilter();
   hiPass.type = hiPass.HIGHPASS;
-  hiPass.frequency.value = 200;
+  hiPass.frequency.value = 80;
   var loPass = audioContext.createBiquadFilter();
   loPass.type = loPass.LOWPASS;
   loPass.frequency.value = 1200;
-  var loShelf = audioContext.createBiquadFilter();
-  loShelf.type = loShelf.LOWSHELF;
-  loShelf.frequency.value = 330;
-  loShelf.gain.value = -10;
+  // Not needed with our current mic setup
+  // var loShelf = audioContext.createBiquadFilter();
+  // loShelf.type = loShelf.LOWSHELF;
+  // loShelf.frequency.value = 330;
+  // loShelf.gain.value = -10;
   analyser.fftSize = 2048;
   analyser.minDecibels = -144;
   var FFTData = new Float32Array(analyser.frequencyBinCount);
@@ -138,8 +151,8 @@ var streamLoaded = function(stream) {
   analyser.getFloatFrequencyData(FFTData);
   microphone.connect(hiPass);
   hiPass.connect(loPass);
-  loPass.connect(loShelf);
-  loShelf.connect(analyser);
+  loPass.connect(analyser);
+  // loShelf.connect(analyser);
   server.on("startAudio",function() {
     calibrate();
     setTimeout(process, 4500);
