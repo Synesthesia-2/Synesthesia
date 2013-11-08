@@ -71,7 +71,6 @@ canvas.on('refresh', function (canvas){
 });
 
 fireworks.on('connection', function (firework) {
-  console.log("new firework connected!!!!!!!!!");
   firework.emit("welcome", "You're a fireworks!");
 });
 
@@ -95,7 +94,7 @@ conductor.on('connection', function (conductor) {
     clients.emit('randomColor', data);
   });
 
-  conductor.on('startAudio', function (data){
+  conductor.on('toggleSound', function (data){
     audio.emit('startAudio',data);
   });
 
@@ -170,8 +169,13 @@ clients.on('connection', function (client) {
     fireworks.emit('gyro', data);
   });
 
+});
+
+audio.on('connection', function (audio) {
+
   audio.on('audio', function (data){
     console.log(data);
     fireworks.emit('audio',data);
   });
+
 });
