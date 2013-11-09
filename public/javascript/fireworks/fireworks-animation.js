@@ -102,11 +102,16 @@ function initialize (data) {
 		var filterFreq = moving_avg*data.hz +(1-moving_avg)*lastX;
 		lastX = filterFreq;
 		tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-3.75;
+		if (tempX>2.5) {tempX=2.3;}
+		else if (tempX<-2.5) {tempX=-2.3;}
 
 		lastY = lastY || 0;
 		var filterVol = moving_avg*data.volume +(1-moving_avg)*lastY;
 		lastY = filterVol;
 		tempY = 0.05*(filterVol+30);
+		if (tempY>1) {tempY=0.9;}
+		else if (tempY<-1) {tempY=-0.9;}
+
 		touches[0] = tempY;
 		touches[1] = tempX;
 		console.log('Yes:', data.volume);
