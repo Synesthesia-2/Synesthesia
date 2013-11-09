@@ -3,30 +3,40 @@
 }
 html,
 body {
-  height: 100%;
   width: 100%;
   overflow: hidden;
   padding: 0;
   margin: 0;
-  background-color: #e02443;
-  min-height: 370px;
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #e02443), color-stop(100%, #8f0d23));
+  background: -webkit-radial-gradient(center, ellipse cover, #e02443 0%, #8f0d23 100%);
+  background: radial-gradient(ellipse at center, #e02443 0%, #8f0d23 100%);
 }
 h1 {
+  margin: 0;
+  padding: 10px 0 10px 0;
+  text-align: center;
+  color: #fff;
+  text-decoration: underline;
+  padding-bottom: 5px;
+}
+h2 {
   margin: 0;
   padding: 0;
   text-align: center;
   color: #fff;
 }
+h3 {
+  margin: 0;
+  padding: 10px 0 0px 0;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+}
 .mainPage {
-  background-color: #000;
   height: 100%;
   width: 100%;
-  margin-bottom: 40px;
 }
 #container {
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #e02443), color-stop(100%, #8f0d23));
-  background: -webkit-radial-gradient(center, ellipse cover, #e02443 0%, #8f0d23 100%);
-  background: radial-gradient(ellipse at center, #e02443 0%, #8f0d23 100%);
   left: 0;
   right: 0;
   height: 100%;
@@ -52,7 +62,6 @@ header p {
   font-size: 18px;
   color: #fff;
   text-align: center;
-  font-weight: 400;
 }
 header p.showTitle {
   font-size: 22px;
@@ -75,6 +84,76 @@ button:active {
   border-top: 2px solid #bbb;
   color: #ddd;
   background-color: #e02443;
+}
+.about {
+  padding: 10px 20px 10px 20px;
+}
+.about .about-text {
+  color: #fff;
+  font-size: 18px;
+}
+.about img {
+  border-radius: 20px;
+  width: 80%;
+  margin-left: 10%;
+}
+.shows {
+  padding: 10px 20px 10px 20px;
+}
+.shows a {
+  text-decoration: none;
+  padding: 0;
+  color: #fff;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  border-top: 1px solid #999;
+  padding-top: 10px;
+}
+.shows a p {
+  padding: 0 0 10px 0;
+  margin: 0;
+}
+.shows a p.what {
+  font-size: 16px;
+  font-weight: 800;
+}
+.cast {
+  padding: 10px 10px 10px 10px;
+}
+.cast h2 {
+  padding: 10px 0 10px 0;
+}
+.cast div.castMember {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #999;
+  padding-bottom: 10px;
+}
+.cast div.castMember img {
+  float: left;
+  border: 2px solid #fff;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  margin-top: 3px;
+}
+.cast div.castMember p {
+  color: #fff;
+  padding: 0;
+  margin: 5px 0 0 0;
+}
+.cast div.castMember p.castName {
+  font-size: 20px;
+  font-weight: 800;
+  margin-top: 0px;
+}
+.cast div.castMember p.role {
+  font-size: 14px;
+  font-weight: 800;
+}
+.cast div.castMember p.bio {
+  font-size: 12px;
 }
 #wrapper {
   position: fixed;
