@@ -20,7 +20,6 @@ var offset = 0,
 	cw,
 	ch,
 	cr = 0, cg = 0, cb = 0,
-	intensityTimeout,
 	tr, tg, tb,
 	px, py, pz,
 	rndX = 0,
@@ -34,7 +33,6 @@ var offset = 0,
 	totalLines = 60000,
 	renderMode = 0,
 	numLines = totalLines,
-	then=0,
 	lastX,
 	lastY=[],
 	aZ,
@@ -44,38 +42,58 @@ var offset = 0,
 function initialize (data) {
 
 	//when initialized by audio data
-	if (data.hz && data.volume>-85) {
+	if (data.hz && data.volume>-40) {
 		numLines = Math.floor((5000/7)*data.volume) + 65000;
 		if (numLines>totalLines) {numLines=totalLines;}
 		
-		if (data.hz%55<2) {
+		if (data.hz%38.9<2) {
 			cr=255/256;
-			cg=0;
-			cb=255/256;
-		} else if (data.hz%62<2) {
+			cg=51/256;
+			cb=51/256;
+		} else if (data.hz%41.2<2) {
 			cr=255/256;
-			cg=165/256;
-			cb=0;
-		} else if (data.hz%65<2) {
-			cr=34/256;
+			cg=153/256;
+			cb=51/256;
+		} else if (data.hz%43.6<2) {
+			cr=255/256;
 			cg=255/256;
-			cb=34/256;
-		} else if (data.hz%73<2) {
-			cr=187/256;
-			cg=0;
+			cb=51/256;
+		} else if (data.hz%46.2<2) {
+			cr=153/256;
+			cg=255/256;
+			cb=51/256;
+		} else if (data.hz%49.0<2) {
+			cr=51/256;
+			cg=255/256;
+			cb=51/256;
+		} else if (data.hz%51.9<2) {
+			cr=51/256;
+			cg=255/256;
+			cb=153/256;
+		} else if (data.hz%55.0<2) {
+			cr=51/256;
+			cg=255/256;
 			cb=255/256;
-		} else if (data.hz%41<2) {
-			cr=255/256;
-			cg=0;
-			cb=0;
-		} else if (data.hz%44<2) {
-			cr=255/256;
-			cg=187/256;
-			cb=0;
-		} else if (data.hz%49<2) {
-			cr=85/256;
-			cg=85/256;
+		} else if (data.hz%58.3<2) {
+			cr=51/256;
+			cg=153/256;
 			cb=255/256;
+		} else if (data.hz%61.7<2) {
+			cr=51/256;
+			cg=51/256;
+			cb=255/256;
+		} else if (data.hz%65.4<2) {
+			cr=153/256;
+			cg=51/256;
+			cb=255/256;
+		} else if (data.hz%69.3<2) {
+			cr=255/256;
+			cg=51/256;
+			cb=255/256;
+		} else if (data.hz%73.4<2) {
+			cr=255/256;
+			cg=51/256;
+			cb=153/256;
 		}
 
 		var tempX, tempY;
@@ -88,9 +106,13 @@ function initialize (data) {
 		lastY = lastY || 0;
 		var filterVol = moving_avg*data.volume +(1-moving_avg)*lastY;
 		lastY = filterVol;
-		tempY = (filterVol/30)+2;
+		tempY = 0.05*(filterVol+30);
 		touches[0] = tempY;
 		touches[1] = tempX;
+		console.log('Yes:', data.volume);
+	} else if (data.hz && data.volume<-40) {
+		touches = [];
+		console.log('No:',data.volume);
 	}
 
 	// When initialized by gyro data:
@@ -557,7 +579,7 @@ function loadScene()
 }
 
 function onKey( e ) {
-	setRenderMode( ++renderMode % 4 );
+	setRenderMode( ++renderMode % 2 );
 }
 
 function setRenderMode( n ) {
@@ -569,12 +591,12 @@ function setRenderMode( n ) {
 	case 1: // triangle strip
 		numLines = 600;
 		break;
-	case 2: // lines strip
-		numLines = 7000;
-		break;
-	case 3: // quad strip
-		numLines = 400;
-		break;
+	// case 2: // lines strip
+	// 	numLines = 7000;
+	// 	break;
+	// case 3: // quad strip
+	// 	numLines = 400;
+	// 	break;
 	}
 }
 // }());
