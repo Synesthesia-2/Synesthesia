@@ -153,25 +153,11 @@ var streamLoaded = function(stream) {
   analyser.getFloatFrequencyData(FFTData);
   microphone.connect(hiPass);
   hiPass.connect(loPass);
-<<<<<<< HEAD
-  loPass.connect(loShelf);
-  loShelf.connect(analyser);
-  
-  server.on("startAudio", function(data) {
-    if (data.sound) { // toggle on
-      calibrate();
-      setTimeout(process, 4500);
-    } else { // toggle off
-      clearInterval(soundInterval);
-      h1.text('Audio stream paused by controller.');
-    }
-=======
   loPass.connect(analyser);
   // loShelf.connect(analyser);
   server.on("startAudio",function() {
     calibrate();
     setTimeout(process, 4500);
->>>>>>> master
   });
 };
 
