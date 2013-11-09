@@ -6,7 +6,8 @@ ConductorSpace.MainView = Backbone.View.extend({
     'change #fader' : 'updateFadeTime',
     'click #toggleSound' : 'toggleSound',
     'click #togglePaint' : 'togglePaint',
-    'click #toggleStrobe' : 'toggleStrobe'
+    'click #toggleStrobe' : 'toggleStrobe',
+    'click #toggleAudioLights' : 'toggleAudioLights'
   },
 
   initialize: function() {
@@ -47,6 +48,11 @@ ConductorSpace.MainView = Backbone.View.extend({
 
   toggleStrobe: function() {
     this.model.toggleStrobe();
+  },
+
+  toggleAudioLights: function() {
+    $('.color .random')
+    this.model.toggleAudioLights();
   }
 
 });
