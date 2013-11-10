@@ -6,6 +6,7 @@ ClientSpace.Client = Backbone.Model.extend({
   // etc
 
   initialize: function() {
+    // TODO: add all client properties as defaults here for reference.
     this.set('currentShow', 'Synethesia');
     this.set('upcoming', {
       'one': {

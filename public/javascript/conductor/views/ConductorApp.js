@@ -9,7 +9,7 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.router = new ConductorSpace.Router({ el: this.$el.find('#container'), model: this.model });
     Backbone.history.start({pushstate:true});
     this.model.on('toggleSound', this.toggleSound.bind(this));
-    this.model.on('togglePaint', this.togglePaint.bind(this));
+    this.model.on('toggleMotion', this.toggleMotion.bind(this));
     this.model.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.model.on('changeColor', this.sendColor.bind(this));
     this.model.on('randomColor', this.randomColor.bind(this));
@@ -31,8 +31,8 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.server.emit('toggleStrobe', { strobe: data.strobe });
   },
 
-  togglePaint: function(data) {
-    this.server.emit('switchPainting', { paint: data.paint });
+  toggleMotion: function(data) {
+    this.server.emit('toggleMotion', { motion: data.motion });
   },
 
   toggleSound: function(data) {

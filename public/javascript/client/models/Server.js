@@ -7,7 +7,6 @@ ClientSpace.Server = Backbone.Model.extend({
     this.connection.on('welcome', this.setID.bind(this));
     this.connection.on('changeColor', this.setBackgroundColor.bind(this));
     this.connection.on('randomColor', this.randomBackgroundColor.bind(this));
-    this.connection.on('switchPainting', this.routePaintSwitch.bind(this));
     this.connection.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.connection.on('newFadeTime', this.newFadeTime.bind(this));
     this.connection.on('audio', this.audioColor.bind(this));
@@ -15,14 +14,6 @@ ClientSpace.Server = Backbone.Model.extend({
 
   setID: function(data) {
     this.trigger('setClientDetails', data);
-  },
-
-  routePaintSwitch: function(data) {
-    if (data.paint) {
-      this.trigger('initMotionListener');
-    } else {
-      this.trigger('removeMotionListener');
-    }
   },
 
   toggleStrobe: function(data) {

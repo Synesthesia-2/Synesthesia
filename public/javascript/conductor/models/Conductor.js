@@ -2,7 +2,7 @@ ConductorSpace.Conductor = Backbone.Model.extend({
 
   initialize: function() {
     this.set('strobe', false);
-    this.set('paint', false);
+    this.set('motion', false);
     this.set('sound', false);
     this.set('audioLightControl', false);
   },
@@ -14,17 +14,17 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     this.set('sound', sound);
     if (sound) {
       $('#toggleSound').addClass('toggled');
-      $('#toggleSound').text('TOGGLE SOUND OFF');
+      $('#toggleSound').text('STOP SOUND STREAMING');
     } else {
       $('#toggleSound').removeClass('toggled');
-      $('#toggleSound').text('TOGGLE SOUND ON');
+      $('#toggleSound').text('START SOUND STREAMING');
     }
   },
 
   reset: function() {
     this.initialize();
     $('#toggleSound').removeClass('toggled');
-    $('#togglePaint').removeClass('toggled');
+    $('#toggleMotion').removeClass('toggled');
     $('#toggleStrobe').removeClass('toggled');
   },
 
@@ -32,17 +32,17 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     this.trigger('newFadeTime', { fadeTime: newFadeTime });
   },
 
-  togglePaint: function() {
-    var paint = this.get('paint');
-    paint = !paint;
-    this.trigger('togglePaint', { paint: paint });
-    this.set('paint', paint);
-    if (paint) {
-      $('#togglePaint').addClass('toggled');
-      $('#togglePaint').text('TOGGLE PAINT OFF');
+  toggleMotion: function() {
+    var motion = this.get('motion');
+    motion = !motion;
+    this.trigger('toggleMotion', { motion: motion });
+    this.set('motion', motion);
+    if (motion) {
+      $('#toggleMotion').addClass('toggled');
+      $('#toggleMotion').text('STOP MOTION TRACKING');
     } else {
-      $('#togglePaint').removeClass('toggled');
-      $('#togglePaint').text('TOGGLE PAINT ON');
+      $('#toggleMotion').removeClass('toggled');
+      $('#toggleMotion').text('START MOTION TRACKING');
     }
   },
 
@@ -53,10 +53,10 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     this.set('strobe', strobe);
     if (strobe) {
       $('#toggleStrobe').addClass('toggled');
-      $('#toggleStrobe').text('TOGGLE STROBE OFF');
+      $('#toggleStrobe').text('STOP CLIENT LIGHT STROBE');
     } else {
       $('#toggleStrobe').removeClass('toggled');
-      $('#toggleStrobe').text('TOGGLE STROBE ON');
+      $('#toggleStrobe').text('START CLIENT LIGHT STROBE');
     }
   },
 
@@ -67,17 +67,14 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     this.set('audioLightControl', audioLightControl);
     if (audioLightControl) {
       $('#toggleAudioLights').addClass('toggled');
-      $('#toggleAudioLights').text('AUDIO LIGHT SHOW');
+      $('#toggleAudioLights').text('AUDIO LIGHT SHOW CONTROL');
     } else {
       $('#toggleAudioLights').removeClass('toggled');
-      $('#toggleAudioLights').text('MANUAL LIGHT SHOW');
+      $('#toggleAudioLights').text(' MANUAL LIGHT SHOW CONTROL');
     }
   },
 
   sendColor: function(color, fadeTime) {
-    if ($('#togglePaint').hasClass("toggled")) {
-      this.togglePaint();
-    }
     this.trigger('changeColor', { color: color, fadeTime: fadeTime });
   },
 

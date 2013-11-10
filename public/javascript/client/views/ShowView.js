@@ -4,8 +4,6 @@ ClientSpace.ShowView = Backbone.View.extend({
 
   events: {
     'touchend #exitShow': 'exitShow',
-    'touchstart #brushSize' : 'setBrushSize',
-    'touchstart .colorBlock': 'setColor'
   },
 
   initialize: function(params) {
@@ -16,13 +14,9 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.server = params.server;
     this.ip = this.server.get('ip');
     this.server.on('changeBG', this.updateBackgroundColor.bind(this));
-    this.server.on('initMotionListener', this.initMotionListener.bind(this));
-    this.server.on('removeMotionListener', this.removeMotionListener.bind(this));
     this.server.on('setClientDetails', this.setClientDetails.bind(this));
     this.server.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.server.on('newFadeTime', this.newFadeTime.bind(this));
-    this.emitGyro = this.emitGyro.bind(this); // bind for context
-    this.onDeviceMotion = this.onDeviceMotion.bind(this);
   },
 
   render: function() {
@@ -42,7 +36,6 @@ ClientSpace.ShowView = Backbone.View.extend({
   setClientDetails: function(data) {
     this.model.set('strobe', data.strobe);
     this.model.set('mode', data.mode);
-//    this.strobe(false);
     if (!this.model.get('brushId')){
       this.model.set('brushId', data.id);
     }
@@ -143,65 +136,6 @@ ClientSpace.ShowView = Backbone.View.extend({
       clearInterval(this.strobeInt);
       this.strobeInt = null;
     }
-  },
-
-  initMotionListener: function() {
-    console.log('motion on');
-    this.$el.animate({
-      backgroundColor: '#000000'
-    }, 500);
-    this.$el.find('#wrapper').fadeIn(500);
-    window.addEventListener('deviceorientation', this.emitGyro);
-    window.addEventListener('devicemotion', this.onDeviceMotion);
-  },
-
-  removeMotionListener: function() {
-    var that = this;
-    console.log('motion off');
-    this.$el.find('#wrapper').fadeOut(500);
-    this.$el.animate({
-      backgroundColor: that.currentColor
-    }, 500);
-    window.removeEventListener('deviceorientation', this.emitGyro);
-    window.removeEventListener('devicemotion', this.emitGyro);
-  },
-
-  emitGyro: function(event){
-    var alpha = Math.round(event.alpha);
-    var beta = Math.round(event.beta);
-    var gamma = Math.round(event.gamma);
-    var data = {
-      alpha: alpha,
-      beta: beta,
-      gamma: gamma,
-      color: this.model.get('color'),
-      brushSize: this.model.get('brushSize'),
-      brushId: this.model.get('brushId')
-    };
-    this.server.emit('gyro', data);
-  },
-
-  onDeviceMotion: function(event) {
-    var aX = event.acceleration.x;
-    var aY = event.acceleration.y;
-    var aZ = event.acceleration.z;
-    var data = {
-      aX: aX,
-      aY: aY,
-      aZ: aZ,
-      color: client.get('color'),
-      brushSize: client.get('brushSize'),
-      brushId: client.get('brushId')
-    };
-    this.server.emit('paint', data);
-  },
-
-  setBrushSize: function(event) {
-   this.model.set('brushSize', event.target.value);
-  },
-
-  setColor: function(event) {
-    this.model.set('color', event.target.dataset.color);
   },
 
   exitShow: function(event) {

@@ -4,16 +4,17 @@ var http = require('http');
 var server = http.createServer(app);
 server.listen(8080);
 var io = require('socket.io').listen(server);
-var canvas = io.of('/canvas');
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
+var dancer = io.of('/dancer');
 var audio = io.of('/audio');
 var state = {
   strobe: false,
   connections: 0,
   mode: "default",
-  audio: false
+  audio: false,
+  motionTrack: false
 };
 
 app.set('views', __dirname + '/views');
@@ -37,16 +38,16 @@ app.get('/conductor', function (req, res) {
   res.render('conductor');
 });
 
-app.get('/canvas', function (req, res) {
-  res.render('canvas');
-});
-
 app.get('/fireworks', function (req, res) {
   res.render('fireworks');
 });
 
 app.get('/audio', function (req, res) {
   res.render('audio');
+});
+
+app.get('/dancer', function (req, res) {
+  res.render('dancer');
 });
 
 //////////////////////////////////////////
@@ -56,24 +57,26 @@ app.get('/audio', function (req, res) {
 //////////////////////////////////////////
 
 //////////////////////////////////////////
-/// Canvas events
+/// Visualizer events
 //////////////////////////////////////////
 
-canvas.on('connection', function (canvas) {
-  canvas.emit("welcome","You're a canvas!");
-  clients.emit('refresh', {mode: state.mode});
-});
-
-canvas.on('refresh', function (canvas){
-  clients.emit('refresh');
-  clients.on('refresh', function (data){
-    canvas.emit('refresh', data);
-  });
-});
-
 fireworks.on('connection', function (firework) {
-  firework.emit("welcome", "You're a fireworks!");
+  firework.emit("welcome", "Visualizer connected.");
 });
+
+//////////////////////////////////////////
+/// Dancer / Motion Tracker events
+//////////////////////////////////////////
+
+dancer.on('connection', function (dancer) {
+  dancer.emit('welcome', "Connected for motion tracking.");
+
+  dancer.on('motionData', function (data) {
+    fireworks.emit('motionData', data);
+  });
+
+});
+
 
 //////////////////////////////////////////
 /// Conductor events
@@ -103,15 +106,14 @@ conductor.on('connection', function (conductor) {
     audio.emit('startAudio', data);
   });
 
-  conductor.on('switchPainting', function (data){
-    var clients = io.of('/client');
-    if (data.paint) {
-      state.mode = "switchPaintingOn";
+  conductor.on('toggleMotion', function (data){
+    var dancer = io.of('/dancer');
+    if (data.motion) {
+      state.motionTrack = true;
     } else if (!data.paint) {
-      state.mode = "switchPaintingOff";
-      canvas.emit("clearAll");
+      state.motionTrack = false;
     }
-    clients.emit('switchPainting', data);
+    dancer.emit('toggleMotion', data);
   });
 
   conductor.on('toggleStrobe', function (data){
@@ -139,23 +141,11 @@ clients.on('connection', function (client) {
   var clients = io.of('/client');
   state.connections += 1;
 
-//  canvas.emit('newBrush',{brushId: client.id});
-  // fireworks.emit('newBrush',{brushId: client.id});
-
   client.emit("welcome", {
     id: client.id,
     message: "welcome!",
     mode: state.mode,
     strobe: false
-  });
-
-  client.on('paint', function (data){
-    canvas.emit('paint',data);
-    console.log(data);
-  });
-
-  client.on('refresh', function (data){
-    canvas.emit('refresh', data);
   });
 
   client.on('disconnect', function (){
@@ -168,10 +158,6 @@ clients.on('connection', function (client) {
     //   id: client.id,
     //   mode: state.mode
     // });
-  });
-
-  client.on('gyro', function (data){
-    fireworks.emit('gyro', data);
   });
 
 });
