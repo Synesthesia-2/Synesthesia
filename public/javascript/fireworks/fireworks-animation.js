@@ -22,26 +22,46 @@ var offset = 0,
 	cr = 0, cg = 0, cb = 0,
 	tr, tg, tb,
 	px, py, pz,
-	rndX = 0,
-	rndY = 0,
-	rndOn = false,
-	rndSX = 0,
-	rndSY = 0,
-	lastUpdate = 0,
-	IDLE_DELAY = 6000,
+	// rndX = 0,
+	// rndY = 0,
+	// rndOn = false,
+	// rndSX = 0,
+	// rndSY = 0,
+	// lastUpdate = 0,
+	// IDLE_DELAY = 6000,
 	touches = [],
 	totalLines = 60000,
 	renderMode = 0,
 	numLines = totalLines,
-	lastX,
-	lastY=[],
-	aZ,
-	brushSize,
-	brushId;
+	// lastX,
+	// lastY,
+	aZ;
 
 function initialize (data) {
 
-	//when initialized by audio data
+	touches[0] = 0;
+	touches[1] = 0;
+
+	if (data.brushSize) {
+		px = data.alpha;
+		py = data.beta;
+		pz = data.gamma;
+
+		px = (px*(5+Math.random()))%cw;
+		py = (py*(5+Math.random()))%ch;
+		pz *= 5;
+		
+		if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
+			touches[0]=px;
+			touches[1]=py;
+		}
+
+		oa = px;
+		ob = py;
+		og = pz;
+	}
+
+
 	if (data.hz && data.volume>-40) {
 		numLines = Math.floor((5000/7)*data.volume) + 65000;
 		if (numLines>totalLines) {numLines=totalLines;}
@@ -96,89 +116,30 @@ function initialize (data) {
 			cb=153/256;
 		}
 
-		var tempX, tempY;
-		lastX = lastX || 0;
-		var moving_avg = 0.1;
-		var filterFreq = moving_avg*data.hz +(1-moving_avg)*lastX;
-		lastX = filterFreq;
-		tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-3.75;
-		if (tempX>2.5) {tempX=2.3;}
-		else if (tempX<-2.5) {tempX=-2.3;}
+		// The following block exists for when position is purely audio driven (no gyro expected)
+		// var tempX, tempY;
+		// lastX = lastX || 0;
+		// var moving_avg = 0.1;
+		// var filterFreq = moving_avg*data.hz +(1-moving_avg)*lastX;
+		// lastX = filterFreq;
+		// tempX = 1.25*Math.log(filterFreq/55)/Math.log(2)-3.75;
+		// if (tempX>2.5) {tempX=2.3;}
+		// else if (tempX<-2.5) {tempX=-2.3;}
 
-		lastY = lastY || 0;
-		var filterVol = moving_avg*data.volume +(1-moving_avg)*lastY;
-		lastY = filterVol;
-		tempY = 0.05*(filterVol+30);
-		if (tempY>1) {tempY=0.9;}
-		else if (tempY<-1) {tempY=-0.9;}
+		// lastY = lastY || 0;
+		// var filterVol = moving_avg*data.volume +(1-moving_avg)*lastY;
+		// lastY = filterVol;
+		// tempY = 0.05*(filterVol+30);
+		// if (tempY>1) {tempY=0.9;}
+		// else if (tempY<-1) {tempY=-0.9;}
 
-		touches[0] = tempY;
-		touches[1] = tempX;
-		console.log('Yes:', data.volume);
+		// touches[0] = tempY;
+		// touches[1] = tempX;
+
 	} else if (data.hz && data.volume<-40) {
 		touches = [];
-		console.log('No:',data.volume);
 	}
-
-	// When initialized by gyro data:
-	if (data.brushSize) {
-		brushSize = data.brushSize;
-		brushId = data.brushId;
-		px = data.alpha;
-		py = data.beta;
-		pz = data.gamma;
-
-		if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-			px = (px*(5+Math.random()))%cw;
-			py = (py*(5+Math.random()))%ch;
-			pz *= 5;
-		} else if (brushId.charAt(0)<brushId.charAt(1) && brushId.charAt(2)>brushId.charAt(3)) {
-			px = (px*(10+Math.random()))%cw;
-			py = (py*(10+Math.random()))%ch;
-			pz *= 10;
-		} else if (brushId.charAt(0)>brushId.charAt(1) && brushId.charAt(2)<brushId.charAt(3)) {
-			px = (px*(15+Math.random()))%cw;
-			py = (py*(15+Math.random()))%ch;
-			pz *= 15;
-		} else {
-			px = (px*(20+Math.random()))%cw;
-			py = (py*(20+Math.random()))%ch;
-			pz *= 20;
-		}
-		
-		if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
-			intensity(px,py,pz);
-		}
-		if (data.color === "#8158D9") {
-			cr = 129/256;
-			cg = 88/256;
-			cb = 217/256;
-		} else if (data.color === "#D958B1") {
-			cr = 217/256;
-			cg = 88/256;
-			cb = 177/256;
-		} else if (data.color === "#82F5E7") {
-			cr = 130/256;
-			cg = 245/256;
-			cb = 231/256;
-		} else if (data.color === "#4B61F2") {
-			cr = 75/256;
-			cg = 97/256;
-			cb = 242/256;
-		} else if (data.color === "#40DB2C") {
-			cr = 64/256;
-			cg = 219/256;
-			cb = 44/256;
-		} else if (data.color === "#EB0C40") {
-			cr = 235/256;
-			cg = 12/256;
-			cb = 64/256;
-		}
-
-		oa = px;
-		ob = py;
-		og = pz;
-	}
+	
 }
 
 // setup webGL
@@ -584,7 +545,7 @@ function loadScene()
 }
 
 function onKey( e ) {
-	setRenderMode( ++renderMode % 2 );
+	// setRenderMode( ++renderMode % 2 );
 }
 
 function setRenderMode( n ) {
@@ -593,9 +554,9 @@ function setRenderMode( n ) {
 	case 0: // lines
 		numLines = totalLines;
 		break;
-	case 1: // triangle strip
-		numLines = 600;
-		break;
+	// case 1: // triangle strip
+	// 	numLines = 600;
+	// 	break;
 	// case 2: // lines strip
 	// 	numLines = 7000;
 	// 	break;
