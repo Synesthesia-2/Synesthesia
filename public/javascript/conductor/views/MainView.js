@@ -51,7 +51,13 @@ ConductorSpace.MainView = Backbone.View.extend({
   },
 
   toggleAudioLights: function() {
-    $('.color .random')
+    if (this.model.get('audioLightControl')) {
+      $('.audioControlled').removeAttr('disabled');
+      $('.audioControlled').css('opacity', '1.0');
+    } else {
+      $('.audioControlled').attr('disabled', 'disabled');
+      $('.audioControlled').css('opacity', '0.7');
+    }
     this.model.toggleAudioLights();
   }
 

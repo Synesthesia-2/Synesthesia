@@ -21,28 +21,25 @@ html
       header
         h1 Master Controller
       div#specController
-        div#currentBar
-          h3 Currently Deployed:
         div#optionBuilder
-          h2 Select Color to send:
           div#optionPalette
-            button(class="color", data-color="#CC0000", style="background-color: #CC0000")
-            button(class="color", data-color="#00CC00", style="background-color: #00CC00")
-            button(class="color", data-color="#0000CC", style="background-color: #0000CC")
-            button(class="color", data-color="#B5FC9B", style="background-color: #B5FC9B")
-            button(class="color", data-color="#9BDAFC", style="background-color: #9BDAFC")
-            button(class="color", data-color="#F50FF1", style="background-color: #F50FF1")
-            button(class="color", data-color="#F5AC0F", style="background-color: #F5AC0F")
-            button(class="color", data-color="#FFE203", style="background-color: #FFE203")
-            button(class="color", data-color="#AA84E0", style="background-color: #AA84E0")
-            button(class="color", data-color="#7A0014", style="background-color: #7A0014")
-            button(class="color", data-color="#000000", style="background-color: #000000")
-            button(class="color", data-color="#FFFFFF", style="background-color: #FFFFFF")
-            button(class="random", style="background-color: #999999") RANDOM
+            button(class="color audioControlled", data-color="#CC0000", style="background-color: #CC0000")
+            button(class="color audioControlled", data-color="#00CC00", style="background-color: #00CC00")
+            button(class="color audioControlled", data-color="#0000CC", style="background-color: #0000CC")
+            button(class="color audioControlled", data-color="#B5FC9B", style="background-color: #B5FC9B")
+            button(class="color audioControlled", data-color="#9BDAFC", style="background-color: #9BDAFC")
+            button(class="color audioControlled", data-color="#F50FF1", style="background-color: #F50FF1")
+            button(class="color audioControlled", data-color="#F5AC0F", style="background-color: #F5AC0F")
+            button(class="color audioControlled", data-color="#FFE203", style="background-color: #FFE203")
+            button(class="color audioControlled", data-color="#AA84E0", style="background-color: #AA84E0")
+            button(class="color audioControlled", data-color="#7A0014", style="background-color: #7A0014")
+            button(class="color audioControlled", data-color="#000000", style="background-color: #000000")
+            button(class="color audioControlled", data-color="#FFFFFF", style="background-color: #FFFFFF")
+            button(class="random audioControlled", style="background-color: #999999") RANDOM
             
-            p#fadeTimeText FADE: 1.5 Seconds
+            p#fadeTimeText.audioControlled FADE: 1.5 Seconds
             form
-              input(type="range", name="fader", id="fader", value="1500", min="0", max="3000")
+              input(type="range", class="audioControlled", name="fader", id="fader", value="1500", min="0", max="3000")
 
 
       div#specOptionList
