@@ -35,7 +35,7 @@ ClientSpace.Server = Backbone.Model.extend({
   },
 
   audioColor: function(data) {
-    console.log(data);
+    this.trigger('audioColor', data);
   },
 
   emit: function(event, data) {

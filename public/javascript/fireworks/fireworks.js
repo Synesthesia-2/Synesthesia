@@ -7,9 +7,6 @@ $(document).ready(function() {
   // id for each brush
   server.on('welcome', function(data) {
     console.log("welcomed", data);
-  })
-  server.on('newBrush', function(data) {
-    canvasWrapper.addView(data.brushId);
   });
 
   server.on('gyro', function(data) {

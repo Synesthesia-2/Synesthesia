@@ -7,6 +7,9 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   initialize: function(params) {
+    this.cr = 0;
+    this.cg = 0;
+    this.cb = 0;
     this.strobeInt = null;
     this.currentColor = '#000000';
     this.fadeTime = 1500;
@@ -17,6 +20,7 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.server.on('setClientDetails', this.setClientDetails.bind(this));
     this.server.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.server.on('newFadeTime', this.newFadeTime.bind(this));
+    this.server.on('audioColor', this.audioColor.bind(this));
   },
 
   render: function() {
@@ -60,59 +64,67 @@ ClientSpace.ShowView = Backbone.View.extend({
     }, this.fadeTime);
   },
 
-  audioLightShow: function(data) {
+  audioColor: function(data) {
+    this.cr = 0;
+    this.cg = 0;
+    this.cb = 0;
     if (data.hz && data.volume>-40) {
-    
       if (data.hz%38.9<2) {
-        cr=255/256;
-        cg=51/256;
-        cb=51/256;
+        this.cr=255/256;
+        this.cg=51/256;
+        this.cb=51/256;
       } else if (data.hz%41.2<2) {
-        cr=255/256;
-        cg=153/256;
-        cb=51/256;
+        this.cr=255/256;
+        this.cg=153/256;
+        this.cb=51/256;
       } else if (data.hz%43.6<2) {
-        cr=255/256;
-        cg=255/256;
-        cb=51/256;
+        this.cr=255/256;
+        this.cg=255/256;
+        this.cb=51/256;
       } else if (data.hz%46.2<2) {
-        cr=153/256;
-        cg=255/256;
-        cb=51/256;
+        this.cr=153/256;
+        this.cg=255/256;
+        this.cb=51/256;
       } else if (data.hz%49.0<2) {
-        cr=51/256;
-        cg=255/256;
-        cb=51/256;
+        this.cr=51/256;
+        this.cg=255/256;
+        this.cb=51/256;
       } else if (data.hz%51.9<2) {
-        cr=51/256;
-        cg=255/256;
-        cb=153/256;
+        this.cr=51/256;
+        this.cg=255/256;
+        this.cb=153/256;
       } else if (data.hz%55.0<2) {
-        cr=51/256;
-        cg=255/256;
-        cb=255/256;
+        this.cr=51/256;
+        this.cg=255/256;
+        this.cb=255/256;
       } else if (data.hz%58.3<2) {
-        cr=51/256;
-        cg=153/256;
-        cb=255/256;
+        this.cr=51/256;
+        this.cg=153/256;
+        this.cb=255/256;
       } else if (data.hz%61.7<2) {
-        cr=51/256;
-        cg=51/256;
-        cb=255/256;
+        this.cr=51/256;
+        this.cg=51/256;
+        this.cb=255/256;
       } else if (data.hz%65.4<2) {
-        cr=153/256;
-        cg=51/256;
-        cb=255/256;
+        this.cr=153/256;
+        this.cg=51/256;
+        this.cb=255/256;
       } else if (data.hz%69.3<2) {
-        cr=255/256;
-        cg=51/256;
-        cb=255/256;
+        this.cr=255/256;
+        this.cg=51/256;
+        this.cb=255/256;
       } else if (data.hz%73.4<2) {
-        cr=255/256;
-        cg=51/256;
-        cb=153/256;
+        this.cr=255/256;
+        this.cg=51/256;
+        this.cb=153/256;
       }
     }
+    this.cr = Math.round(this.cr * 255);
+    this.cg = Math.round(this.cg * 255);
+    this.cb = Math.round(this.cb * 255);
+    this.$el.animate({
+      'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
+    }, 20);
   },
 
   strobe: function(on) {
