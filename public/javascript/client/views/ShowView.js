@@ -10,6 +10,8 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.cr = 0;
     this.cg = 0;
     this.cb = 0;
+    this.fadeOutTimer = 0;
+    this.fadeInterval = null;
     this.strobeInt = null;
     this.currentColor = '#000000';
     this.fadeTime = 1500;
@@ -65,11 +67,24 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   audioColor: function(data) {
-    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+//    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+    var self = this;
+    if (data.hz && !this.fadeInterval) {
+
+      this.fadeInterval = setInterval(function() {
+        self.fadeOutTimer++;
+        if (self.fadeOutTimer % 10 === 0) console.log(self.fadeOutTimer);
+        if (self.fadeOutTimer === 500) {
+          self.fadeOut();
+        }
+        if (self.fadeOutTimer > 2000) {
+          clearInterval(self.fadeInterval);
+        }
+      }, 1);
+    
+    }
     if (data.hz && data.volume>-50) {
-      // this.cr = 0;
-      // this.cg = 0;
-      // this.cb = 0;
+      this.fadeOutTimer = 0;
       if (data.hz%38.9<2) {
         this.cr=255;
         this.cg=51;
@@ -150,6 +165,12 @@ ClientSpace.ShowView = Backbone.View.extend({
       clearInterval(this.strobeInt);
       this.strobeInt = null;
     }
+  },
+
+  fadeOut: function() {
+    this.$el.animate({
+      backgroundColor: '#000000'
+    }, 600);
   },
 
   exitShow: function(event) {
