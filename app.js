@@ -14,7 +14,8 @@ var state = {
   connections: 0,
   mode: "default",
   audio: false,
-  motionTrack: false
+  audioLights: false,
+  motionTrack: false,
 };
 
 app.set('views', __dirname + '/views');
@@ -120,10 +121,19 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     if (data.strobe) {
       state.strobe = true;
-    } else if (!data.toggleStrobe) {
+    } else {
       state.strobe = false;
     }
     clients.emit('toggleStrobe');
+  });
+
+  conductor.on('audioLightControl', function (data){
+    var clients = io.of('/client');
+    if (data.audio) {
+      state.audioLights = true;
+    } else {
+      state.audioLights = false;
+    }
   });
 
   conductor.on('newFadeTime', function (data) {
@@ -167,7 +177,9 @@ audio.on('connection', function (audio) {
   audio.on('audio', function (data){
     var clients = io.of('/client');
     console.log(data);
-    clients.emit('audio', data);
+    if (state.audioLights) {
+      clients.emit('audio', data);
+    }
     fireworks.emit('audio', data);
   });
 

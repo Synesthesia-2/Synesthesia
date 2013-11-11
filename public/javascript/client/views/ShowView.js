@@ -65,10 +65,11 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   audioColor: function(data) {
-    this.cr = 0;
-    this.cg = 0;
-    this.cb = 0;
-    if (data.hz && data.volume>-40) {
+    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+    if (data.hz && data.volume>-50) {
+      // this.cr = 0;
+      // this.cg = 0;
+      // this.cb = 0;
       if (data.hz%38.9<2) {
         this.cr=255;
         this.cg=51;
@@ -118,10 +119,14 @@ ClientSpace.ShowView = Backbone.View.extend({
         this.cg=51;
         this.cb=153;
       }
+    } else {
+      this.cr = 0;
+      this.cb = 0;
+      this.cg = 0;
     }
     this.$el.animate({
       'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
-    }, 20);
+    }, 10);
   },
 
   strobe: function(on) {
@@ -148,7 +153,6 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   exitShow: function(event) {
-    this.removeMotionListener();
     this.model.loadIndex();
   }
 

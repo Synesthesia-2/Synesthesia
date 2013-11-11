@@ -62,7 +62,7 @@ function initialize (data) {
 	}
 
 
-	if (data.hz && data.volume>-40) {
+	if (data.hz && data.volume>-50) {
 		numLines = Math.floor((5000/7)*data.volume) + 65000;
 		if (numLines>totalLines) {numLines=totalLines;}
 		

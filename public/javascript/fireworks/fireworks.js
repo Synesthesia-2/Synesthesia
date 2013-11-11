@@ -14,6 +14,7 @@ $(document).ready(function() {
   });
 
   server.on('audio', function(data) {
+    console.log(data);
     initialize(data);
   })
 

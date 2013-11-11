@@ -11,6 +11,7 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.model.on('toggleSound', this.toggleSound.bind(this));
     this.model.on('toggleMotion', this.toggleMotion.bind(this));
     this.model.on('toggleStrobe', this.toggleStrobe.bind(this));
+    this.model.on('audioLightControl', this.audioLightControl.bind(this));
     this.model.on('changeColor', this.sendColor.bind(this));
     this.model.on('randomColor', this.randomColor.bind(this));
     this.model.on('newFadeTime', this.newFadeTime.bind(this));
@@ -33,6 +34,10 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
 
   toggleMotion: function(data) {
     this.server.emit('toggleMotion', { motion: data.motion });
+  },
+
+  audioLightControl: function(data) {
+    this.server.emit('audioLightControl', { audio: data.audioLightControl });
   },
 
   toggleSound: function(data) {
