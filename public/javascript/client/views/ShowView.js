@@ -72,20 +72,20 @@ ClientSpace.ShowView = Backbone.View.extend({
 
   audioColor: function(data) {
     if (data.hz && data.volume>-40) {
-      console.log('hz: ' + data.hz + ' volume: ' + data.volume);
-      var self = this;
-      if (!this.fadeInterval) {
-        this.fadeInterval = setInterval(function() {
-          self.fadeOutTimer++;
-          if (self.fadeOutTimer === 260) {
-            self.fadeOut();
-          }
-          if (self.fadeOutTimer === 800) {
-            clearInterval(self.fadeInterval);
-            self.fadeInterval = null;
-          }
-        }, 1);
-      }
+      //console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+      // var self = this;
+      // if (!this.fadeInterval) {
+      //   this.fadeInterval = setInterval(function() {
+      //     self.fadeOutTimer++;
+      //     if (self.fadeOutTimer === 260) {
+      //       self.fadeOut();
+      //     }
+      //     if (self.fadeOutTimer === 800) {
+      //       clearInterval(self.fadeInterval);
+      //       self.fadeInterval = null;
+      //     }
+      //   }, 1);
+      // }
     
       var modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
       var colorHz = pusher.color('yellow').hue(modifier.toString());
