@@ -59,8 +59,8 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   updateBackgroundColor: function(data) {
-    console.log(this.model.get('strobe'));
     if (this.model.get('strobe')) {
+      this.strobe(false);
       this.strobe(true);
     }
     this.currentColor = data.color;
