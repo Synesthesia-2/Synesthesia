@@ -18,3 +18,10 @@ html
     h1 Connecting...
 
     script(src="javascript/dancer/dancer.js")
+    script.
+      iosSleepPreventInterval = setInterval(function () {
+        window.location.href = "/dancer";
+        window.setTimeout(function () {
+          window.stop()
+        }, 0);
+      }, 30000);
