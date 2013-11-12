@@ -20,22 +20,22 @@ server.on('toggleMotion', function(data) {
 
 var initMotionListener = function() {
   console.log('init');
-  window.addEventListener('devicemotion', boundDeviceMotion);
+  window.addEventListener('deviceorientation', boundDeviceMotion);
 };
 
 var removeMotionListener = function() {
   console.log('remove');
-  window.removeEventListener('devicemotion', boundDeviceMotion);
+  window.removeEventListener('deviceorientation', boundDeviceMotion);
 };
 
 var onDeviceMotion = function(event) {
-  var aX = event.acceleration.x;
-  var aY = event.acceleration.y;
-  var aZ = event.acceleration.z;
+  var alpha = event.alpha;
+  var beta = event.beta;
+  var gamma = event.gamma;
   var data = {
-    aX: aX,
-    aY: aY,
-    aZ: aZ,
+    alpha: alpha,
+    beta: beta,
+    gamma: gamma,
   };
   console.log(data);
   server.emit('motionData', data);
