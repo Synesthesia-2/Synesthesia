@@ -1,6 +1,6 @@
 ClientSpace.AboutView = Backbone.View.extend({
   
-  className: 'about',
+  className: 'about scrollable',
   
   events: {
     'click .back': 'backToIndex'

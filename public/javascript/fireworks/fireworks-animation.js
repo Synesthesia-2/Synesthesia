@@ -56,64 +56,65 @@ function initialize (data) {
 	}
 
 
-	if (data.hz && data.volume>-40) {
-		numLines = Math.floor((5000/7)*data.volume) + 65000;
-		if (numLines>totalLines) {numLines=totalLines;}
-		
-		if (data.hz%38.9<2) {
-			cr=255/256;
-			cg=51/256;
-			cb=51/256;
-		} else if (data.hz%41.2<2) {
-			cr=255/256;
-			cg=153/256;
-			cb=51/256;
-		} else if (data.hz%43.6<2) {
-			cr=255/256;
-			cg=255/256;
-			cb=51/256;
-		} else if (data.hz%46.2<2) {
-			cr=153/256;
-			cg=255/256;
-			cb=51/256;
-		} else if (data.hz%49.0<2) {
-			cr=51/256;
-			cg=255/256;
-			cb=51/256;
-		} else if (data.hz%51.9<2) {
-			cr=51/256;
-			cg=255/256;
-			cb=153/256;
-		} else if (data.hz%55.0<2) {
-			cr=51/256;
-			cg=255/256;
-			cb=255/256;
-		} else if (data.hz%58.3<2) {
-			cr=51/256;
-			cg=153/256;
-			cb=255/256;
-		} else if (data.hz%61.7<2) {
-			cr=51/256;
-			cg=51/256;
-			cb=255/256;
-		} else if (data.hz%65.4<2) {
-			cr=153/256;
-			cg=51/256;
-			cb=255/256;
-		} else if (data.hz%69.3<2) {
-			cr=255/256;
-			cg=51/256;
-			cb=255/256;
-		} else if (data.hz%73.4<2) {
-			cr=255/256;
-			cg=51/256;
-			cb=153/256;
-		}
 
-	} else if (data.hz && data.volume<-40) {
-		touches = [];
-	}
-	
+        if (data.hz && data.volume>-60) {
+                numLines = Math.floor((5000/7)*data.volume) + 65000;
+                if (numLines>totalLines) {numLines=totalLines;}
+                
+                if (data.hz%38.9<2) {
+                        cr=255/256;
+                        cg=51/256;
+                        cb=51/256;
+                } else if (data.hz%41.2<2) {
+                        cr=255/256;
+                        cg=153/256;
+                        cb=51/256;
+                } else if (data.hz%43.6<2) {
+                        cr=255/256;
+                        cg=255/256;
+                        cb=51/256;
+                } else if (data.hz%46.2<2) {
+                        cr=153/256;
+                        cg=255/256;
+                        cb=51/256;
+                } else if (data.hz%49.0<2) {
+                        cr=51/256;
+                        cg=255/256;
+                        cb=51/256;
+                } else if (data.hz%51.9<2) {
+                        cr=51/256;
+                        cg=255/256;
+                        cb=153/256;
+                } else if (data.hz%55.0<2) {
+                        cr=51/256;
+                        cg=255/256;
+                        cb=255/256;
+                } else if (data.hz%58.3<2) {
+                        cr=51/256;
+                        cg=153/256;
+                        cb=255/256;
+                } else if (data.hz%61.7<2) {
+                        cr=51/256;
+                        cg=51/256;
+                        cb=255/256;
+                } else if (data.hz%65.4<2) {
+                        cr=153/256;
+                        cg=51/256;
+                        cb=255/256;
+                } else if (data.hz%69.3<2) {
+                        cr=255/256;
+                        cg=51/256;
+                        cb=255/256;
+                } else if (data.hz%73.4<2) {
+                        cr=255/256;
+                        cg=51/256;
+                        cb=153/256;
+                }
+
+        } else if (data.hz && data.volume<-60) {
+                touches = [];
+        }
+        
 }
 
 // setup webGL

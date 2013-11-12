@@ -31,6 +31,7 @@ html
       button.cast Tonights Performers
       button.about About Kine-Tech
       button.upcomingShows Upcoming Events
+      p.HR Created at Hack Reactor
 
     script#show(type="text/x-handlebars-template")
       button#exitShow Quit
@@ -70,6 +71,9 @@ html
 
     script.
       var ClientSpace = {};
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
 
     script(src="javascript/client/models/Client.js")
     script(src="javascript/client/models/Server.js")
@@ -94,3 +98,7 @@ html
       client.set('templates', kineTemplates);
 
       var clientApp = new ClientSpace.ClientApp({ model: client });
+      $('body').on('touchmove', '.scrollable', function(e) {
+        e.stopPropagation();
+      });
+

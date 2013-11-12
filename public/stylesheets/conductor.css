@@ -144,3 +144,8 @@ div#specOptionList .toggled {
   background: linear-gradient(to bottom, #8f0d23 0%, #e02443 100%);
 /* W3C */
 }
+@media (orientation:landscape) {
+  header {
+    display: none;
+  }
+}

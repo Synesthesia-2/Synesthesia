@@ -37,7 +37,6 @@ var onDeviceMotion = function(event) {
     beta: beta,
     gamma: gamma,
   };
-  console.log(data);
   server.emit('motionData', data);
 };
 
