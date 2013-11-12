@@ -67,23 +67,24 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   audioColor: function(data) {
-//    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
     var self = this;
     if (data.hz && !this.fadeInterval) {
 
       this.fadeInterval = setInterval(function() {
         self.fadeOutTimer++;
         if (self.fadeOutTimer % 10 === 0) console.log(self.fadeOutTimer);
-        if (self.fadeOutTimer === 500) {
+        if (self.fadeOutTimer === 350) {
           self.fadeOut();
         }
-        if (self.fadeOutTimer > 2000) {
+        if (self.fadeOutTimer > 1000) {
+          console.log(self.fadeInterval);
           clearInterval(self.fadeInterval);
         }
       }, 1);
     
     }
-    if (data.hz && data.volume>-50) {
+    if (data.hz && data.volume>-40) {
       this.fadeOutTimer = 0;
       if (data.hz%38.9<2) {
         this.cr=255;

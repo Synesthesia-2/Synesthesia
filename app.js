@@ -176,7 +176,6 @@ audio.on('connection', function (audio) {
 
   audio.on('audio', function (data){
     var clients = io.of('/client');
-    console.log(data);
     if (state.audioLights) {
       clients.emit('audio', data);
     }

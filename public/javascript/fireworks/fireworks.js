@@ -14,8 +14,8 @@ $(document).ready(function() {
   });
 
   server.on('audio', function(data) {
-    console.log(data);
+    console.log(data.volume);
     initialize(data);
-  })
+  });
 
 });
