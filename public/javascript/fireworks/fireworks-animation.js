@@ -229,9 +229,27 @@ function redraw()
 		gl.lineWidth(1);
 		gl.drawArrays( gl.LINES, 0, numLines );
 		break;
+			
+	case 1:
+		gl.drawArrays( gl.TRIANGLE_STRIP, 0, numLines );
+		break;
+		
+	case 2 :
+		gl.lineWidth(1);
+		gl.drawArrays( gl.LINE_STRIP, 0, numLines );
+		break;
+		
+	case 3:
+		gl.drawArrays( gl.TRIANGLE_FAN, 0, numLines );
+		break;
 	}
 	
 	gl.flush();
+}
+
+var colorTimeout;
+
+function switchColor() {
 }
 
 function loadScene()
@@ -388,6 +406,7 @@ function loadScene()
 	gl.uniformMatrix4fv(uModelViewMatrix, false, new Float32Array(perspectiveMatrix));
 	gl.uniformMatrix4fv(uPerspectiveMatrix, false, new Float32Array(modelViewMatrix));
 	
+	switchColor();
 }
 
 function onKey( e ) {
