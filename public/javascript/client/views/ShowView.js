@@ -76,14 +76,15 @@ ClientSpace.ShowView = Backbone.View.extend({
     if (!this.fadeInterval) {
       this.fadeInterval = setInterval(function() {
         self.fadeOutTimer++;
-        // if (self.fadeOutTimer > 0 && self.fadeOutTimer % 30 === 0) {
-        //   self.cr = (self.cr * 0.94).toFixed(3);
-        //   self.cg = (self.cg * 0.94).toFixed(3);
-        //   self.cb = (self.cb * 0.94).toFixed(3);
-        //   self.$el.animate({
-        //     'backgroundColor': 'rgb(' + self.cr + ',' + self.cg + ',' + self.cb + ')'
-        //   }, 10);
-        // }
+        if (self.fadeOutTimer > 0 && self.fadeOutTimer % 30 === 0) {
+          console.log(self.fadeOutTimer);
+          // self.cr = (self.cr * 0.94).toFixed(3);
+          // self.cg = (self.cg * 0.94).toFixed(3);
+          // self.cb = (self.cb * 0.94).toFixed(3);
+          // self.$el.animate({
+          //   'backgroundColor': 'rgb(' + self.cr + ',' + self.cg + ',' + self.cb + ')'
+          // }, 10);
+        }
         if (self.fadeOutTimer === 170) {
           self.fadeOut();
         }
