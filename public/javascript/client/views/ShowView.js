@@ -73,13 +73,12 @@ ClientSpace.ShowView = Backbone.View.extend({
 
       this.fadeInterval = setInterval(function() {
         self.fadeOutTimer++;
-        if (self.fadeOutTimer % 10 === 0) console.log(self.fadeOutTimer);
         if (self.fadeOutTimer === 350) {
           self.fadeOut();
         }
         if (self.fadeOutTimer > 1000) {
-          console.log(self.fadeInterval);
           clearInterval(self.fadeInterval);
+          self.fadeInterval = null;
         }
       }, 1);
     
