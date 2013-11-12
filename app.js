@@ -16,6 +16,12 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
+  resetMC: function() {
+    this.strobe = false;
+    this.audio = false;
+    this.audioLights = false;
+    this.motionTrack = false;
+  }
 };
 
 app.set('views', __dirname + '/views');
@@ -85,13 +91,13 @@ dancer.on('connection', function (dancer) {
 
 conductor.on('connection', function (conductor) {
   // reset on connection
-  state.audio = false;
-  state.strobe = false;
+  state.resetMC();
 
   conductor.emit("welcome");
 
   conductor.on('changeColor',function (data){
     var clients = io.of('/client');
+    // Do we need to redefine this in each case?
     state.mode = "changeColor";
     clients.emit('changeColor', data);
   });
