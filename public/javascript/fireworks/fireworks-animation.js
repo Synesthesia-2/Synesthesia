@@ -7,21 +7,23 @@
  */
 
 
-var offset = 0,
+var connectDiv,
 	// deadTimeOut = 1000,
-	i, n,
-	connectDiv,
+	// i, n,
+	// offset = 0,
 	canvas, gl,
 	ratio,
 	vertices,
 	velocities,
+	colorHz,
 	colorLoc,
 	oa, ob, og, //for old alpha, old beta, old gamma
 	cw,
 	ch,
 	cr = 0, cg = 0, cb = 0,
-	tr, tg, tb,
+	// tr, tg, tb,
 	px, py, pz,
+	modifier,
 	touches = [],
 	totalLines = 60000,
 	renderMode = 0,
@@ -54,60 +56,18 @@ function initialize (data) {
 		og = pz;
 	}
 
-
 	if (data.hz && data.volume>-40) {
 		numLines = Math.floor((5000/7)*data.volume) + 65000;
 		if (numLines>totalLines) {numLines=totalLines;}
 		
-		if (data.hz%38.9<2) {
-			cr=255/256;
-			cg=51/256;
-			cb=51/256;
-		} else if (data.hz%41.2<2) {
-			cr=255/256;
-			cg=153/256;
-			cb=51/256;
-		} else if (data.hz%43.6<2) {
-			cr=255/256;
-			cg=255/256;
-			cb=51/256;
-		} else if (data.hz%46.2<2) {
-			cr=153/256;
-			cg=255/256;
-			cb=51/256;
-		} else if (data.hz%49.0<2) {
-			cr=51/256;
-			cg=255/256;
-			cb=51/256;
-		} else if (data.hz%51.9<2) {
-			cr=51/256;
-			cg=255/256;
-			cb=153/256;
-		} else if (data.hz%55.0<2) {
-			cr=51/256;
-			cg=255/256;
-			cb=255/256;
-		} else if (data.hz%58.3<2) {
-			cr=51/256;
-			cg=153/256;
-			cb=255/256;
-		} else if (data.hz%61.7<2) {
-			cr=51/256;
-			cg=51/256;
-			cb=255/256;
-		} else if (data.hz%65.4<2) {
-			cr=153/256;
-			cg=51/256;
-			cb=255/256;
-		} else if (data.hz%69.3<2) {
-			cr=255/256;
-			cg=51/256;
-			cb=255/256;
-		} else if (data.hz%73.4<2) {
-			cr=255/256;
-			cg=51/256;
-			cb=153/256;
-		}
+		modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
+		console.log((Math.floor(modifier)).toString());
+		colorHz = pusher.color('yellow').hue(modifier.toString());
+
+
+		cr=colorHz.rgb()[0]/256;
+		cg=colorHz.rgb()[1]/256;
+		cb=colorHz.rgb()[2]/256;
 
 	} else if (data.hz && data.volume<-40) {
 		touches = [];
@@ -144,9 +104,10 @@ function redraw()
 			i = 0, nt = touches.length, j;
 	
 	// animate color
-	cr = cr * 0.94;
-	cg = cg * 0.94;
-	cb = cb * 0.94;
+	cr = (cr * 0.94).toFixed(3);
+	cg = (cg * 0.94).toFixed(3);
+	cb = (cb * 0.94).toFixed(3);
+	console.log(cr,cg,cb);
 	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.3 );
 	
 	// animate and attract particles
