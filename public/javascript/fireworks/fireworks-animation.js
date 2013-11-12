@@ -206,10 +206,6 @@ function redraw()
 
 var colorTimeout;
 
-function switchColor() {
-
-}
-
 function loadScene()
 {
 	connectDiv = document.getElementById("connectImg");
@@ -363,8 +359,7 @@ function loadScene()
 	//     Set the values
 	gl.uniformMatrix4fv(uModelViewMatrix, false, new Float32Array(perspectiveMatrix));
 	gl.uniformMatrix4fv(uPerspectiveMatrix, false, new Float32Array(modelViewMatrix));
-	
-	switchColor();
+
 }
 
 function onKey( e ) {
