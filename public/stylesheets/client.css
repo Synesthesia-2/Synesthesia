@@ -67,6 +67,14 @@ header p.showTitle {
   font-size: 22px;
   font-weight: 800;
 }
+p.HR {
+  text-align: center;
+  color: #fff;
+  font-size: 8px;
+  background-color: #e02443;
+  height: 10px;
+  padding-bottom: 4px;
+}
 button {
   margin: 20px auto;
   display: block;

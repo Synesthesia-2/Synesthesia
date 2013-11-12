@@ -71,14 +71,18 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   audioColor: function(data) {
-    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
-    var oldCR = this.cr, oldCB = this.cb, oldCG = this.cg;
+    //console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+//    var oldCR = this.cr, oldCB = this.cb, oldCG = this.cg;
     var self = this;
     if (data.hz && !this.fadeInterval) {
-
       this.fadeInterval = setInterval(function() {
         self.fadeOutTimer++;
-        if (self.fadeOutTimer === 300) {
+    //     // if (self.fadeOutTimer > 100 && self.fadeOutTIme < 300 && self.fadeOutTimer % 60 === 0) {
+          
+    //     //   console.log(self.fadeOutTimer, " drifting."); 
+    //     //   self.driftColor();
+    //     // }
+        if (self.fadeOutTimer === 260) {
           self.fadeOut();
         }
         if (self.fadeOutTimer > 1000) {
@@ -86,7 +90,6 @@ ClientSpace.ShowView = Backbone.View.extend({
           self.fadeInterval = null;
         }
       }, 1);
-    
     }
     if (data.hz && data.volume>-60) {
       this.fadeOutTimer = 0;
@@ -146,7 +149,7 @@ ClientSpace.ShowView = Backbone.View.extend({
     }
     this.$el.animate({
       'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
-    }, 100);
+    }, 90);
   },
 
   strobe: function(on) {
@@ -175,7 +178,16 @@ ClientSpace.ShowView = Backbone.View.extend({
   fadeOut: function() {
     this.$el.animate({
       backgroundColor: '#000000'
-    }, 600);
+    }, 500);
+  },
+
+  driftColor: function() {
+    this.cr = this.cr * 0.94;
+    this.cg = this.cg * 0.94;
+    this.cb = this.cb * 0.94;
+    this.$el.animate({
+      'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
+    }, 20);
   },
 
   exitShow: function(event) {

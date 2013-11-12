@@ -38,8 +38,8 @@ html
             button(class="random audioControlled", style="background-color: #999999") RANDOM
             
             p#fadeTimeText.audioControlled FADE: 1.5 Seconds
-            form
-              input(type="range", class="audioControlled", name="fader", id="fader", value="1500", min="0", max="3000")
+            form(class="scrollable")
+              input(type="range", class="audioControlled scrollable", name="fader", id="fader", value="1500", min="0", max="3000")
 
 
       div#specOptionList
@@ -49,6 +49,9 @@ html
           button(class="specOption", id="toggleMotion") START MOTION TRACKING
 
     script.
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
       var ConductorSpace = {};
 
     script(src="javascript/conductor/models/Conductor.js")
@@ -69,3 +72,6 @@ html
       conductor.set('templates', kineTemplates);
       var server = new ConductorSpace.Server();
       var conductorApp = new ConductorSpace.ConductorApp({ model: conductor, server: server });
+      $('body').on('touchmove', '.scrollable', function(e) {
+        e.stopPropagation();
+      });

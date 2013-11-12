@@ -4,10 +4,10 @@ ConductorSpace.MainView = Backbone.View.extend({
     'touchend .color' : 'sendColor',
     'touchend .random' : 'sendRandomColor',
     'change #fader' : 'updateFadeTime',
-    'touchend #toggleSound' : 'toggleSound',
-    'touchend #toggleMotion' : 'toggleMotion',
-    'touchend #toggleStrobe' : 'toggleStrobe',
-    'touchend #toggleAudioLights' : 'toggleAudioLights'
+    'click #toggleSound' : 'toggleSound',
+    'click #toggleMotion' : 'toggleMotion',
+    'click #toggleStrobe' : 'toggleStrobe',
+    'click #toggleAudioLights' : 'toggleAudioLights'
   },
 
   initialize: function() {
@@ -55,7 +55,7 @@ ConductorSpace.MainView = Backbone.View.extend({
       $('.audioControlled').removeAttr('disabled');
       $('.audioControlled').css('opacity', '1.0');
     } else {
-      $('.audioControlled').attr('disabled', 'disabled');
+      $('.audioControlled').prop('disabled', 'disabled');
       $('.audioControlled').css('opacity', '0.7');
       if (this.model.get('strobe')) {
         this.model.toggleStrobe();
