@@ -163,7 +163,7 @@ conductor.on('connection', function (conductor) {
 //////////////////////////////////////////
 
 clients.on('connection', function (client) {
-  var clients = io.of('/client');
+  // var clients = io.of('/client');
   state.connections += 1;
 
   client.emit("welcome", {
@@ -177,13 +177,13 @@ clients.on('connection', function (client) {
     state.connections -= 1;
   });
 
-  client.on('reconnect', function (){
+  // client.on('reconnect', function (){
     // canvas.emit('refresh', data);
     // client.emit("welcome", {
     //   id: client.id,
     //   mode: state.mode
     // });
-  });
+  // });
 });
 
 //////////////////////////////////////////
