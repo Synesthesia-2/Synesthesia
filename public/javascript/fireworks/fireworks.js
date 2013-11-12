@@ -1,23 +1,17 @@
 var server = io.connect('/fireworks');
 
 $(document).ready(function() {
-  // when a new client connects to brushServer,
-  // notify the canvas change below to whatever
-  // you need - data should contain a unique
-  // id for each brush
+
   server.on('welcome', function(data) {
     console.log("welcomed", data);
-  })
-  server.on('newBrush', function(data) {
-    canvasWrapper.addView(data.brushId);
   });
 
-  server.on('gyro', function(data) {
+  server.on('motionData', function(data) {
     initialize(data);
   });
 
   server.on('audio', function(data) {
     initialize(data);
-  })
+  });
 
 });

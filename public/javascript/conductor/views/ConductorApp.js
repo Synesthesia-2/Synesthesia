@@ -9,11 +9,14 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.router = new ConductorSpace.Router({ el: this.$el.find('#container'), model: this.model });
     Backbone.history.start({pushstate:true});
     this.model.on('toggleSound', this.toggleSound.bind(this));
-    this.model.on('togglePaint', this.togglePaint.bind(this));
+    this.model.on('toggleMotion', this.toggleMotion.bind(this));
     this.model.on('toggleStrobe', this.toggleStrobe.bind(this));
+    this.model.on('audioLightControl', this.audioLightControl.bind(this));
     this.model.on('changeColor', this.sendColor.bind(this));
     this.model.on('randomColor', this.randomColor.bind(this));
     this.model.on('newFadeTime', this.newFadeTime.bind(this));
+
+    this.server.on('resetSelf', this.resetSelf.bind(this));
   },
 
   render: function(){
@@ -21,12 +24,20 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     return this;
   },
 
+  resetSelf: function() {
+    this.model.reset();
+  },
+
   toggleStrobe: function(data) {
     this.server.emit('toggleStrobe', { strobe: data.strobe });
   },
 
-  togglePaint: function(data) {
-    this.server.emit('switchPainting', { paint: data.paint });
+  toggleMotion: function(data) {
+    this.server.emit('toggleMotion', { motion: data.motion });
+  },
+
+  audioLightControl: function(data) {
+    this.server.emit('audioLightControl', { audio: data.audioLightControl });
   },
 
   toggleSound: function(data) {

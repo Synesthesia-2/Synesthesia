@@ -51,7 +51,6 @@ function initialize (data) {
 		modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
 		colorHz = pusher.color('yellow').hue(modifier.toString());
 
-
 		cr=colorHz.rgb()[0]/256;
 		cg=colorHz.rgb()[1]/256;
 		cb=colorHz.rgb()[2]/256;
@@ -77,8 +76,8 @@ function onResize(e) {
 animate();
 
 function animate() {
-	requestAnimationFrame( animate );
-	redraw();
+  requestAnimationFrame( animate );
+  redraw();
 }
 
 function redraw() {
@@ -173,6 +172,7 @@ function redraw() {
 	
 	gl.flush();
 }
+
 
 function loadScene() {
 	//    Get the canvas element
