@@ -1,35 +1,23 @@
-// (function(){
 /**
  * Most of the WebGL-related code in this demo 
  * comes from this tutorial by Dennis Ippel (thanks!) :
  * http://www.rozengain.com/blog/2010/02/22/beginning-webgl-step-by-step-tutorial/
- * 
  */
 
-
-var connectDiv,
-	// deadTimeOut = 1000,
-	// i, n,
-	// offset = 0,
-	canvas, gl,
+var canvas, gl,
 	ratio,
 	vertices,
 	velocities,
 	colorHz,
 	colorLoc,
 	oa, ob, og, //for old alpha, old beta, old gamma
-	cw,
-	ch,
-	cr = 0, cg = 0, cb = 0,
-	// tr, tg, tb,
-	px, py, pz,
-	modifier,
-	touches = [],
+	cw, ch, //canvas width and height
+	cr, cg, cb, //for color-red, -green, -blue
+	px, py, pz, //position-x, -y, -z
+	modifier, //converts from frequency to color
+	touches = [], //analogue to mouse press
 	totalLines = 60000,
-	renderMode = 0,
 	numLines = totalLines,
-	// lastX,
-	// lastY,
 	aZ;
 
 function initialize (data) {
@@ -46,7 +34,7 @@ function initialize (data) {
 		py = (py*(5+Math.random()))%ch;
 		pz *= 5;
 		
-		if (Math.abs(oa-px)>5 && Math.abs(ob-py)>5 && Math.abs(og-pz)>5){
+		if (Math.abs(oa-px)>5 || Math.abs(ob-py)>5 || Math.abs(og-pz)>5){
 			touches[0]=px;
 			touches[1]=py;
 		}
@@ -61,7 +49,6 @@ function initialize (data) {
 		if (numLines>totalLines) {numLines=totalLines;}
 		
 		modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
-		console.log((Math.floor(modifier)).toString());
 		colorHz = pusher.color('yellow').hue(modifier.toString());
 
 
@@ -72,7 +59,6 @@ function initialize (data) {
 	} else if (data.hz && data.volume<-40) {
 		touches = [];
 	}
-	
 }
 
 // setup webGL
@@ -82,32 +68,29 @@ loadScene();
 window.addEventListener( "resize", onResize, false );
 onResize();
 
-// start animation
-animate();
-
 function onResize(e) {
 	cw = window.innerWidth;
 	ch = window.innerHeight;
 }
+
+// start animation
+animate();
 
 function animate() {
 	requestAnimationFrame( animate );
 	redraw();
 }
 
+function redraw() {
 
-function redraw()
-{
-
-	var player, dx, dy, d,
-			tx, ty, bp, p,
-			i = 0, nt = touches.length, j;
+	var dx, dy, d,
+		bp, p,
+		i = 0, nt = touches.length, j;
 	
 	// animate color
 	cr = (cr * 0.94).toFixed(3);
 	cg = (cg * 0.94).toFixed(3);
 	cb = (cb * 0.94).toFixed(3);
-	console.log(cr,cg,cb);
 	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.3 );
 	
 	// animate and attract particles
@@ -147,7 +130,7 @@ function redraw()
 		}
 		vertices[bp+4] = p;
 		
-		if ( nt ) // attraction when touched
+		if ( nt ) // attraction when audio input
 		{
 			for( j=0; j<nt; j+=2 )
 			{
@@ -185,44 +168,18 @@ function redraw()
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
 		
-	switch( renderMode ) {
-	case 0 :
-		gl.lineWidth(1);
-		gl.drawArrays( gl.LINES, 0, numLines );
-		break;
-			
-	case 1:
-		gl.drawArrays( gl.TRIANGLE_STRIP, 0, numLines );
-		break;
-		
-	case 2 :
-		gl.lineWidth(1);
-		gl.drawArrays( gl.LINE_STRIP, 0, numLines );
-		break;
-		
-	case 3:
-		gl.drawArrays( gl.TRIANGLE_FAN, 0, numLines );
-		break;
-	}
+	gl.lineWidth(1);
+	gl.drawArrays( gl.LINES, 0, numLines );
 	
 	gl.flush();
 }
 
-var colorTimeout;
-
-function switchColor() {
-}
-
-function loadScene()
-{
-	connectDiv = document.getElementById("connectImg");
-
+function loadScene() {
 	//    Get the canvas element
 	canvas = document.getElementById("webGLCanvas");
 	//    Get the WebGL context
 	gl = canvas.getContext("experimental-webgl");
-	//    Check whether the WebGL context is available or not
-	//    if it's not available exit
+
 	if(!gl)
 	{
 		alert("There's no WebGL context available.");
@@ -235,11 +192,9 @@ function loadScene()
 	canvas.height = ch;
 	gl.viewport(0, 0, canvas.width, canvas.height);
 	
-	//    Load the vertex shader that's defined in a separate script
-	//    block at the top of this page.
-	
-	//    Grab the script element
+	//    Load the vertex shader
 	var vertexShaderScript = document.getElementById("shader-vs");
+
 	var vertexShader = gl.createShader(gl.VERTEX_SHADER);
 	gl.shaderSource(vertexShader, vertexShaderScript.text);
 	gl.compileShader(vertexShader);
@@ -249,7 +204,7 @@ function loadScene()
 		return;
 	}
 	
-	//    Load the fragment shader that's defined in a separate script
+	//    Load the fragment shader
 	var fragmentShaderScript = document.getElementById("shader-fs");
 	
 	var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -273,9 +228,7 @@ function loadScene()
 		gl.deleteProgram(fragmentShader);
 		return;
 	}
-	//    Install the program as part of the current rendering state
 	gl.useProgram(gl.program);
-	
 	
 	// get the color uniform location
 	colorLoc = gl.getUniformLocation( gl.program, "color" );
@@ -295,11 +248,9 @@ function loadScene()
 	gl.disable(gl.DEPTH_TEST);
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 	
-	//    Now create a shape.
 	//    First create a vertex buffer in which we can store our data.
 	var vertexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-
 
 	//    
 	vertices = [];
@@ -318,7 +269,7 @@ function loadScene()
 	//    Clear the color buffer and the depth buffer
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	
-	//    Define the viewing frustum parameters
+	//    Define the viewing parameters
 	var fieldOfView = 30.0;
 	var aspectRatio = canvas.width / canvas.height;
 	var nearPlane = 1.0;
@@ -328,8 +279,8 @@ function loadScene()
 	var right = top * aspectRatio;
 	var left = -right;
 
-	//     Create the perspective matrix. The OpenGL function that's normally used for this,
-	//     glFrustum() is not included in the WebGL API. That's why we have to do it manually here.
+	// Create the perspective matrix. The OpenGL function that's normally used for this,
+	// glFrustum() is not included in the WebGL API. 
 	var a = (right + left) / (right - left);
 	var b = (top + bottom) / (top - bottom);
 	var c = (farPlane + nearPlane) / (farPlane - nearPlane);
@@ -352,35 +303,17 @@ function loadScene()
 	];
 	//     Get the vertex position attribute location from the shader program
 	var vertexPosAttribLocation = gl.getAttribLocation(gl.program, "vertexPosition");
-//				colorLoc = gl.getVaryingLocation(gl.program, "vColor");
-//				alert("color loc : " + colorLoc );
+
 	//     Specify the location and format of the vertex position attribute
 	gl.vertexAttribPointer(vertexPosAttribLocation, 3.0, gl.FLOAT, false, 0, 0);
-	//gl.vertexAttribPointer(colorLoc, 4.0, gl.FLOAT, false, 0, 0);
-	//     Get the location of the "modelViewMatrix" uniform variable from the 
-	//     shader program
+
+	// Get the location of the "modelViewMatrix" and "perspectiveMatrix"
+	// uniform variables from the shader program
 	var uModelViewMatrix = gl.getUniformLocation(gl.program, "modelViewMatrix");
-	//     Get the location of the "perspectiveMatrix" uniform variable from the 
-	//     shader program
 	var uPerspectiveMatrix = gl.getUniformLocation(gl.program, "perspectiveMatrix");
+
 	//     Set the values
 	gl.uniformMatrix4fv(uModelViewMatrix, false, new Float32Array(perspectiveMatrix));
 	gl.uniformMatrix4fv(uPerspectiveMatrix, false, new Float32Array(modelViewMatrix));
 	
-	switchColor();
 }
-
-function onKey( e ) {
-	// setRenderMode( ++renderMode % 2 );
-}
-
-function setRenderMode( n ) {
-	renderMode = n;
-	switch(renderMode) {
-	case 0: // lines
-		numLines = totalLines;
-		break;
-	}
-}
-// }());
-
