@@ -1,6 +1,6 @@
 ClientSpace.AboutView = Backbone.View.extend({
   
-  className: 'about',
+  className: 'about scrollable',
   
   events: {
     'click .back': 'backToIndex'
@@ -8,8 +8,6 @@ ClientSpace.AboutView = Backbone.View.extend({
 
   initialize: function() {
     this.template = this.model.get('templates')['about'];
-    // get cast from remote server
-    // set this cast to a cast collection
   },
 
   render: function() {

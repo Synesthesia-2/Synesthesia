@@ -4,16 +4,20 @@ html
     title Kine-Tech
     meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(name="mobile-web-app-capable", content="yes")
     meta(name="apple-mobile-web-app-status-bar-style", content="black")
+
     link(rel='stylesheet', href='/bower_components/normalize-css/normalize.css')
     link(rel='stylesheet', href='/stylesheets/client.css')
 
+    link(rel="icon", type="image/png", href="images/icon.png")
     script(src="/socket.io/socket.io.js")
     script(src="bower_components/jquery/jquery.min.js")
     script(src="bower_components/jquery-color/jquery.color.js")
     script(src="bower_components/underscore/underscore-min.js")
     script(src="bower_components/backbone/backbone-min.js")
     script(src="bower_components/handlebars/handlebars.js")
+    script(src="/javascript/pusher.color.min.js")
 
   body
 
@@ -24,47 +28,53 @@ html
       header
         p Welcome to
         p.showTitle {{ currentShow }}
-      button.startShow Connect and start show
-      button.cast Tonights performers
+      button.startShow Connect and Start Show
+      button.cast Tonights Performers
       button.about About Kine-Tech
-      button.upcomingShows Upcoming shows
+      button.upcomingShows Upcoming Events
+      p.HR Created at Hack Reactor
 
     script#show(type="text/x-handlebars-template")
-      div#wrapper(style="display:none")
-        div#drawOptions
-          div.colors
-            div.colorBlock(data-color="#8158D9", style="background-color: #8158D9")
-            div.colorBlock(data-color="#D958B1", style="background-color: #D958B1")
-            div.colorBlock(data-color="#82F5E7", style="background-color: #82F5E7")
-            div.colorBlock(data-color="#4B61F2", style="background-color: #4B61F2")
-            div.colorBlock(data-color="#EB0C40", style="background-color: #EB0C40")
-            div.colorBlock(data-color="#40DB2C", style="background-color: #40DB2C")
-          form
-            input(type="range", name="brushSize", id="brushSize", value="5", min="1", max="10")
       button#exitShow Quit
 
     script#castList(type="text/x-handlebars-template")
-      header {{ currentShow }} cast and crew:
-      p Person: Job
-      p WOOOOOOOOOORDSSSSSSS
-
+      h2 {{ currentShow }} cast and crew:
+      {{#each cast}}
+      div.castMember
+        img(src="{{ portrait }}")
+        p.castName {{ name }}
+        p.role {{ role }}
+        p.bio {{ bio }}
+      {{/each}}
       button.back Back
 
     script#showsList(type="text/x-handlebars-template")
-      ul
-        li {{ upcomingShows.one }}
-        li {{ upcomingShows.two }}
-        li {{ upcomingShows.three }} 
+      h1 Upcoming Events
+      h3 Click an event to find out more
+      {{#each upcoming}}
+      a(href="{{ link }}")
+        div
+          p.what {{ what }}
+          p When: {{ when }}
+          p Where: {{ where }}
+      {{/each}}
+
       button.back Back
 
     script#about(type="text/x-handlebars-template")
       h1 About Kine-Tech
-      p Words words words
+      h2 @kine_tech
+      p.about-text We are a collaboration of dancers, programmers, tech/ media geniuses, choreographers, artists and physicists sharing our mutual passion for movement and technology.
+      p.about-text We meet in our media lab on Tuesday evenings at Kunstoff Arts in San Francisco. 
+      p.about-text Follow us for updates on our explorations, thoughts and adventures in the world of dance, movement and media.
+      img(src="images/kinetech-concept.gif")
       button.back Back 
-    <!-- script(src="javascript/client/client-audio.js") -->
 
     script.
       var ClientSpace = {};
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
 
     script(src="javascript/client/models/Client.js")
     script(src="javascript/client/models/Server.js")
@@ -89,3 +99,7 @@ html
       client.set('templates', kineTemplates);
 
       var clientApp = new ClientSpace.ClientApp({ model: client });
+      $('body').on('touchmove', '.scrollable', function(e) {
+        e.stopPropagation();
+      });
+

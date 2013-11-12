@@ -4,11 +4,14 @@ ClientSpace.ShowView = Backbone.View.extend({
 
   events: {
     'touchend #exitShow': 'exitShow',
-    'touchstart #brushSize' : 'setBrushSize',
-    'touchstart .colorBlock': 'setColor'
   },
 
   initialize: function(params) {
+    this.cr = 0;
+    this.cg = 0;
+    this.cb = 0;
+    this.fadeOutTimer = 0;
+    this.fadeInterval = null;
     this.strobeInt = null;
     this.currentColor = '#000000';
     this.fadeTime = 1500;
@@ -16,13 +19,10 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.server = params.server;
     this.ip = this.server.get('ip');
     this.server.on('changeBG', this.updateBackgroundColor.bind(this));
-    this.server.on('initMotionListener', this.initMotionListener.bind(this));
-    this.server.on('removeMotionListener', this.removeMotionListener.bind(this));
     this.server.on('setClientDetails', this.setClientDetails.bind(this));
     this.server.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.server.on('newFadeTime', this.newFadeTime.bind(this));
-    this.emitGyro = this.emitGyro.bind(this); // bind for context
-    this.onDeviceMotion = this.onDeviceMotion.bind(this);
+    this.server.on('audioColor', this.audioColor.bind(this));
   },
 
   render: function() {
@@ -44,7 +44,7 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.model.set('mode', data.mode);
     if (!this.model.get('brushId')){
       this.model.set('brushId', data.id);
-    };
+    }
   },
 
   toggleStrobe: function() {
@@ -59,11 +59,45 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   updateBackgroundColor: function(data) {
+    if (this.model.get('strobe')) {
+      this.strobe(false);
+      this.strobe(true);
+    }
     this.currentColor = data.color;
     this.fadeTime = parseFloat(data.fadeTime);
     this.$el.animate({
       backgroundColor: this.currentColor
     }, this.fadeTime);
+  },
+
+  audioColor: function(data) {
+    if (data.hz && data.volume>-40) {
+      //console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+      // var self = this;
+      // if (!this.fadeInterval) {
+      //   this.fadeInterval = setInterval(function() {
+      //     self.fadeOutTimer++;
+      //     if (self.fadeOutTimer === 260) {
+      //       self.fadeOut();
+      //     }
+      //     if (self.fadeOutTimer === 800) {
+      //       clearInterval(self.fadeInterval);
+      //       self.fadeInterval = null;
+      //     }
+      //   }, 1);
+      // }
+    
+      var modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
+      var colorHz = pusher.color('yellow').hue(modifier.toString());
+
+      this.cr=colorHz.rgb()[0];
+      this.cg=colorHz.rgb()[1];
+      this.cb=colorHz.rgb()[2];
+    
+      this.$el.animate({
+        'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
+      }, 90);
+    }
   },
 
   strobe: function(on) {
@@ -83,73 +117,28 @@ ClientSpace.ShowView = Backbone.View.extend({
         });
       }, this.fadeTime);
     } else {
-      console.log('off');
+      console.log('strobe off');
       clearInterval(this.strobeInt);
       this.strobeInt = null;
     }
   },
 
-  initMotionListener: function() {
-    console.log('motion on');
+  fadeOut: function() {
     this.$el.animate({
       backgroundColor: '#000000'
     }, 500);
-    this.$el.find('#wrapper').fadeIn(500);
-    window.addEventListener('deviceorientation', this.emitGyro);
-    window.addEventListener('devicemotion', this.onDeviceMotion);
   },
 
-  removeMotionListener: function() {
-    var that = this;
-    console.log('motion off');
-    this.$el.find('#wrapper').fadeOut(500);
+  driftColor: function() {
+    this.cr = this.cr * 0.94;
+    this.cg = this.cg * 0.94;
+    this.cb = this.cb * 0.94;
     this.$el.animate({
-      backgroundColor: that.currentColor
-    }, 500);
-    window.removeEventListener('deviceorientation', this.emitGyro);
-    window.removeEventListener('devicemotion', this.emitGyro);
-  },
-
-  emitGyro: function(event){
-    var alpha = Math.round(event.alpha);
-    var beta = Math.round(event.beta);
-    var gamma = Math.round(event.gamma);
-    var data = {
-      alpha: alpha,
-      beta: beta,
-      gamma: gamma,
-      color: this.model.get('color'),
-      brushSize: this.model.get('brushSize'),
-      brushId: this.model.get('brushId')
-    };
-    this.server.emit('gyro', data);
-  },
-
-  onDeviceMotion: function(event) {
-    var aX = event.acceleration.x;
-    var aY = event.acceleration.y;
-    var aZ = event.acceleration.z;
-    var data = {
-      aX: aX,
-      aY: aY,
-      aZ: aZ,
-      color: client.get('color'),
-      brushSize: client.get('brushSize'),
-      brushId: client.get('brushId')
-    };
-    this.server.emit('paint', data);
-  },
-
-  setBrushSize: function(event) {
-   this.model.set('brushSize', event.target.value);
-  },
-
-  setColor: function(event) {
-    this.model.set('color', event.target.dataset.color);
+      'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
+    }, 20);
   },
 
   exitShow: function(event) {
-    this.removeMotionListener();
     this.model.loadIndex();
   }
 

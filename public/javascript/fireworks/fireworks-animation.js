@@ -6,7 +6,6 @@
  * 
  */
 
-
 var connectDiv,
 	// deadTimeOut = 1000,
 	// i, n,
@@ -64,7 +63,6 @@ function initialize (data) {
 		console.log((Math.floor(modifier)).toString());
 		colorHz = pusher.color('yellow').hue(modifier.toString());
 
-
 		cr=colorHz.rgb()[0]/256;
 		cg=colorHz.rgb()[1]/256;
 		cb=colorHz.rgb()[2]/256;
@@ -72,7 +70,6 @@ function initialize (data) {
 	} else if (data.hz && data.volume<-40) {
 		touches = [];
 	}
-	
 }
 
 // setup webGL
@@ -91,8 +88,8 @@ function onResize(e) {
 }
 
 function animate() {
-	requestAnimationFrame( animate );
-	redraw();
+  requestAnimationFrame( animate );
+  redraw();
 }
 
 
@@ -107,7 +104,6 @@ function redraw()
 	cr = (cr * 0.94).toFixed(3);
 	cg = (cg * 0.94).toFixed(3);
 	cb = (cb * 0.94).toFixed(3);
-	console.log(cr,cg,cb);
 	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.3 );
 	
 	// animate and attract particles
@@ -209,9 +205,6 @@ function redraw()
 }
 
 var colorTimeout;
-
-function switchColor() {
-}
 
 function loadScene()
 {
@@ -366,12 +359,11 @@ function loadScene()
 	//     Set the values
 	gl.uniformMatrix4fv(uModelViewMatrix, false, new Float32Array(perspectiveMatrix));
 	gl.uniformMatrix4fv(uPerspectiveMatrix, false, new Float32Array(modelViewMatrix));
-	
-	switchColor();
+
 }
 
 function onKey( e ) {
-	// setRenderMode( ++renderMode % 2 );
+        // setRenderMode( ++renderMode % 2 );
 }
 
 function setRenderMode( n ) {
@@ -383,4 +375,3 @@ function setRenderMode( n ) {
 	}
 }
 // }());
-
