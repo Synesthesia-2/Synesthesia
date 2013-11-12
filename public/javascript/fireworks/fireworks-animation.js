@@ -55,7 +55,7 @@ function initialize (data) {
         }
 
 
-        if (data.hz && data.volume>-40) {
+        if (data.hz && data.volume>-60) {
                 numLines = Math.floor((5000/7)*data.volume) + 65000;
                 if (numLines>totalLines) {numLines=totalLines;}
                 
@@ -109,7 +109,7 @@ function initialize (data) {
                         cb=153/256;
                 }
 
-        } else if (data.hz && data.volume<-40) {
+        } else if (data.hz && data.volume<-60) {
                 touches = [];
         }
         
