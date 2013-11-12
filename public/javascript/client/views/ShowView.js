@@ -71,85 +71,33 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   audioColor: function(data) {
-    //console.log('hz: ' + data.hz + ' volume: ' + data.volume);
-//    var oldCR = this.cr, oldCB = this.cb, oldCG = this.cg;
-    var self = this;
-    if (data.hz && !this.fadeInterval) {
-      this.fadeInterval = setInterval(function() {
-        self.fadeOutTimer++;
-    //     // if (self.fadeOutTimer > 100 && self.fadeOutTIme < 300 && self.fadeOutTimer % 60 === 0) {
-          
-    //     //   console.log(self.fadeOutTimer, " drifting."); 
-    //     //   self.driftColor();
-    //     // }
-        if (self.fadeOutTimer === 260) {
-          self.fadeOut();
-        }
-        if (self.fadeOutTimer > 1000) {
-          clearInterval(self.fadeInterval);
-          self.fadeInterval = null;
-        }
-      }, 1);
-    }
-    if (data.hz && data.volume>-60) {
-      this.fadeOutTimer = 0;
-      if (data.hz%38.9<2) {
-        this.cr=255;
-        this.cg=51;
-        this.cb=51;
-      } else if (data.hz%41.2<2) {
-        this.cr=255;
-        this.cg=153;
-        this.cb=51;
-      } else if (data.hz%43.6<2) {
-        this.cr=255;
-        this.cg=255;
-        this.cb=51;
-      } else if (data.hz%46.2<2) {
-        this.cr=153;
-        this.cg=255;
-        this.cb=51;
-      } else if (data.hz%49.0<2) {
-        this.cr=51;
-        this.cg=255;
-        this.cb=51;
-      } else if (data.hz%51.9<2) {
-        this.cr=51;
-        this.cg=255;
-        this.cb=153;
-      } else if (data.hz%55.0<2) {
-        this.cr=51;
-        this.cg=255;
-        this.cb=255;
-      } else if (data.hz%58.3<2) {
-        this.cr=51;
-        this.cg=153;
-        this.cb=255;
-      } else if (data.hz%61.7<2) {
-        this.cr=51;
-        this.cg=51;
-        this.cb=255;
-      } else if (data.hz%65.4<2) {
-        this.cr=153;
-        this.cg=51;
-        this.cb=255;
-      } else if (data.hz%69.3<2) {
-        this.cr=255;
-        this.cg=51;
-        this.cb=255;
-      } else if (data.hz%73.4<2) {
-        this.cr=255;
-        this.cg=51;
-        this.cb=153;
+    if (data.hz && data.volume>-40) {
+      console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+      var self = this;
+      if (!this.fadeInterval) {
+        this.fadeInterval = setInterval(function() {
+          self.fadeOutTimer++;
+          if (self.fadeOutTimer === 260) {
+            self.fadeOut();
+          }
+          if (self.fadeOutTimer === 800) {
+            clearInterval(self.fadeInterval);
+            self.fadeInterval = null;
+          }
+        }, 1);
       }
-    } else {
-      this.cr = 0;
-      this.cb = 0;
-      this.cg = 0;
+    
+      var modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
+      var colorHz = pusher.color('yellow').hue(modifier.toString());
+
+      this.cr=colorHz.rgb()[0];
+      this.cg=colorHz.rgb()[1];
+      this.cb=colorHz.rgb()[2];
+    
+      this.$el.animate({
+        'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
+      }, 90);
     }
-    this.$el.animate({
-      'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
-    }, 90);
   },
 
   strobe: function(on) {

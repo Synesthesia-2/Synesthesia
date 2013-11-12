@@ -36,7 +36,7 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
-  mode: "default"
+  mode: "default",
   resetMC: function() {
     this.strobe = false;
     this.audio = false;
