@@ -71,9 +71,37 @@ var makePitchAnalyser = function(context,source) {
     var index = Array.prototype.indexOf.call(array,max);
     return [[index-1,array[index-1]],[index,max],[index+1,array[index+1]]];
   };
+  var _convertToHz = function(bucket) {
+    var targetFreq = bucket[1][0];
+    var lowD = ((bucket[1][1])-(bucket[0][1]));
+    var highD = ((bucket[1][1])-(bucket[2][1]));
+    var shift = (lowD < highD ? -(highD - lowD) : (lowD - highD));
+    var adjShift = (shift*0.5)*0.1;
+    return (targetFreq+adjShift)/analyser.frequencyBinCount*(context.sampleRate * 0.5);
+  };
+  var _getPeaks = function(array) {
+    var sum = 0;
+    var freqs = {};
+    var i = array.length;
+    while(i--) {
+      var vol = array[i].volume;
+      var freq = Math.round(array[i].hz / 5) * 5;
+      if (freqs[freq]) {
+        freqs[freq].hits+=1;
+        freqs[freq].vol+=vol;
+      } else {
+        freqs[freq] = {hits:1,vol:vol};
+      }
+      sum+=vol;
+    }
+    return {
+      avg: sum/array.length,
+      freqs: freqs
+    };
+  };
   var _noiseCancel = function(freq) {
     var amount = (data.avg-ptAvg)*notchStrength;
-    console.log("adding filter at " + freq,data.avg);
+    console.log("adding filter at "+freq+"with gain "+amount);
     source.disconnect(analyser);
     var filter = makeFilter(context,"PEAKING",freq,amount);
     var chain = analyser.ncFilters;
@@ -85,19 +113,45 @@ var makePitchAnalyser = function(context,source) {
       source.connect(chain);
       chain.connect(analyser);
     }
-  }
-  analyser.calibrate = function(context,time,notchStrength) {
-    this.smoothingTimeConstant = 0.9;
-    var start = new Date().getTime();
-    var e = start+4000;
-    var offset = 20;
+  };
+  var _analyseEnv = function() {
     var results = [];
-    this.getFloatFrequencyData(_FFT);
-    var targetRange = _findMaxWithI(_FFT);
+    analyser.getFloatFrequencyData(_FFT);
+    var fftIndex = _findMaxWithI(_FFT);
     var sample = {
-      volume: targetRange[1][1],
-      hz: convertToHz(targetRange)
+      volume: fftIndex[1][1],
+      hz: _convertToHz(fftIndex)
     };
+    results.push(sample);
+    var cur = new Date().getTime();
+    if (cur < e) {
+      setTimeout(_analyseEnv,50);
+    } else {
+      var data = _getPeaks(results);
+      for (var f in data.freqs) {
+        var pt = data.freqs[f];
+        var ptAvg = pt.vol/pt.hits;
+        if (pt.hits > results.length*0.3) {
+          noiseCancel(f);
+        }
+      }
+      if (data.avg >= -60 && data.avg <= -40) {
+        offset = 10;
+      } else if (data.avg > -40) {
+        offset = 0;
+      }
+      state.threshold = data.avg+offset;
+    }
+  }
+  analyser.calibrate = function(context,time,tStrength,nStrength) {
+    this.smoothingTimeConstant = 0.9;
+    var _start = new Date().getTime();
+    var _e = start+4000;
+    if (tStrength < 0 || tStrength > 30) {
+      throw new Error("threshold strength must be between 0 and 30");
+    }
+    this.tStrength = tStrength || 20;
+    
   }
   analyser.process = function(){};
   return analyser;
@@ -110,7 +164,7 @@ var makePitchAnalyser = function(context,source) {
 var calibrate = function(context,time,notchStrength) {
   var analyze = function(){
     var noiseCancel = function(freq) {
-      var amount = (data.avg-ptAvg)*notchStrength
+      var amount = (data.avg-ptAvg)*notchStrength;
       console.log("adding filter at " + freq,data.avg);
       var filter = makeFilter(context,"PEAKING",freq,amount);
 
@@ -138,7 +192,7 @@ var calibrate = function(context,time,notchStrength) {
     if (cur < e) {
       setTimeout(analyze,50);
     } else {
-      var data = getPeaks(results);
+      var data = _getPeaks(results);
       for (var f in data.freqs) {
         var pt = data.freqs[f];
         var ptAvg = pt.vol/pt.hits;
