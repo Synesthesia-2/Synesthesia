@@ -4,6 +4,7 @@ ClientSpace.ShowView = Backbone.View.extend({
 
   events: {
     'touchend #exitShow': 'exitShow',
+    'mousedown #exitShow': 'exitShow'
   },
 
   initialize: function(params) {

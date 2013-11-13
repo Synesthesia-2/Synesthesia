@@ -3,7 +3,8 @@ ClientSpace.CastView = Backbone.View.extend({
   className: 'cast scrollable',
   
   events: {
-    'click .back': 'backToIndex'
+    'touchend .back': 'backToIndex',
+    'mousedown .back': 'backToIndex'
   },
 
   initialize: function() {

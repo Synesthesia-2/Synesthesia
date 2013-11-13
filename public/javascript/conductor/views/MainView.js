@@ -1,18 +1,20 @@
 ConductorSpace.MainView = Backbone.View.extend({
 
-  events: function() {
-    var _events = {};
-    _events[ConductorSpace.clickEvent + " .color"] = "sendColor";
-    _events[ConductorSpace.clickEvent + " .random"] = "sendRandomColor";
-    _events[ConductorSpace.clickEvent + " #toggleSound"] = "toggleSound";
-    _events[ConductorSpace.clickEvent + " #toggleMotion"] = "toggleMotion";
-    _events[ConductorSpace.clickEvent + " #toggleStrobe"] = "toggleStrobe";
-    _events[ConductorSpace.clickEvent + " #toggleAudioLights"] = "toggleAudioLights";
-    _events["change #fader"] = "updateFadeTime";
-
-    return _events;
+  events: {
+    'mousedown .color': 'sendColor',
+    'mousedown .random': 'sendRandomColor',
+    'mousedown #toggleSound': 'toggleSound',
+    'mousedown #toggleMotion': 'toggleMotion',
+    'mousedown #toggleStrobe': 'toggleStrobe',
+    'mousedown #toggleAudioLights': 'toggleAudioLights',
+    'touchstart .color': 'sendColor',
+    'touchstart .random': 'sendRandomColor',
+    'touchstart #toggleSound': 'toggleSound',
+    'touchstart #toggleMotion': 'toggleMotion',
+    'touchstart #toggleStrobe': 'toggleStrobe',
+    'touchstart #toggleAudioLights': 'toggleAudioLights',
+    'change #fader': 'updateFadeTime'
   },
-
 
   initialize: function() {
     this.template = this.model.get('templates')['mainView'];
