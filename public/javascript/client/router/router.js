@@ -22,13 +22,14 @@ ClientSpace.Router = Backbone.Router.extend({
 
   index: function(){
     console.log('index route');
-    var indexView = new ClientSpace.IndexView({ model: this.model });
+    var indexView = new ClientSpace.IndexView({ model: this.model  });
     this.swapView(indexView);
   },
 
   showCastList: function() {
     console.log('cast route');
-    var castView = new ClientSpace.CastView({ model: this.model });
+    var cast = new Cast();
+    var castView = new ClientSpace.CastView({ model: this.model, collection: cast });
     this.swapView(castView);
   },
 
