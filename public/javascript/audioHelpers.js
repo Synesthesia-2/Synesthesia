@@ -103,14 +103,12 @@ var makePitchAnalyser = function(context,source) {
     };
   };
   var _noiseCancel = function(freq,diff) {
-    notchStrength = 0.3;
+    notchStrength = 0.7;
     var amt = diff*notchStrength;
-    debugger;
     console.log("adding filter at "+freq+"hz with gain "+amt);
     source.disconnect(analyser);
     var filter = makeFilter(context,"PEAKING",freq,amt);
     var chain = analyser.ncFilters;
-    debugger;
     if (chain) {
       chain.add(filter);
     } else {
@@ -120,36 +118,43 @@ var makePitchAnalyser = function(context,source) {
       chain.connect(analyser);
     }
   };
+
   var _analyseEnv = function(time,tStrength) {
     var interval = 50;
+    var start = new Date().getTime();
+    var e = start + time;
     var results = [];
-    var offset = tStrength;
-    analyser.getFloatFrequencyData(_FFT);
-    var fftIndex = _findMaxWithI(_FFT);
-    var sample = {
-      volume: fftIndex[1][1],
-      hz: _convertToHz(fftIndex)
-    };
-    results.push(sample);
-    if (time > 0) {
-      setTimeout(_analyseEnv(time-interval),interval);
-    } else {
-      var data = _getPeaks(results);
-      debugger;
-      for (var f in data.freqs) {
-        var pt = data.freqs[f];
-        var ptAvg = pt.vol/pt.hits;
-        if (pt.hits > results.length*0.7) {
-          _noiseCancel(f,data.avg-ptAvg);
+    var tick = function(timeLeft) {
+      analyser.getFloatFrequencyData(_FFT);
+      var fftIndex = _findMaxWithI(_FFT);
+      var sample = {
+        volume: fftIndex[1][1],
+        hz: _convertToHz(fftIndex)
+      };
+      results.push(sample);
+      var cur = new Date().getTime();
+      if (cur < e) {
+        setTimeout(tick,interval);
+      } else {
+        var data = _getPeaks(results);
+        for (var f in data.freqs) {
+          var pt = data.freqs[f];
+          var ptAvg = pt.vol/pt.hits;
+          if (pt.hits > results.length*0.3) {
+            _noiseCancel(f,data.avg-ptAvg);
+          }
         }
+        if (data.avg >= analyser.minDecibels*0.4 && data.avg <= analyser.minDecibels*0.27) {
+          console.log("OLD TSTRENGTH",tStrength);
+          tStrength *= 0.5;
+          console.log("NEW TSTRENGTH",tStrength);
+        } else if (data.avg > analyser.minDecibels*0.27) {
+          tStrength = 0;
+        }
+        analyser.threshold = data.avg+tStrength;
       }
-      if (data.avg >= analyser.minDecibels*0.4 && data.avg <= analyser.minDecibels*0.27) {
-        offset = tStrength*0.5;
-      } else if (data.avg > analyser.minDecibels*0.27) {
-        offset = 0;
-      }
-      analyser.threshold = data.avg+offset;
-    }
+    };
+    tick(time);
   };
 
   analyser.calibrate = function(time,tStrength) {
@@ -170,7 +175,7 @@ var makePitchAnalyser = function(context,source) {
       callback = smooth;
       smooth = undefined;
     }
-    interval = interval || 4000;
+    interval = interval || 60;
     this.smoothingTimeConstant = smooth || 0;
     setInterval(function(){
       analyser.getFloatFrequencyData(_FFT);
