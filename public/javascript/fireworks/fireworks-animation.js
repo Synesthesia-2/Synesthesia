@@ -10,10 +10,11 @@ var canvas, gl,
 	velocities,
 	colorHz,
 	colorLoc,
-	oa, ob, og, //for old alpha, old beta, old gamma
+	countdown,
+	oa, ob, //og, for old alpha, old beta, old gamma
 	cw, ch, //canvas width and height
 	cr, cg, cb, //for color-red, -green, -blue
-	px, py, pz, //position-x, -y, -z
+	px, py, //pz, position-x, -y, -z
 	modifier, //converts from frequency to color
 	touches = [], //analogue to mouse press
 	totalLines = 60000,
@@ -26,27 +27,22 @@ function initialize (data) {
 	touches[1] = 0;
 
 	if (data.alpha) {
-		px = data.alpha;
-		py = data.beta;
-		pz = data.gamma;
+		py = 2.25*(data.alpha-180)/360; //0 to 360
+		px = data.beta/120; //-90 to +90
+		// pz = data.gamma; //-180 to +180
 
-		px = (px*(5+Math.random()))%cw;
-		py = (py*(5+Math.random()))%ch;
-		pz *= 5;
-		
-		if (Math.abs(oa-px)>5 || Math.abs(ob-py)>5 || Math.abs(og-pz)>5){
-			touches[0]=px;
-			touches[1]=py;
-		}
+		touches[0]=px;
+		touches[1]=py;
 
 		oa = px;
 		ob = py;
-		og = pz;
+		// og = pz;
 	}
 
-	if (data.hz && data.volume>-40) {
-		numLines = Math.floor((5000/7)*data.volume) + 65000;
+	if (data.hz) {
+		numLines = Math.floor((5000/7)*data.volume) + 63000;
 		if (numLines>totalLines) {numLines=totalLines;}
+		console.log(numLines,data.volume);
 		
 		modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
 		colorHz = pusher.color('yellow').hue(modifier.toString());
@@ -54,10 +50,19 @@ function initialize (data) {
 		cr=colorHz.rgb()[0]/256;
 		cg=colorHz.rgb()[1]/256;
 		cb=colorHz.rgb()[2]/256;
-
-	} else if (data.hz && data.volume<-40) {
-		touches = [];
 	}
+
+	function setDisappear() {
+		countdown = setTimeout(function(){touches=[];},2000);
+	}
+
+	function clearDisappear() {
+		clearTimeout(countdown);
+	}
+
+	if (countdown) {clearDisappear();}
+	setDisappear();
+
 }
 
 // setup webGL
