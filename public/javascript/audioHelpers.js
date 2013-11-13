@@ -160,6 +160,14 @@ var makePitchAnalyser = function(context,source) {
   };
 
   analyser.process = function(interval,smooth,callback){
+    if (typeof(interval) === 'function') {
+      callback = interval;
+      interval = undefined;
+    } else if (typeof(smooth) === 'function') {
+      callback = smooth;
+      smooth = undefined;
+    }
+    interval = interval || 4000;
     this.smoothingTimeConstant = smooth || 0;
     setInterval(function(){
       analyser.getFloatFrequencyData(_FFTData);
