@@ -1,10 +1,10 @@
 ClientSpace.IndexView = Backbone.View.extend({
   className: "scrollable",
   events: {
-    "click .startShow":  "startShow",
-    "click .cast":  "showCastList",
-    "click .upcomingShows":  "showUpcomingShows",
-    "click .about":  "showAbout"
+    "touchend .startShow":  "startShow",
+    "touchend .cast":  "showCastList",
+    "touchend .upcomingShows":  "showUpcomingShows",
+    "touchend .about":  "showAbout"
   },
 
   initialize: function() {

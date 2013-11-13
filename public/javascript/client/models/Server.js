@@ -10,6 +10,11 @@ ClientSpace.Server = Backbone.Model.extend({
     this.connection.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.connection.on('newFadeTime', this.newFadeTime.bind(this));
     this.connection.on('audio', this.audioColor.bind(this));
+    this.connection.on('reset', this.reset.bind(this));
+  },
+
+  reset: function() {
+    this.trigger('reset');
   },
 
   setID: function(data) {
