@@ -102,18 +102,21 @@ var makePitchAnalyser = function(context,source) {
       freqs: freqs
     };
   };
-  var _noiseCancel = function(freq) {
-    var amount = (data.avg-ptAvg)*notchStrength;
-    console.log("adding filter at "+freq+"with gain "+amount);
+  var _noiseCancel = function(freq,diff) {
+    notchStrength = 0.3;
+    var amt = diff*notchStrength;
+    debugger;
+    console.log("adding filter at "+freq+"hz with gain "+amt);
     source.disconnect(analyser);
-    var filter = makeFilter(context,"PEAKING",freq,amount);
+    var filter = makeFilter(context,"PEAKING",freq,amt);
     var chain = analyser.ncFilters;
+    debugger;
     if (chain) {
       chain.add(filter);
     } else {
       chain = analyser.ncFilters = makeFilterChain();
       chain.add(filter);
-      source.connect(chain);
+      source.connect(chain.first);
       chain.connect(analyser);
     }
   };
@@ -132,11 +135,12 @@ var makePitchAnalyser = function(context,source) {
       setTimeout(_analyseEnv(time-interval),interval);
     } else {
       var data = _getPeaks(results);
+      debugger;
       for (var f in data.freqs) {
         var pt = data.freqs[f];
         var ptAvg = pt.vol/pt.hits;
-        if (pt.hits > results.length*0.3) {
-          noiseCancel(f);
+        if (pt.hits > results.length*0.7) {
+          _noiseCancel(f,data.avg-ptAvg);
         }
       }
       if (data.avg >= analyser.minDecibels*0.4 && data.avg <= analyser.minDecibels*0.27) {
@@ -151,11 +155,10 @@ var makePitchAnalyser = function(context,source) {
   analyser.calibrate = function(time,tStrength) {
     this.smoothingTimeConstant = 0.9;
     time = time || 4000;
-    if (arguments.length < 3) {tStrength = interval;}
+    tStrength = tStrength || 20;
     if (tStrength < 0 || tStrength > 50) {
       throw new Error("threshold strength must be between 0 and 50");
     }
-    tStrength = tStrength || 20;
     _analyseEnv(time, tStrength);
   };
 
@@ -170,8 +173,8 @@ var makePitchAnalyser = function(context,source) {
     interval = interval || 4000;
     this.smoothingTimeConstant = smooth || 0;
     setInterval(function(){
-      analyser.getFloatFrequencyData(_FFTData);
-      var targetRange = _findMaxWithI(_FFTData);
+      analyser.getFloatFrequencyData(_FFT);
+      var targetRange = _findMaxWithI(_FFT);
       var volume = targetRange[1][1];
       var hz = _convertToHz(targetRange);
       var data = {
@@ -183,8 +186,6 @@ var makePitchAnalyser = function(context,source) {
   };
   return analyser;
 };
-
-if (volume > state.threshold) { server.emit("audio",data); }
 
 
 // // HOW TO USE THESE HELPER FUNCTIONS:
