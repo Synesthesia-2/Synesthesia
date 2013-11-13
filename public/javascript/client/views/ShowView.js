@@ -71,22 +71,31 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   audioColor: function(data) {
+    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
+    var self = this;
+    if (!this.fadeInterval) {
+      this.fadeInterval = setInterval(function() {
+        self.fadeOutTimer++;
+        if (self.fadeOutTimer > 0 && self.fadeOutTimer % 30 === 0) {
+          console.log(self.fadeOutTimer);
+          // self.cr = (self.cr * 0.94).toFixed(3);
+          // self.cg = (self.cg * 0.94).toFixed(3);
+          // self.cb = (self.cb * 0.94).toFixed(3);
+          // self.$el.animate({
+          //   'backgroundColor': 'rgb(' + self.cr + ',' + self.cg + ',' + self.cb + ')'
+          // }, 10);
+        }
+        if (self.fadeOutTimer === 170) {
+          self.fadeOut();
+        }
+        if (self.fadeOutTimer === 800) {
+          clearInterval(self.fadeInterval);
+          self.fadeInterval = null;
+        }
+      }, 1);
+    }
     if (data.hz && data.volume>-40) {
-      //console.log('hz: ' + data.hz + ' volume: ' + data.volume);
-      // var self = this;
-      // if (!this.fadeInterval) {
-      //   this.fadeInterval = setInterval(function() {
-      //     self.fadeOutTimer++;
-      //     if (self.fadeOutTimer === 260) {
-      //       self.fadeOut();
-      //     }
-      //     if (self.fadeOutTimer === 800) {
-      //       clearInterval(self.fadeInterval);
-      //       self.fadeInterval = null;
-      //     }
-      //   }, 1);
-      // }
-    
+      this.fadeOutTimer = 0;
       var modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
       var colorHz = pusher.color('yellow').hue(modifier.toString());
 
