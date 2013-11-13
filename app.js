@@ -107,6 +107,7 @@ dancer.on('connection', function (dancer) {
 conductor.on('connection', function (conductor) {
   // reset on connection
   state.resetMC();
+  clients.emit('reset');
 
   conductor.emit("welcome");
 

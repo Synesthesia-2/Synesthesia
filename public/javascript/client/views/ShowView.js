@@ -23,11 +23,21 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.server.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.server.on('newFadeTime', this.newFadeTime.bind(this));
     this.server.on('audioColor', this.audioColor.bind(this));
+    this.server.on('reset', this.reset.bind(this));
   },
 
   render: function() {
     this.$el.html( this.template() );
     return this;
+  },
+
+  reset: function() {
+    this.strobe(false);
+    this.model.set('strobe', false);
+    this.fadeTime = 1500;
+    if (this.strobeInt !== null) clearInterval(this.strobeInt);
+    this.currentColor = '#000000';
+    this.$el.css({'backgroundColor': '#000000'});
   },
 
   newFadeTime: function(data) {
@@ -77,6 +87,7 @@ ClientSpace.ShowView = Backbone.View.extend({
       this.fadeInterval = setInterval(function() {
         self.fadeOutTimer++;
         if (self.fadeOutTimer > 0 && self.fadeOutTimer % 30 === 0) {
+          // TODO: Match visualizer drift
           // self.cr = (self.cr * 0.94).toFixed(3);
           // self.cg = (self.cg * 0.94).toFixed(3);
           // self.cb = (self.cb * 0.94).toFixed(3);

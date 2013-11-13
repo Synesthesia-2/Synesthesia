@@ -19,6 +19,9 @@ html
 
     script(src="javascript/dancer/dancer.js")
     script.
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
       iosSleepPreventInterval = setInterval(function () {
         window.location.href = "/dancer";
         window.setTimeout(function () {
