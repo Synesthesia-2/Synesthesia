@@ -156,6 +156,9 @@ var streamLoaded = function(stream) {
   loPass.connect(analyser);
   // loShelf.connect(analyser);
   server.on("startAudio",function() {
+    // startAudio sends data.sound as a boolean.
+    // can be used to start the audio, as done now,
+    // or end it with clearInterval(soundInterval)
     calibrate();
     setTimeout(process, 4500);
   });
