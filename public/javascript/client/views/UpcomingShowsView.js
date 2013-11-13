@@ -4,8 +4,7 @@ ClientSpace.UpcomingShowsView = Backbone.View.extend({
   className: 'shows scrollable',
   
   events: {
-    'touchend .back': 'backToIndex',
-    'mousedown .back': 'backToIndex'
+    'touchend .back': 'backToIndex'
   },
 
   initialize: function() {

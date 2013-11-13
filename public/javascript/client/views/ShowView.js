@@ -3,8 +3,7 @@ ClientSpace.ShowView = Backbone.View.extend({
   className: "showWrapper",
 
   events: {
-    'touchend #exitShow': 'exitShow',
-    'mousedown #exitShow': 'exitShow'
+    'touchend #exitShow': 'exitShow'
   },
 
   initialize: function(params) {
@@ -127,7 +126,6 @@ ClientSpace.ShowView = Backbone.View.extend({
         this.fadeTime = 150;
       }
       var self = this;
-      console.log('strobe on');
       this.strobeInt = setInterval(function() {
         self.$el.animate({
           backgroundColor: '#000000'
@@ -138,7 +136,6 @@ ClientSpace.ShowView = Backbone.View.extend({
         });
       }, this.fadeTime);
     } else {
-      console.log('strobe off');
       clearInterval(this.strobeInt);
       this.strobeInt = null;
     }
@@ -148,15 +145,6 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.$el.animate({
       backgroundColor: '#000000'
     }, 500);
-  },
-
-  driftColor: function() {
-    this.cr = this.cr * 0.94;
-    this.cg = this.cg * 0.94;
-    this.cb = this.cb * 0.94;
-    this.$el.animate({
-      'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
-    }, 20);
   },
 
   exitShow: function(event) {
