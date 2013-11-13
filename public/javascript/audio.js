@@ -6,7 +6,7 @@
 
 // Tip: If you have access to soundcard settings, adjust input gain so that microphone input
 // averages between 50% and 75% on soundcard.
-// Good rule of thumb for analyser is that -100dB is a very quiet room and 0 is a loud input.
+// Good rule of thumb for analyser is that -100dB is a very quiet room and 0 is a very loud input.
 // Under this setup most inputs should avg between -40 and -5 dB.
 var h1 = $('h1');
 var contextClass = (window.AudioContext ||

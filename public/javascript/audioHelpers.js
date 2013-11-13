@@ -1,6 +1,8 @@
 var makeFilter = function(context,type,freq,gain,q) {
   if (!context) {throw new Error("context argument required");}
-  if (!type || typeof(type) !== "string") {throw new Error("type must be string");}
+  if (!type || typeof(type) !== "string") {
+    throw new Error("type must be string");
+  }
   var filter = context.createBiquadFilter();
   filter.type = filter[type];
   if (freq) { filter.frequency.value = freq; }
@@ -64,6 +66,7 @@ var makeAnalyser = function(context,fftSize,maxdec,mindec,smoothing) {
 
 var makePitchAnalyser = function(context,source) {
   var analyser = makeAnalyser(context,2048,-30,-144);
+  analyser.threshold = analyser.minDecibels;
   source.connect(analyser);
   var _FFT = new Float32Array(analyser.frequencyBinCount);
   var _findMaxWithI = function(array) {
@@ -71,10 +74,10 @@ var makePitchAnalyser = function(context,source) {
     var index = Array.prototype.indexOf.call(array,max);
     return [[index-1,array[index-1]],[index,max],[index+1,array[index+1]]];
   };
-  var _convertToHz = function(bucket) {
-    var targetFreq = bucket[1][0];
-    var lowD = ((bucket[1][1])-(bucket[0][1]));
-    var highD = ((bucket[1][1])-(bucket[2][1]));
+  var _convertToHz = function(buckets) {
+    var targetFreq = buckets[1][0];
+    var lowD = ((buckets[1][1])-(buckets[0][1]));
+    var highD = ((buckets[1][1])-(buckets[2][1]));
     var shift = (lowD < highD ? -(highD - lowD) : (lowD - highD));
     var adjShift = (shift*0.5)*0.1;
     return (targetFreq+adjShift)/analyser.frequencyBinCount*(context.sampleRate * 0.5);
@@ -114,8 +117,10 @@ var makePitchAnalyser = function(context,source) {
       chain.connect(analyser);
     }
   };
-  var _analyseEnv = function() {
+  var _analyseEnv = function(time,tStrength) {
+    var interval = 50;
     var results = [];
+    var offset = tStrength;
     analyser.getFloatFrequencyData(_FFT);
     var fftIndex = _findMaxWithI(_FFT);
     var sample = {
@@ -123,9 +128,8 @@ var makePitchAnalyser = function(context,source) {
       hz: _convertToHz(fftIndex)
     };
     results.push(sample);
-    var cur = new Date().getTime();
-    if (cur < e) {
-      setTimeout(_analyseEnv,50);
+    if (time > 0) {
+      setTimeout(_analyseEnv(time-interval),interval);
     } else {
       var data = _getPeaks(results);
       for (var f in data.freqs) {
@@ -135,98 +139,44 @@ var makePitchAnalyser = function(context,source) {
           noiseCancel(f);
         }
       }
-      if (data.avg >= -60 && data.avg <= -40) {
-        offset = 10;
-      } else if (data.avg > -40) {
+      if (data.avg >= analyser.minDecibels*0.4 && data.avg <= analyser.minDecibels*0.27) {
+        offset = tStrength*0.5;
+      } else if (data.avg > analyser.minDecibels*0.27) {
         offset = 0;
       }
-      state.threshold = data.avg+offset;
+      analyser.threshold = data.avg+offset;
     }
-  }
-  analyser.calibrate = function(context,time,tStrength,nStrength) {
+  };
+
+  analyser.calibrate = function(time,tStrength) {
     this.smoothingTimeConstant = 0.9;
-    var _start = new Date().getTime();
-    var _e = start+4000;
-    if (tStrength < 0 || tStrength > 30) {
-      throw new Error("threshold strength must be between 0 and 30");
+    time = time || 4000;
+    if (arguments.length < 3) {tStrength = interval;}
+    if (tStrength < 0 || tStrength > 50) {
+      throw new Error("threshold strength must be between 0 and 50");
     }
-    this.tStrength = tStrength || 20;
-    
-  }
-  analyser.process = function(){};
+    tStrength = tStrength || 20;
+    _analyseEnv(time, tStrength);
+  };
+
+  analyser.process = function(interval,smooth,callback){
+    this.smoothingTimeConstant = smooth || 0;
+    setInterval(function(){
+      analyser.getFloatFrequencyData(_FFTData);
+      var targetRange = _findMaxWithI(_FFTData);
+      var volume = targetRange[1][1];
+      var hz = _convertToHz(targetRange);
+      var data = {
+        hz: hz,
+        volume: volume
+      };
+      callback(data);
+    }, interval);
+  };
   return analyser;
-}
-
-
-
-
-
-var calibrate = function(context,time,notchStrength) {
-  var analyze = function(){
-    var noiseCancel = function(freq) {
-      var amount = (data.avg-ptAvg)*notchStrength;
-      console.log("adding filter at " + freq,data.avg);
-      var filter = makeFilter(context,"PEAKING",freq,amount);
-
-      filter.connect(analyser);
-      var lastFilter = dynamicFilters.length;
-      if (lastFilter) {
-        dynamicFilters[lastFilter-1].disconnect(analyser);
-        dynamicFilters[lastFilter-1].connect(filter);
-        dynamicFilters.push(filter);
-      } else {
-        // the last static filter in line to the analyser
-        loPass.disconnect(analyser);
-        loPass.connect(filter);
-        dynamicFilters.push(filter);
-      }
-    };
-    analyser.getFloatFrequencyData(FFTData);
-    var targetRange = findMaxWithI(FFTData);
-    var sample = {
-      volume: targetRange[1][1],
-      hz: convertToHz(targetRange)
-    };
-    results.push(sample);
-    var cur = new Date().getTime();
-    if (cur < e) {
-      setTimeout(analyze,50);
-    } else {
-      var data = _getPeaks(results);
-      for (var f in data.freqs) {
-        var pt = data.freqs[f];
-        var ptAvg = pt.vol/pt.hits;
-        if (pt.hits > results.length*0.3) {
-          noiseCancel(f);
-        }
-      }
-      if (data.avg >= -60 && data.avg <= -40) {
-        offset = 10;
-      } else if (data.avg > -40) {
-        offset = 0;
-      }
-      state.threshold = data.avg+offset;
-    }
-  };
-  analyze();
 };
 
-
-var makeThing = function() {
-  var thing = {};
-  var blah = function() {
-    thing.word = true;
-  };
-  thing.callBlah = function(){
-    blah();
-  };
-  return thing;
-};
-
-
-
-
-
+if (volume > state.threshold) { server.emit("audio",data); }
 
 
 // // HOW TO USE THESE HELPER FUNCTIONS:
