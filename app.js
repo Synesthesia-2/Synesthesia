@@ -23,6 +23,7 @@ server.listen(8080);
 var io = require('socket.io').listen(server);
 
 var db = require('./server/database_server');
+var helpers = require('./server/helpers');
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
@@ -91,6 +92,20 @@ app.get('/cast', function (req, res) {
 app.get('/upcomingShows', function (req, res) {
   db.getUpcomingShows(res);
 });
+
+// POST DATABASE FILES
+app.post('/cast', function (req, res) {
+  processPost(req, function(data){
+    console.log(data);
+  });
+});
+
+app.post('/upcomingShows', function (req, res) {
+  processPost(req, function(data){
+    console.log(data);
+  });
+});
+
 //////////////////////////////////////////
 /// EVENTS
 //////////////////////////////////////////

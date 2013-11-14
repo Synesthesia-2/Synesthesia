@@ -15,3 +15,13 @@ exports.sendResponse = sendResponse = function(res, object, statusCode, contentT
   res.writeHead(statusCode, headers);
   res.end(object);
 };
+
+exports.processPost = processPost = function(req, cb) {
+  var data = "";
+  req.on("data", function(chunk) {
+    data += chunk;
+  });
+  req.on("end", function() {
+    cb(data);
+  });
+};

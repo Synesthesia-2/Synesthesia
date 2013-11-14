@@ -90,27 +90,52 @@ header
     margin 0 0 10px 0
 
   aside.currentEventsList
-    width 250px
-    height 500px
+    padding 10px
+    width 240px
+    height 490px
     background-color #fff
     border 1px solid #000
     float left
 
   section
     float right
-    width 600px
+    width 595px
     height 500px
-
-    li
-      list-style: none
 
 // FORM STUFF
 
-.submit-button
-  height 40px
-  width 100px
-  margin 20px
+form
+  padding 0 0 0 20px
 
-textarea
-  height 100px
-  width 540px
+  .submit-button
+    height 40px
+    width 100px
+    margin 20px 0 0 0
+
+  textarea
+    height 100px
+    width 540px
+    padding 2px 5px 3px 5px
+    outline: none
+    border 1px solid #999
+
+  label
+    display block
+    height 30px
+    font-size 18px
+    color #444
+
+  input[type="text"]
+    height 25px
+    width 540px
+    padding 2px 5px 3px 5px
+    margin-bottom 10px
+    outline none
+    border 1px solid #999
+
+  input[type="text"]:focus, textarea:focus
+    border 1px solid #000
+
+  input[type="file"]
+    height 25px
+    margin-bottom 10px
