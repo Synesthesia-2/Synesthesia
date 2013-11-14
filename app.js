@@ -51,7 +51,7 @@ var state = {
 app.set('views', __dirname + '/views');
 app.set("view engine", "jade");
 app.use(require('stylus').middleware({ src: __dirname + '/public'}));
-app.use(express.static(__dirname + '/public'));   
+app.use(express.static(__dirname + '/public'));
 io.set('log level', 1);                           // reduce server-side logging
 io.set('browser client gzip', true);              // gzip the static files
 
@@ -77,6 +77,10 @@ app.get('/audio', function (req, res) {
 
 app.get('/dancer', function (req, res) {
   res.render('dancer');
+});
+
+app.get('/update', function (req, res) {
+  res.render('update');
 });
 
 // SERVE DATABASE FILES
@@ -166,7 +170,6 @@ conductor.on('connection', function (conductor) {
     } else {
       state.audioLights = false;
     }
-    // clients.emit?
   });
 
   conductor.on('newFadeTime', function (data){
