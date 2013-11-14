@@ -198,8 +198,9 @@ clients.on('connection', function (client) {
 //////////////////////////////////////////
 
 audio.on('connection', function (audio) {
-  audio.emit('welcome', {audio: state.audio})
+  audio.emit('welcome', {audio: state.audio});
   audio.on('audio', function (data){
+    console.log(data);  // Leave in for test logging until Monday
     var clients = io.of('/client');
     if (state.audioLights) {
       clients.emit('audio', data);
