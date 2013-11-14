@@ -16,4 +16,14 @@ suite('Conductor', function() {
 	test('should have an initialize method', function() {
 		expect(typeof conductor.initialize).to.equal('function');
 	})
+
+	//After conductor.sendColor is called, expect changeColor
+	//to have been triggered
+
+	test('should toggle strobe when called', function() {
+		conductor['strobe'] = true;
+		conductor.toggleStrobe();
+		expect(conductor['strobe']).to.equal(false);
+	})
+
 })
