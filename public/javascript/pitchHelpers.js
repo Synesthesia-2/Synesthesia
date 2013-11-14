@@ -113,7 +113,20 @@ var makePitchAnalyser = function(context,source) {
     _analyseEnv(time,tStrength,callback);
   };
 
-  analyser.process = function(interval,smooth,callback){
+  analyser.start = function(interval,smooth,callback){ 
+    var startInterval = function(){
+      return setInterval(function(){
+        analyser.getFloatFrequencyData(_FFT);
+        var targetRange = _findMaxWithI(_FFT);
+        var volume = targetRange[1][1];
+        var hz = _convertToHz(targetRange);
+        var data = {
+          hz: hz,
+          volume: volume
+        };
+        callback(data);
+      }, interval);
+    };
     if (typeof(interval) === 'function') {
       callback = interval;
       interval = undefined;
@@ -123,17 +136,15 @@ var makePitchAnalyser = function(context,source) {
     }
     interval = interval || 60;
     this.smoothingTimeConstant = smooth || 0;
-    setInterval(function(){
-      analyser.getFloatFrequencyData(_FFT);
-      var targetRange = _findMaxWithI(_FFT);
-      var volume = targetRange[1][1];
-      var hz = _convertToHz(targetRange);
-      var data = {
-        hz: hz,
-        volume: volume
-      };
-      callback(data);
-    }, interval);
+    var processor = startInterval();
+    this.end = function() {
+      clearInterval(processor);
+    };
   };
+
+  analyser.end = function(){
+    return "End called but analyser not processing yet.";
+  };
+
   return analyser;
 };
