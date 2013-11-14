@@ -22,6 +22,8 @@ var server = http.createServer(app);
 server.listen(8080);
 var io = require('socket.io').listen(server);
 
+var db = require('./server/database_server');
+
 // define socket.io spaces
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
@@ -49,7 +51,7 @@ var state = {
 app.set('views', __dirname + '/views');
 app.set("view engine", "jade");
 app.use(require('stylus').middleware({ src: __dirname + '/public'}));
-app.use(express.static(__dirname + '/public'));   
+app.use(express.static(__dirname + '/public'));
 io.set('log level', 1);                           // reduce server-side logging
 io.set('browser client gzip', true);              // gzip the static files
 
@@ -77,6 +79,18 @@ app.get('/dancer', function (req, res) {
   res.render('dancer');
 });
 
+app.get('/update', function (req, res) {
+  res.render('update');
+});
+
+// SERVE DATABASE FILES
+app.get('/cast', function (req, res) {
+  db.getCast(res);
+});
+
+app.get('/upcomingShows', function (req, res) {
+  db.getUpcomingShows(res);
+});
 //////////////////////////////////////////
 /// EVENTS
 //////////////////////////////////////////
@@ -156,7 +170,6 @@ conductor.on('connection', function (conductor) {
     } else {
       state.audioLights = false;
     }
-    // clients.emit?
   });
 
   conductor.on('newFadeTime', function (data){

@@ -1,0 +1,109 @@
+doctype 5
+html
+  head
+    title Update Landing Page Details
+    meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
+
+    link(rel='stylesheet', href='/bower_components/normalize-css/normalize.css')
+    link(rel='stylesheet', href='/stylesheets/update.css')
+
+    link(rel="icon", type="image/png", href="images/icon.png")
+
+    link(rel="icon", type="image/png", href="images/icon.png")
+
+    script(src="bower_components/jquery/jquery.min.js")
+    script(src="bower_components/underscore/underscore-min.js")
+    script(src="bower_components/backbone/backbone-min.js")
+    script(src="bower_components/handlebars/handlebars.js")
+
+  body
+
+    script#updateApp(type="text/x-handlebars-template")
+      header
+        h1 Update Client Landing Page
+        nav
+          ul
+            li(class="nav-link castLink") UPDATE CAST LIST
+            li |
+            li(class="nav-link eventsLink") UPDATE EVENT LIST
+
+      div#wrapper
+
+    script#updateCast(type="text/x-handlebars-template")
+      h1 Update Cast List
+
+      aside.currentCastList
+        
+
+      section.formField
+        form(name="cast-form", id="cast-form", method="post")
+          ul.formChecker
+            li
+              p Name
+            li
+              input(type="text", name="name", maxlength="75", id="name", tabindex="1", AUTOCOMPLETE="OFF", class="txtinput")
+            li
+              p Portrait Image
+            li
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+            li
+              p Role
+            li
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+            li
+              p Description
+            li
+              textarea(rows="4", maxlength="255", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF", class="txtinput")
+            li
+              input(type="submit", value="SUBMIT", name="cast-submit", tabindex="6", class="submit-button")
+    
+    script#updateEvents(type="text/x-handlebars-template")
+      h1 Update Events List
+
+      aside.currentEventsList
+        
+      section.formField
+        form(name="event-form", id="event-form", method="post")
+          ul.formChecker
+            li
+              p Name
+            li
+              input(type="text", name="name", maxlength="75", id="name", tabindex="1", AUTOCOMPLETE="OFF", class="txtinput")
+            li
+              p Where
+            li
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+            li
+              p When
+            li
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+            li
+              p Description
+            li
+              textarea(rows="4", maxlength="255", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF", class="txtinput")
+            li
+              input(type="submit", value="SUBMIT", name="cast-submit", tabindex="6", class="submit-button")
+ 
+
+    script.
+      var UpdateSpace = {};
+
+    script(src="javascript/update/models/Update.js")
+    
+    script(src="javascript/update/views/UpdateApp.js")
+    script(src="javascript/update/views/IndexView.js")
+    script(src="javascript/update/views/UpdateCastView.js")
+    script(src="javascript/update/views/UpdateEventsView.js")
+
+    script(src="javascript/update/router/router.js")
+
+    script.
+      var update = new UpdateSpace.Update();
+
+      var kineTemplates = {};
+      $("[type='text/x-handlebars-template']").each(function(index, div){
+          kineTemplates[div.id] = Handlebars.compile(div.innerHTML);
+      });
+      update.set('templates', kineTemplates);
+
+      var updateApp = new UpdateSpace.UpdateApp({ model: update });

@@ -1,13 +1,13 @@
-ClientSpace.AboutView = Backbone.View.extend({
+UpdateSpace.UpdateEventsView = Backbone.View.extend({
   
-  className: 'about scrollable',
+  className: 'events',
   
   events: {
     'click .back': 'backToIndex'
   },
 
   initialize: function() {
-    this.template = this.model.get('templates')['about'];
+    this.template = this.model.get('templates')['updateEvents'];
   },
 
   render: function() {

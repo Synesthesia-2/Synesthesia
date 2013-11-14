@@ -14,10 +14,11 @@ var canvas, gl,
 	oa, ob, //og, for old alpha, old beta, old gamma
 	cw, ch, //canvas width and height
 	cr, cg, cb, //for color-red, -green, -blue
-	px, py, //pz, position-x, -y, -z
+	px, py, pz, //position-x, -y, -z
 	modifier, //converts from frequency to color
 	touches = [], //analogue to mouse press
 	totalLines = 60000,
+	numLinesGoal,
 	numLines = totalLines,
 	aZ;
 
@@ -27,20 +28,22 @@ function initialize (data) {
 	touches[1] = 0;
 
 	if (data.alpha) {
-		py = 2.25*(data.alpha-180)/360; //0 to 360
+		// py = 2.25*(data.alpha-180)/360; //0 to 360
 		px = data.beta/120; //-90 to +90
-		// pz = data.gamma; //-180 to +180
+		console.log(px,pz);
+		pz = data.gamma/180; //-180 to +180
 
 		touches[0]=px;
-		touches[1]=py;
+		touches[1]=pz;
 
 		oa = px;
-		ob = py;
+		ob = pz;
 		// og = pz;
 	}
 
 	if (data.hz) {
-		numLines = Math.floor((5000/7)*data.volume) + 63000;
+		numLinesGoal = Math.floor((5000/7)*data.volume) + 63000;
+		numLines = numLines*0.6 + numLinesGoal*0.4;
 		if (numLines>totalLines) {numLines=totalLines;}
 		console.log(numLines,data.volume);
 		

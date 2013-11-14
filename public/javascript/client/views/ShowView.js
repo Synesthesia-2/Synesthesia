@@ -3,7 +3,7 @@ ClientSpace.ShowView = Backbone.View.extend({
   className: "showWrapper",
 
   events: {
-    'touchend #exitShow': 'exitShow'
+    'click #exitShow': 'exitShow'
   },
 
   initialize: function(params) {
