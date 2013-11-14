@@ -64,15 +64,16 @@ header nav li:hover {
   margin: 0 0 10px 0;
 }
 .castView aside.currentCastList {
-  width: 250px;
-  height: 500px;
+  padding: 10px;
+  width: 240px;
+  height: 490px;
   background-color: #fff;
   border: 1px solid #000;
   float: left;
 }
 .castView section {
   float: right;
-  width: 600px;
+  width: 595px;
   height: 500px;
 }
 .castView section li {
@@ -100,4 +101,13 @@ header nav li:hover {
 }
 .events section li {
   list-style: none;
+}
+.submit-button {
+  height: 40px;
+  width: 100px;
+  margin: 20px;
+}
+textarea {
+  height: 100px;
+  width: 540px;
 }
