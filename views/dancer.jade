@@ -1,0 +1,30 @@
+doctype 5
+html
+  head
+    title Dancer Motion Tracker 
+    meta(http-equiv="content-type", content="text/html; charset=utf-8")
+    meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(name="mobile-web-app-capable", content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style", content="black")
+      
+    link(rel="stylesheet", href="/stylesheets/dancer.css")
+
+    script(src="/socket.io/socket.io.js")
+    script(src="/bower_components/jquery/jquery.min.js")
+
+
+  body
+    h1 Connecting...
+
+    script(src="javascript/dancer/dancer.js")
+    script.
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
+      iosSleepPreventInterval = setInterval(function () {
+        window.location.href = "/dancer";
+        window.setTimeout(function () {
+          window.stop()
+        }, 0);
+      }, 30000);

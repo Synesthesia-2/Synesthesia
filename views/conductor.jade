@@ -1,7 +1,7 @@
 doctype 5
 html
   head
-    title Kinetech Performance Master Conductor
+    title Kinetech MC
     meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
     meta(name="apple-mobile-web-app-status-bar-style", content="black")
@@ -21,36 +21,37 @@ html
       header
         h1 Master Controller
       div#specController
-        div#currentBar
-          h3 Currently Deployed:
         div#optionBuilder
-          h2 Select Color to send:
           div#optionPalette
-            button(class="color", data-color="#CC0000", style="background-color: #CC0000")
-            button(class="color", data-color="#00CC00", style="background-color: #00CC00")
-            button(class="color", data-color="#0000CC", style="background-color: #0000CC")
-            button(class="color", data-color="#B5FC9B", style="background-color: #B5FC9B")
-            button(class="color", data-color="#9BDAFC", style="background-color: #9BDAFC")
-            button(class="color", data-color="#F50FF1", style="background-color: #F50FF1")
-            button(class="color", data-color="#F5AC0F", style="background-color: #F5AC0F")
-            button(class="color", data-color="#FFE203", style="background-color: #FFE203")
-            button(class="color", data-color="#AA84E0", style="background-color: #AA84E0")
-            button(class="color", data-color="#7A0014", style="background-color: #7A0014")
-            button(class="color", data-color="#000000", style="background-color: #000000")
-            button(class="color", data-color="#FFFFFF", style="background-color: #FFFFFF")
-            button(class="random", style="background-color: #999999") RANDOM
+            button(class="color audioControlled", data-color="#CC0000", style="background-color: #CC0000")
+            button(class="color audioControlled", data-color="#00CC00", style="background-color: #00CC00")
+            button(class="color audioControlled", data-color="#0000CC", style="background-color: #0000CC")
+            button(class="color audioControlled", data-color="#B5FC9B", style="background-color: #B5FC9B")
+            button(class="color audioControlled", data-color="#9BDAFC", style="background-color: #9BDAFC")
+            button(class="color audioControlled", data-color="#F50FF1", style="background-color: #F50FF1")
+            button(class="color audioControlled", data-color="#F5AC0F", style="background-color: #F5AC0F")
+            button(class="color audioControlled", data-color="#FFE203", style="background-color: #FFE203")
+            button(class="color audioControlled", data-color="#AA84E0", style="background-color: #AA84E0")
+            button(class="color audioControlled", data-color="#7A0014", style="background-color: #7A0014")
+            button(class="color audioControlled", data-color="#000000", style="background-color: #000000")
+            button(class="color audioControlled", data-color="#FFFFFF", style="background-color: #FFFFFF")
+            button(class="random audioControlled", style="background-color: #999999") RANDOM
             
-            p#fadeTimeText FADE: 1.5 Seconds
-            form
-              input(type="range", name="fader", id="fader", value="1500", min="0", max="3000")
+            p#fadeTimeText.audioControlled FADE: 1.5 Seconds
+            form(class="scrollable")
+              input(type="range", class="audioControlled scrollable", name="fader", id="fader", value="1500", min="0", max="3000")
 
 
       div#specOptionList
-          button(class="specOption" id="toggleSound") TOGGLE SOUND
-          button(class="specOption", id="togglePaint") TOGGLE PAINTING
-          button(class="specOption" id="toggleStrobe") TOGGLE STROBE
+          button(class="specOption" id="toggleSound") START SOUND STREAMING
+          button(class="specOption" id="toggleAudioLights") MANUAL LIGHT SHOW CONTROL
+          button(class="specOption audioControlled" id="toggleStrobe") TOGGLE CLIENT LIGHT PULSE
+          button(class="specOption", id="toggleMotion") START MOTION TRACKING
 
     script.
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
       var ConductorSpace = {};
 
     script(src="javascript/conductor/models/Conductor.js")
@@ -71,3 +72,13 @@ html
       conductor.set('templates', kineTemplates);
       var server = new ConductorSpace.Server();
       var conductorApp = new ConductorSpace.ConductorApp({ model: conductor, server: server });
+      $('body').on('touchmove', '.scrollable', function(e) {
+        e.stopPropagation();
+      });
+      iosSleepPreventInterval = setInterval(function () {
+        window.location.href = "/conductor";
+        window.setTimeout(function () {
+          window.stop()
+        }, 0);
+      }, 30000);
+

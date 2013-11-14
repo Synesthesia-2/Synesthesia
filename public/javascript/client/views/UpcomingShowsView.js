@@ -1,10 +1,10 @@
 ClientSpace.UpcomingShowsView = Backbone.View.extend({
   
   // TODO: ADD VIEW FOR SINGLE SHOW FOR EACH SHOW IN COLLECTION
-  className: 'shows',
+  className: 'shows scrollable',
   
   events: {
-    'click .back': 'backToIndex'
+    'touchend .back': 'backToIndex'
   },
 
   initialize: function() {

@@ -1,9 +1,9 @@
 ClientSpace.CastView = Backbone.View.extend({
   // TODO: ADD VIEW FOR SINGLE PERFORMER FOR EACH PERFORMER IN COLLECTION
-  className: 'cast',
+  className: 'cast scrollable',
   
   events: {
-    'click .back': 'backToIndex'
+    'touchend .back': 'backToIndex'
   },
 
   initialize: function() {

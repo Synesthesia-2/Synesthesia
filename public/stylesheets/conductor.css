@@ -30,7 +30,6 @@ header h1 {
 }
 div#specController {
   width: 100%;
-  margin-top: 15px;
   margin-bottom: 15px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8f0d23), color-stop(100%, rgba(143,13,35,0)));
 /* Chrome,Safari4+ */
@@ -85,7 +84,7 @@ div#specController div#optionBuilder button.random {
   margin: 10px 20px 15px 140px;
 }
 div#specController div#optionBuilder p {
-  padding-top: 5px;
+  padding-top: 15px;
   margin-top: 30px;
   float: left;
   font-size: 25px;
@@ -104,7 +103,11 @@ div#specController div#optionBuilder form input[type='range'] {
   border: 1px solid #999;
   width: 350px;
   padding: 0 35px 0 35px;
-  height: 30px;
+  height: 60px;
+}
+div#specController div#optionBuilder form input[type='range']::-webkit-slider-thumb {
+  width: 65px;
+  height: 65px;
 }
 div#specOptionList {
   margin: 0 auto;
@@ -117,7 +120,7 @@ div#specOptionList {
 div#specOptionList button {
   margin-top: 18px;
   padding: 10px;
-  width: 200px;
+  width: 146px;
   height: 80px;
   border-radius: 15px;
   border: 2px solid #ed2143;
@@ -140,4 +143,9 @@ div#specOptionList .toggled {
 /* Chrome10+,Safari5.1+ */
   background: linear-gradient(to bottom, #8f0d23 0%, #e02443 100%);
 /* W3C */
+}
+@media (orientation:landscape) {
+  header {
+    display: none;
+  }
 }
