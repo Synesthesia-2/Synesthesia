@@ -126,7 +126,7 @@ conductor.on('connection', function (conductor) {
 
   conductor.on('toggleSound', function (data){
     state.audio = data.sound;
-    audio.emit('startAudio', data);
+    audio.emit('toggleSound', data);
   });
 
   conductor.on('toggleMotion', function (data){
@@ -198,6 +198,7 @@ clients.on('connection', function (client) {
 //////////////////////////////////////////
 
 audio.on('connection', function (audio) {
+  audio.emit('welcome', {audio: state.audio})
   audio.on('audio', function (data){
     var clients = io.of('/client');
     if (state.audioLights) {

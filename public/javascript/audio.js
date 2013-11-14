@@ -33,18 +33,17 @@ var pitchAnalyser = makePitchAnalyser(audioContext,filters);
 filters.add(hiPass,loPass);
 
 server.on("welcome",function(data){
-  console.log(data);
-  if (data.start && !state.serverReady) {
+  if (data.audio) {
     state.serverReady = true;
   }
 });
-server.on("startAudio",function() {
-  if (!state.serverReady) {
-    state.serverReady = true;
-  }
-  if (!state.emitting && state.inputEnabled) {
+server.on("toggleSound",function(data) {
+  state.serverReady = data.audio;
+  if (!state.emitting && state.inputEnabled && state.serverReady) {
     startEmitting();
-  }
+  // } else if (state.emitting && state.inputEnabled && !state.serverReady) {
+
+  // }
 });
 
 var streamLoaded = function(stream) {
