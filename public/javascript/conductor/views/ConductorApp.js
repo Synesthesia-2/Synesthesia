@@ -20,6 +20,7 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
   },
 
   render: function(){
+    // debugger;
     this.$el.html( this.template() );
     return this;
   },

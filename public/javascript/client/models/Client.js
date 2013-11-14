@@ -1,8 +1,7 @@
 ClientSpace.Client = Backbone.Model.extend({
 
   initialize: function() {
-    // TODO: add all client properties as defaults here for reference.
-    this.set('currentShow', 'Synethesia');
+    this.set('currentShow', 'Synesthesia');
   },
 
    getCastList: function() {
