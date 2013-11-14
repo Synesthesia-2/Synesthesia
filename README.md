@@ -4,18 +4,6 @@ Synesthesia is a sound and movement visualizer developed as a collaboration betw
 
 Synesthesia mixes motion input from mobile devices and audio input to create visualizations in a web browser. Multiple devices communicate in real time across a single server.
 
-##License:
-
-The MIT License (MIT)
-
-Copyright (c) 2013 Weidong Yang, George Bonner, David Ryan Hall, Kate Jenkins, Joey Yang
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ##Instructions:
 
@@ -68,17 +56,17 @@ Server:
   - Express.js
   - Socket.io
 
-Phone and Controller:
+Client:
   - Jade / Stylus
   - jQuery
   - Backbone.js
-  - Phone gyroscope
 
-Microphone input:
+Input:
   - Webaudio
+  - Phone gyroscope / accelerometer
 
-Canvas:
-  - WebGL (for visualizations)
+Output:
+  - WebGL
 
 Unit Testing:
   - Mocha
@@ -120,6 +108,18 @@ Audio input - Modularity:
 
 TODO: Map the codebase and provide instructions
 
+##License:
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Weidong Yang, George Bonner, David Ryan Hall, Kate Jenkins, Joey Yang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 
