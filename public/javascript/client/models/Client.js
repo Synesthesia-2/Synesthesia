@@ -7,19 +7,19 @@ ClientSpace.Client = Backbone.Model.extend({
 
   initialize: function() {
     // TODO: add all client properties as defaults here for reference.
-    this.set('currentShow', 'Synethesia');
+    this.set('currentShow', 'Synesthesia');
     this.set('upcoming', {
       'one': {
         'link': 'http://www.kunst-stoff.org/projects/Tomi-Paasonen-and-Yannis-Adoniou-create-new-works-for-KUNST-STOFFs-15-Anniversary-Retrospective-Season#prettyPhoto',
         'mainImg': 'images/fpo_show_img.gif',
-        'what': "KUNST-STOFF's 15 Anniversary Retrospective Season",
+        'what': 'KUNST-STOFF\'s 15 Anniversary Retrospective Season',
         'where': 'ODC Theater, San Fransisco',
         'when': 'November 8th, 9th and 10th, 2013'
       },
       'two': {
         'link': '',
         'mainImg': 'images/fpo_show_img.gif',
-        'what': "Details coming soon!",
+        'what': 'Details coming soon!',
         'where': 'The Garage',
         'when': 'November 17th, 2013'
       }

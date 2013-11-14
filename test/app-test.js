@@ -1,1 +1,2 @@
-var ConductorSpace = {};
+var ConductorSpace = {}; 
+var ClientSpace = {};
