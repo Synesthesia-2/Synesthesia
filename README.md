@@ -44,9 +44,16 @@ TODO: Deploy to web, provide link to it here
 
 ##Screenshots:
 
+Client home screen
 ![Client home screen](/screenshots/clientHomeScreen.png "Client home screen")
-![Conductor home screen](/screenshots/conductorHomeScreen.png "Conductor home screen")
+
+Conductor home screen
+![Conductor home screen](/screenshots/conductorScreen.png "Conductor home screen")
+
+Fireworks visualization
 ![Fireworks visualization](/screenshots/fireworks.png "Fireworks display with audio and phone motion")
+
+Dancer screen
 ![Dancer screen](/screenshots/dancer.png "Dancer display")
 
 
