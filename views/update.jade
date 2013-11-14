@@ -45,11 +45,11 @@ html
             li
               p Portrait Image
             li
-              input(type="file", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
             li
               p Role
             li
-              input(type="file", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
             li
               p Description
             li
@@ -58,10 +58,32 @@ html
               input(type="submit", value="SUBMIT", name="cast-submit", tabindex="6", class="submit-button")
     
     script#updateEvents(type="text/x-handlebars-template")
-      div#update
-        h1 Update a project on the site.
-        p class="page-description">Change information or images for an existing project. Choose a project from the list to see current details.
-        section.results-box
+      h1 Update Events List
+
+      aside.currentEventsList
+        
+      section.formField
+        form(name="event-form", id="event-form", method="post")
+          ul.formChecker
+            li
+              p Name
+            li
+              input(type="text", name="name", maxlength="75", id="name", tabindex="1", AUTOCOMPLETE="OFF", class="txtinput")
+            li
+              p Where
+            li
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+            li
+              p When
+            li
+              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
+            li
+              p Description
+            li
+              textarea(rows="4", maxlength="255", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF", class="txtinput")
+            li
+              input(type="submit", value="SUBMIT", name="cast-submit", tabindex="6", class="submit-button")
+ 
 
     script.
       var UpdateSpace = {};

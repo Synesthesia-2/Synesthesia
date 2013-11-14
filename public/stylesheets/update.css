@@ -75,3 +75,29 @@ header nav li:hover {
   width: 600px;
   height: 500px;
 }
+.castView section li {
+  list-style: none;
+}
+.events {
+  padding: 20px;
+}
+.events h1 {
+  color: #fff;
+  text-align: center;
+  margin: 0 0 10px 0;
+}
+.events aside.currentEventsList {
+  width: 250px;
+  height: 500px;
+  background-color: #fff;
+  border: 1px solid #000;
+  float: left;
+}
+.events section {
+  float: right;
+  width: 600px;
+  height: 500px;
+}
+.events section li {
+  list-style: none;
+}
