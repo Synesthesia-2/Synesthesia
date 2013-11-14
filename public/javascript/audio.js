@@ -1,7 +1,3 @@
-// 3. Refactor dynamic filter adding to use addFilter
-// 4. Fix microphone hooking-up
-// 5. Test stream loading
-// 6. Move helper functions out if possible.
 // 7. Gist for making filters
 
 // Tip: If you have access to soundcard settings, adjust input gain so that 
@@ -63,19 +59,25 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
 navigator.getUserMedia( {audio:true}, streamLoaded);
 
 var startEmitting = function() {
-  state.emitting = true;
   h1.text("Calibrating...");
-  pitchAnalyser.calibrate();
-  setTimeout(function(){
-    alert("stream started");
+  pitchAnalyser.calibrate(function(){
     h1.text('Emitting audio stream.');
-    pitchAnalyser.process(60, function (data){
+    state.emitting = true;
+    pitchAnalyser.process(60,function(data){
       if (data.volume > pitchAnalyser.threshold) {
         server.emit("audio",data);
       }
     });
-  }, 4500);
+  });
 };
+
+
+
+
+
+
+
+
 
 
 

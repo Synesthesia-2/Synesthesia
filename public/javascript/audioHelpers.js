@@ -105,7 +105,7 @@ var makePitchAnalyser = function(context,source) {
   var _noiseCancel = function(freq,diff) {
     notchStrength = 0.7;
     var amt = diff*notchStrength;
-    console.log("adding filter at "+freq+"hz with gain "+amt);
+    console.log("adding noise cancelling filter at "+freq+"hz with gain "+amt);
     source.disconnect(analyser);
     var filter = makeFilter(context,"PEAKING",freq,amt);
     var chain = analyser.ncFilters;
@@ -119,12 +119,21 @@ var makePitchAnalyser = function(context,source) {
     }
   };
 
-  var _analyseEnv = function(time,tStrength) {
+  var _setThresh = function(avg,tStr) {
+    if (avg > analyser.minDecibels * 0.27) {
+      tStr = 0;
+    } else if (avg > analyser.minDecibels * 0.4) {
+      tStr *= 0.5;
+    }
+    analyser.threshold = avg+tStr;
+  };
+
+  var _analyseEnv = function(time,tStrength,done) {
     var interval = 50;
     var start = new Date().getTime();
     var e = start + time;
     var results = [];
-    var tick = function(timeLeft) {
+    var tick = function() {
       analyser.getFloatFrequencyData(_FFT);
       var fftIndex = _findMaxWithI(_FFT);
       var sample = {
@@ -138,33 +147,36 @@ var makePitchAnalyser = function(context,source) {
       } else {
         var data = _getPeaks(results);
         for (var f in data.freqs) {
-          var pt = data.freqs[f];
-          var ptAvg = pt.vol/pt.hits;
-          if (pt.hits > results.length*0.3) {
-            _noiseCancel(f,data.avg-ptAvg);
+          var freq = data.freqs[f];
+          var freqAvg = freq.vol/freq.hits;
+          if (freq.hits > results.length*0.3) {
+            var diff = data.avg - freqAvg;
+            _noiseCancel(f,diff);
           }
         }
-        if (data.avg >= analyser.minDecibels*0.4 && data.avg <= analyser.minDecibels*0.27) {
-          console.log("OLD TSTRENGTH",tStrength);
-          tStrength *= 0.5;
-          console.log("NEW TSTRENGTH",tStrength);
-        } else if (data.avg > analyser.minDecibels*0.27) {
-          tStrength = 0;
-        }
-        analyser.threshold = data.avg+tStrength;
+        _setThresh(data.avg,tStrength);
+        done();
       }
     };
-    tick(time);
+    tick();
   };
 
-  analyser.calibrate = function(time,tStrength) {
+  analyser.calibrate = function(time,tStrength,callback) {
+    if (typeof(time) === "function") {
+      callback = time;
+      time = undefined;
+    }
+    if (typeof(tStrength) === "function") {
+      callback = tStrength;
+      tStrength = undefined;
+    }
     this.smoothingTimeConstant = 0.9;
     time = time || 4000;
     tStrength = tStrength || 20;
     if (tStrength < 0 || tStrength > 50) {
       throw new Error("threshold strength must be between 0 and 50");
     }
-    _analyseEnv(time, tStrength);
+    _analyseEnv(time,tStrength,callback);
   };
 
   analyser.process = function(interval,smooth,callback){
@@ -191,25 +203,3 @@ var makePitchAnalyser = function(context,source) {
   };
   return analyser;
 };
-
-
-// // HOW TO USE THESE HELPER FUNCTIONS:
-// var contextClass = window.AudioContext || window.webkitAudioContext;
-// if (contextClass) {
-//   var audioContext = new contextClass();
-// } else {
-//   throw new Error("webaudio not supported.")
-// }
-
-// var input = // Input can be an oscillator node,
-//             // live mic input, other filters, etc.
-
-// var hiPass = makeFilter(audioContext,"HIGHPASS",80);
-// var loPass = makeFilter(audioContext,"LOWPASS",1200);
-// var loShelf = makeFilter(audioContext,"LOWSHELF",330,-10);
-
-// var newChain = makeFilterChain();
-// // Output connection can be defined at any time.
-// newChain.connect(audioContext.destination);
-// newChain.addFilter(hiPass,loPass,loShelf);
-// input.connect(newChain.first);
