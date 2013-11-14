@@ -1,6 +1,10 @@
 ClientSpace.Cast = Backbone.Collection.extend({
 
   model: ClientSpace.CastMember,
-  url: '/cast'
+  url: '/cast',
+
+  initialize: function() {
+    this.fetch();
+  }
 
 });

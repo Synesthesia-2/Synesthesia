@@ -22,6 +22,8 @@ var server = http.createServer(app);
 server.listen(8080);
 var io = require('socket.io').listen(server);
 
+var db = require('./server/database_server');
+
 // define socket.io spaces
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
@@ -77,6 +79,14 @@ app.get('/dancer', function (req, res) {
   res.render('dancer');
 });
 
+// SERVE DATABASE FILES
+app.get('/cast', function (req, res) {
+  db.getCast(res);
+});
+
+app.get('/upcomingShows', function (req, res) {
+  db.getUpcomingShows(res);
+});
 //////////////////////////////////////////
 /// EVENTS
 //////////////////////////////////////////

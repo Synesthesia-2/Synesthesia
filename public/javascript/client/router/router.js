@@ -28,8 +28,7 @@ ClientSpace.Router = Backbone.Router.extend({
 
   showCastList: function() {
     console.log('cast route');
-    var cast = new Cast();
-    var castView = new ClientSpace.CastView({ model: this.model, collection: cast });
+    var castView = new ClientSpace.CastView({ model: this.model, collection: this.model.get('cast') });
     this.swapView(castView);
   },
 
@@ -41,7 +40,7 @@ ClientSpace.Router = Backbone.Router.extend({
 
   showUpcomingShows: function() {
     console.log('upcoming shows route');
-    var showsView = new ClientSpace.UpcomingShowsView({ model: this.model });
+    var showsView = new ClientSpace.UpcomingShowsView({ model: this.model, collection: this.model.get('shows') });
     this.swapView(showsView);
   },
 

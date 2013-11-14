@@ -39,27 +39,28 @@ html
 
     script#castList(type="text/x-handlebars-template")
       h2 {{ currentShow }} cast and crew:
-      {{#each cast}}
-      div.castMember
-        img(src="{{ portrait }}")
-        p.castName {{ name }}
-        p.role {{ role }}
-        p.bio {{ bio }}
-      {{/each}}
+      div#castList
       button.back Back
+
+    script#castMember(type="text/x-handlebars-template")
+      img(src="{{ portrait }}")
+      p.castName {{ name }}
+      p.role {{ role }}
+      p.bio {{ bio }}     
 
     script#showsList(type="text/x-handlebars-template")
       h1 Upcoming Events
       h3 Click an event to find out more
-      {{#each upcoming}}
+      div#showList
+      button.back Back
+
+    script#singleShow(type="text/x-handlebars-template")
       a(href="{{ link }}")
         div
-          p.what {{ what }}
-          p When: {{ when }}
-          p Where: {{ where }}
-      {{/each}}
-
-      button.back Back
+          p.what {{ title }}
+          p When: {{ showdate }}
+          p Where: {{ location }}
+          p {{ description }}
 
     script#about(type="text/x-handlebars-template")
       h1 About Kine-Tech
@@ -79,14 +80,18 @@ html
     script(src="javascript/client/models/Client.js")
     script(src="javascript/client/models/Server.js")
     script(src="javascript/client/models/CastMember.js")
+    script(src="javascript/client/models/Show.js")
 
     script(src="javascript/client/collections/Cast.js")
+    script(src="javascript/client/collections/Shows.js")
 
     script(src="javascript/client/views/ClientApp.js")
     script(src="javascript/client/views/IndexView.js")
     script(src="javascript/client/views/CastView.js")
+    script(src="javascript/client/views/CastMemberView.js")
     script(src="javascript/client/views/AboutView.js")
     script(src="javascript/client/views/UpcomingShowsView.js")
+    script(src="javascript/client/views/SingleShowView.js")
     script(src="javascript/client/views/ShowView.js")
 
     script(src="javascript/client/router/router.js")
@@ -94,6 +99,8 @@ html
     script.
       //var ClientSpace = {};
       var client = new ClientSpace.Client();
+      client.set('cast', new ClientSpace.Cast());
+      client.set('shows', new ClientSpace.Shows());
 
       var kineTemplates = {};
       $("[type='text/x-handlebars-template']").each(function(index, div){
@@ -105,10 +112,10 @@ html
       $('body').on('touchmove', '.scrollable', function(e) {
         e.stopPropagation();
       });
-      iosSleepPreventInterval = setInterval(function () {
-        window.location.href = "/client";
-        window.setTimeout(function () {
-          window.stop()
-        }, 0);
-      }, 30000);
+      //- iosSleepPreventInterval = setInterval(function () {
+      //-   window.location.href = "/client";
+      //-   window.setTimeout(function () {
+      //-     window.stop()
+      //-   }, 0);
+      //- }, 30000);
 
