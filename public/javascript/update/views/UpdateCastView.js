@@ -4,7 +4,8 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
   
   events: {
     'click #castSubmit': 'postCastUpdate',
-    'click #castDelete': 'deleteCastMember'
+    'click #castDelete': 'deleteCastMember',
+    'click #castReset': 'resetForm'
   },
 
   initialize: function() {
@@ -49,6 +50,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     form[0].value = model.get('name');
     form[2].value = model.get('role');
     form[3].value = model.get('bio');
+    $('#castUpdate, #castDelete').removeAttr('disabled');
   },
 
   deleteCastMember: function(event) {
@@ -56,6 +58,12 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     this.collection.remove(this.currentModel);
     this.currentModel.destroy();
     this.currentModel = null;
+  },
+
+  resetForm: function(event) {
+    event.preventDefault();
+    $('#cast-form')[0].reset();
+    $('#castUpdate, #castDelete, #castSubmit').prop('disabled');
   }
 
 });

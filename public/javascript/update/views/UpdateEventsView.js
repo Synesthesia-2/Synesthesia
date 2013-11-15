@@ -4,7 +4,8 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
   
   events: {
     'click #eventSubmit': 'postEventUpdate',
-    'click #eventDelete': 'deleteEvent'
+    'click #eventDelete': 'deleteEvent',
+    'click #eventReset': 'resetForm'
   },
 
   initialize: function() {
@@ -49,6 +50,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     form[1].value = model.get('link');
     form[2].value = model.get('location');
     form[4].value = model.get('description');
+    $('#eventUpdate, #eventDelete').removeAttr('disabled');
   },
 
   deleteEvent: function(event) {
@@ -56,6 +58,12 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     this.collection.remove(this.currentModel);
     this.currentModel.destroy();
     this.currentModel = null;
+  },
+
+  resetForm: function(event) {
+    event.preventDefault();
+    $('#event-form')[0].reset();
+    $('#eventUpdate, #eventDelete, #eventSubmit').prop('disabled');
   },
 
   formatDate: function(date) {

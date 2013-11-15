@@ -45,9 +45,10 @@ html
           input(type="text", name="role", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
           label Description
           textarea(rows="4", type="text", name="bio", tabindex="4", AUTOCOMPLETE="OFF")
-          button(class="submit-button" id="castSubmit") SUBMIT
-          button(class="submit-button" id="castDelete") DELETE
-          button(class="submit-button clearForm") CLEAR
+          button(class="submit-button" id="castSubmit" disabled) SUBMIT
+          button(class="submit-button" id="castUpdate" disabled) UPDATE
+          button(class="submit-button" id="castDelete" disabled) DELETE
+          button(class="submit-button" id="castReset") CLEAR
 
     script#updateEvents(type="text/x-handlebars-template")
       h1 Update Events List
@@ -66,9 +67,10 @@ html
           input(type="date", name="showdate", maxlength="100", tabindex="4", AUTOCOMPLETE="OFF")
           label Description
           textarea(rows="4", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF")
-          button(class="submit-button" id="eventSubmit") SUBMIT
-          button(class="submit-button" id="eventDelete") DELETE
-          button(class="submit-button clearForm") CLEAR
+          button(class="submit-button" id="eventSubmit" disabled) SUBMIT
+          button(class="submit-button" id="eventUpdate" disabled) UPDATE      
+          button(class="submit-button" id="eventDelete" disabled) DELETE
+          button(class="submit-button" id="eventReset") CLEAR
 
     script.
       var UpdateSpace = {};

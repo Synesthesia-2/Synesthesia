@@ -126,7 +126,7 @@ form {
 form .submit-button {
   height: 40px;
   width: 100px;
-  margin: 20px 0 0 0;
+  margin: 20px 15px 0 0;
 }
 form textarea {
   height: 100px;
