@@ -7,7 +7,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     'click #eventUpdate': 'updateEvent',
     'click #eventDelete': 'deleteEvent',
     'click #eventReset': 'resetForm',
-    'click .click-field': 'triggerKeyup',
+    'change #date-field': 'triggerKeyup',
     'keyup #event-form': 'checkFormFilled'
   },
 
@@ -121,8 +121,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
   },
 
   triggerKeyup: function(event) {
-    console.log('test');
-    this.trigger('keyup');
+    $('#date-field').trigger('keyup');
   }
   
 });

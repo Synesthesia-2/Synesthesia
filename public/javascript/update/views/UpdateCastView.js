@@ -7,7 +7,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     'click #castUpdate': 'updateCastMember',
     'click #castDelete': 'deleteCastMember',
     'click #castReset': 'resetForm',
-    'click #port-field': 'triggerKeyup',
+    'change #port-field': 'triggerKeyup',
     'keyup #cast-form': 'checkFormFilled'
   },
 
@@ -115,7 +115,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
   },
 
   triggerKeyup: function(event) {
-    this.trigger('keyup');
+    $('#port-field').trigger('keyup');
   }
   
 });
