@@ -96,13 +96,13 @@ app.get('/upcomingShows', function (req, res) {
 // POST DATABASE FILES
 app.post('/cast', function (req, res) {
   processPost(req, function(data){
-    console.log(data);
+    db.postNewCast(data, res);
   });
 });
 
 app.post('/upcomingShows', function (req, res) {
   processPost(req, function(data){
-    console.log(data);
+    db.postNewEvent(data, res);
   });
 });
 

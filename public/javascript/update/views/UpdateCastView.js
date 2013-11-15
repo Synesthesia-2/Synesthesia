@@ -3,7 +3,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
   className: 'castView',
   
   events: {
-    'click .submit-button': 'postUpdate'
+    'click #castSubmit': 'postCastUpdate'
   },
 
   initialize: function() {
@@ -21,7 +21,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     return this;
   },
 
-  postUpdate: function(event) {
+  postCastUpdate: function(event) {
     event.preventDefault();
     var data = {};
     _(event.target.form).each(function(field) {
@@ -37,8 +37,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     });
     var newCastMember = new UpdateSpace.CastMember(data);
     newCastMember.save();
-    this.collection.fetch();
-
+    this.collection.add(newCastMember);
   }
 
 });

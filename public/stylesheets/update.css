@@ -121,6 +121,9 @@ form label {
   font-size: 18px;
   color: #444;
 }
+form input[type="date"] {
+  margin-bottom: 10px;
+}
 form input[type="text"] {
   height: 25px;
   width: 540px;

@@ -44,8 +44,8 @@ html
           label Role
           input(type="text", name="role", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
           label Description
-          textarea(rows="4", type="text", name="description", tabindex="4", AUTOCOMPLETE="OFF")
-          button(class="submit-button") SUBMIT
+          textarea(rows="4", type="text", name="bio", tabindex="4", AUTOCOMPLETE="OFF")
+          button(class="submit-button" id="castSubmit") SUBMIT
     
     script#updateEvents(type="text/x-handlebars-template")
       h1 Update Events List
@@ -54,17 +54,17 @@ html
         
       section.formField
         form(name="event-form", id="event-form", method="post")
-          label Event Name
-          input(type="text", name="name", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
+          label Event Title
+          input(type="text", name="title", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
           label Link to Event Info Page
           input(type="text", name="link", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
           label Event Location
           input(type="text", name="location", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
           label Event Date
-          input(type="text", name="date", maxlength="100", tabindex="4", AUTOCOMPLETE="OFF")
+          input(type="date", name="showdate", maxlength="100", tabindex="4", AUTOCOMPLETE="OFF")
           label Description
           textarea(rows="4", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF")
-          button(class="submit-button") SUBMIT
+          button(class="submit-button" id="eventSubmit") SUBMIT
     
 
     script.

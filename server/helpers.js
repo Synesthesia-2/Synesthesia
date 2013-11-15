@@ -22,6 +22,6 @@ exports.processPost = processPost = function(req, cb) {
     data += chunk;
   });
   req.on("end", function() {
-    cb(data);
+    cb(JSON.parse(data));
   });
 };

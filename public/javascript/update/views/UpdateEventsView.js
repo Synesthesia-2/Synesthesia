@@ -3,7 +3,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
   className: 'events',
   
   events: {
-    'click .back': 'backToIndex'
+    'click #eventSubmit': 'postEventUpdate'
   },
 
   initialize: function() {
@@ -21,8 +21,29 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     return this;
   },
 
-  backToIndex: function() {
-    this.model.loadIndex();
+  postEventUpdate: function(event) {
+    event.preventDefault();
+    var data = {};
+    var self = this;
+    _(event.target.form).each(function(field) {
+      if (field.name) {
+        if (field.name === 'showdate') {
+          data[field.name] = self.formatDate(field.value);
+        } else {
+          data[field.name] = field.value;
+        }
+      }
+    });
+    var newEvent = new UpdateSpace.Show(data);
+    newEvent.save();
+    this.collection.add(newEvent);
+  },
+
+  formatDate: function(date) {
+    var months = ["", "January","February","March","April","May","June","July","August","September","October","November","December"];
+    date = date.split('-');
+    var month = months[date[1]];
+    return month + " " + date[2] + ", " + date[0];
   }
 
 });
