@@ -2,11 +2,12 @@ var mysql = require('mysql');
 var helpers = require('./helpers');
 
 var dbConnection = mysql.createConnection({
-  host: "localhost",
+  host: "162.144.2.39",
   port: '3306',
-  user: "root",
-  password: "",
-  database: "kinetech"
+  user: "drhall_kinetech",
+  password: "kine-tech-arts",
+  database: "drhall_kinetech",
+  insecureAuth: true
 });
 
 dbConnection.connect();
