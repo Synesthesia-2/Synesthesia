@@ -3,7 +3,7 @@ ConductorSpace.MainView = Backbone.View.extend({
   events: {
     'touchstart .color': 'sendColor',
     'touchstart .random': 'sendRandomColor',
-    'touchstart #toggleSound': 'toggleSound',
+    'click #toggleSound': 'toggleSound',
     'touchstart #toggleMotion': 'toggleMotion',
     'touchstart #toggleStrobe': 'toggleStrobe',
     'touchstart #toggleAudioLights': 'toggleAudioLights',
