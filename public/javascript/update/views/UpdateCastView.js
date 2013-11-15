@@ -3,19 +3,22 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
   className: 'castView',
   
   events: {
-    'click #castSubmit': 'postCastUpdate'
+    'click #castSubmit': 'postCastUpdate',
+    'click #castDelete': 'deleteCastMember'
   },
 
   initialize: function() {
     this.template = this.model.get('templates')['updateCast'];
-    this.collection.on('add', this.render.bind(this));
+    this.collection.on('add remove', this.render.bind(this));
+    this.currentModel = null;
   },
 
   render: function() {
+    var self = this;
     this.$el.html( this.template(this.model.attributes) );
     this.$el.find('.currentCastList').append(
       this.collection.map(function(item) {
-        return '<p>' + item.get('name') + '</p>';
+        return new UpdateSpace.CastMemberView({ model: item, parentView: self }).render();
       })
     );
     return this;
@@ -38,6 +41,21 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     var newCastMember = new UpdateSpace.CastMember(data);
     newCastMember.save();
     this.collection.add(newCastMember);
+  },
+
+  addMemberToForm: function(model) {
+    this.currentModel = model;
+    var form = $('#cast-form').get(0);
+    form[0].value = model.get('name');
+    form[2].value = model.get('role');
+    form[3].value = model.get('bio');
+  },
+
+  deleteCastMember: function(event) {
+    event.preventDefault();
+    this.collection.remove(this.currentModel);
+    this.currentModel.destroy();
+    this.currentModel = null;
   }
 
 });

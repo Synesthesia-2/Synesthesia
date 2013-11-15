@@ -46,7 +46,9 @@ html
           label Description
           textarea(rows="4", type="text", name="bio", tabindex="4", AUTOCOMPLETE="OFF")
           button(class="submit-button" id="castSubmit") SUBMIT
-    
+          button(class="submit-button" id="castDelete") DELETE
+          button(class="submit-button clearForm") CLEAR
+
     script#updateEvents(type="text/x-handlebars-template")
       h1 Update Events List
 
@@ -65,7 +67,8 @@ html
           label Description
           textarea(rows="4", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF")
           button(class="submit-button" id="eventSubmit") SUBMIT
-    
+          button(class="submit-button" id="eventDelete") DELETE
+          button(class="submit-button clearForm") CLEAR
 
     script.
       var UpdateSpace = {};
@@ -79,7 +82,9 @@ html
 
     script(src="javascript/update/views/UpdateApp.js")
     script(src="javascript/update/views/UpdateCastView.js")
+    script(src="javascript/update/views/CastMemberView.js")
     script(src="javascript/update/views/UpdateEventsView.js")
+    script(src="javascript/update/views/SingleShowView.js")
 
     script(src="javascript/update/router/router.js")
 
