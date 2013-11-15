@@ -8,6 +8,7 @@ ClientSpace.CastView = Backbone.View.extend({
 
   initialize: function() {
     this.template = this.model.get('templates')['castList'];
+    this.collection.on('add', this.render.bind(this));
   },
 
   render: function() {

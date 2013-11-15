@@ -65,19 +65,30 @@ header
     margin 0 0 10px 0
 
   aside.currentCastList
-    width 250px
-    height 500px
+    padding 10px
+    width 240px
+    height 490px
     background-color #fff
     border 1px solid #000
     float left
 
   section
     float right
-    width 600px
+    width 595px
     height 500px
 
     li
       list-style: none
+
+  .castMember
+    padding 0
+    padding 7px 0 7px 0
+    margin 0
+    cursor pointer
+    border-bottom 1px solid #eee
+
+  .castMember:hover
+    background-color #eee
 
 .events
   padding 20px
@@ -88,16 +99,68 @@ header
     margin 0 0 10px 0
 
   aside.currentEventsList
-    width 250px
-    height 500px
+    padding 10px
+    width 240px
+    height 490px
     background-color #fff
     border 1px solid #000
     float left
 
   section
     float right
-    width 600px
+    width 595px
     height 500px
 
-    li
-      list-style: none
+  .singleShow
+    padding 0
+    padding 7px 0 7px 0
+    margin 0
+    cursor pointer
+    border-bottom 1px solid #eee
+
+  .singleShow:hover
+    background-color #eee
+
+// FORM STUFF
+
+form
+  padding 0 0 0 20px
+
+  .submit-button
+    height 40px
+    width 100px
+    margin 20px 15px 0 0
+
+  textarea
+    height 100px
+    width 540px
+    padding 2px 5px 3px 5px
+    outline: none
+    border 1px solid #999
+
+  label
+    display block
+    height 30px
+    font-size 18px
+    color #444
+
+  input[type="date"]
+    margin-bottom 10px
+
+  input[type="date"], input[type="file"]
+    outline none
+
+  input[type="text"]
+    height 25px
+    width 540px
+    padding 2px 5px 3px 5px
+    margin-bottom 10px
+    outline none
+    border 1px solid #999
+
+  input[type="text"]:focus, textarea:focus
+    border 1px solid #000
+
+  input[type="file"]
+    height 25px
+    margin-bottom 10px

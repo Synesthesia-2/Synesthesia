@@ -33,30 +33,23 @@ html
       h1 Update Cast List
 
       aside.currentCastList
-        
 
+        
       section.formField
         form(name="cast-form", id="cast-form", method="post")
-          ul.formChecker
-            li
-              p Name
-            li
-              input(type="text", name="name", maxlength="75", id="name", tabindex="1", AUTOCOMPLETE="OFF", class="txtinput")
-            li
-              p Portrait Image
-            li
-              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
-            li
-              p Role
-            li
-              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
-            li
-              p Description
-            li
-              textarea(rows="4", maxlength="255", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF", class="txtinput")
-            li
-              input(type="submit", value="SUBMIT", name="cast-submit", tabindex="6", class="submit-button")
-    
+          label Name
+          input(class="cast-field", type="text", name="name", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
+          label Portrait Image
+          input(class="cast-field", type="file", id="port-field" name="portrait", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
+          label Role
+          input(class="cast-field", type="text", name="role", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
+          label Description
+          textarea(class="cast-field" rows="4", type="text", name="bio", tabindex="4", AUTOCOMPLETE="OFF")
+          button(class="submit-button" id="castSubmit" disabled) SUBMIT
+          button(class="submit-button" id="castUpdate" disabled) UPDATE
+          button(class="submit-button" id="castDelete" disabled) DELETE
+          button(class="submit-button" id="castReset") CLEAR
+
     script#updateEvents(type="text/x-handlebars-template")
       h1 Update Events List
 
@@ -64,41 +57,43 @@ html
         
       section.formField
         form(name="event-form", id="event-form", method="post")
-          ul.formChecker
-            li
-              p Name
-            li
-              input(type="text", name="name", maxlength="75", id="name", tabindex="1", AUTOCOMPLETE="OFF", class="txtinput")
-            li
-              p Where
-            li
-              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
-            li
-              p When
-            li
-              input(type="text", name="mainImage", size="50", maxlength="100", id="main-image", AUTOCOMPLETE="OFF", tabindex="2", class="txtinput")
-            li
-              p Description
-            li
-              textarea(rows="4", maxlength="255", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF", class="txtinput")
-            li
-              input(type="submit", value="SUBMIT", name="cast-submit", tabindex="6", class="submit-button")
- 
+          label Event Title
+          input(class="event-field", type="text", name="title", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
+          label Link to Event Info Page
+          input(class="event-field", type="text", name="link", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
+          label Event Location
+          input(class="event-field", type="text", name="location", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
+          label Event Date
+          input(class="event-field", type="date", name="showdate", maxlength="100", tabindex="4", AUTOCOMPLETE="OFF")
+          label Description
+          textarea(class="event-field", rows="4", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF")
+          button(class="submit-button" id="eventSubmit" disabled) SUBMIT
+          button(class="submit-button" id="eventUpdate" disabled) UPDATE      
+          button(class="submit-button" id="eventDelete" disabled) DELETE
+          button(class="submit-button" id="eventReset") CLEAR
 
     script.
       var UpdateSpace = {};
 
     script(src="javascript/update/models/Update.js")
-    
+    script(src="javascript/update/models/CastMember.js")
+    script(src="javascript/update/models/Show.js")
+
+    script(src="javascript/update/collections/Cast.js")
+    script(src="javascript/update/collections/Shows.js")
+
     script(src="javascript/update/views/UpdateApp.js")
-    script(src="javascript/update/views/IndexView.js")
     script(src="javascript/update/views/UpdateCastView.js")
+    script(src="javascript/update/views/CastMemberView.js")
     script(src="javascript/update/views/UpdateEventsView.js")
+    script(src="javascript/update/views/SingleShowView.js")
 
     script(src="javascript/update/router/router.js")
 
     script.
       var update = new UpdateSpace.Update();
+      update.set('cast', new UpdateSpace.Cast());
+      update.set('shows', new UpdateSpace.Shows());
 
       var kineTemplates = {};
       $("[type='text/x-handlebars-template']").each(function(index, div){
