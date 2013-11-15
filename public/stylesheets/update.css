@@ -64,19 +64,30 @@ header nav li:hover {
   margin: 0 0 10px 0;
 }
 .castView aside.currentCastList {
-  width: 250px;
-  height: 500px;
+  padding: 10px;
+  width: 240px;
+  height: 490px;
   background-color: #fff;
   border: 1px solid #000;
   float: left;
 }
 .castView section {
   float: right;
-  width: 600px;
+  width: 595px;
   height: 500px;
 }
 .castView section li {
   list-style: none;
+}
+.castView .castMember {
+  padding: 0;
+  padding: 7px 0 7px 0;
+  margin: 0;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+.castView .castMember:hover {
+  background-color: #eee;
 }
 .events {
   padding: 20px;
@@ -87,17 +98,69 @@ header nav li:hover {
   margin: 0 0 10px 0;
 }
 .events aside.currentEventsList {
-  width: 250px;
-  height: 500px;
+  padding: 10px;
+  width: 240px;
+  height: 490px;
   background-color: #fff;
   border: 1px solid #000;
   float: left;
 }
 .events section {
   float: right;
-  width: 600px;
+  width: 595px;
   height: 500px;
 }
-.events section li {
-  list-style: none;
+.events .singleShow {
+  padding: 0;
+  padding: 7px 0 7px 0;
+  margin: 0;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+.events .singleShow:hover {
+  background-color: #eee;
+}
+form {
+  padding: 0 0 0 20px;
+}
+form .submit-button {
+  height: 40px;
+  width: 100px;
+  margin: 20px 15px 0 0;
+}
+form textarea {
+  height: 100px;
+  width: 540px;
+  padding: 2px 5px 3px 5px;
+  outline: none;
+  border: 1px solid #999;
+}
+form label {
+  display: block;
+  height: 30px;
+  font-size: 18px;
+  color: #444;
+}
+form input[type="date"] {
+  margin-bottom: 10px;
+}
+form input[type="date"],
+form input[type="file"] {
+  outline: none;
+}
+form input[type="text"] {
+  height: 25px;
+  width: 540px;
+  padding: 2px 5px 3px 5px;
+  margin-bottom: 10px;
+  outline: none;
+  border: 1px solid #999;
+}
+form input[type="text"]:focus,
+form textarea:focus {
+  border: 1px solid #000;
+}
+form input[type="file"] {
+  height: 25px;
+  margin-bottom: 10px;
 }
