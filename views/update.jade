@@ -38,11 +38,11 @@ html
       section.formField
         form(name="cast-form", id="cast-form", method="post")
           label Name
-          input(class="cast-field" type="text", name="name", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
+          input(class="cast-field", type="text", name="name", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
           label Portrait Image
-          input(class="cast-field" type="file", name="portrait", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
+          input(class="cast-field", type="file", name="portrait", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
           label Role
-          input(class="cast-field" type="text", name="role", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
+          input(class="cast-field", type="text", name="role", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
           label Description
           textarea(class="cast-field" rows="4", type="text", name="bio", tabindex="4", AUTOCOMPLETE="OFF")
           button(class="submit-button" id="castSubmit" disabled) SUBMIT
@@ -58,15 +58,15 @@ html
       section.formField
         form(name="event-form", id="event-form", method="post")
           label Event Title
-          input(type="text", name="title", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
+          input(class="event-field", type="text", name="title", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
           label Link to Event Info Page
-          input(type="text", name="link", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
+          input(class="event-field", type="text", name="link", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
           label Event Location
-          input(type="text", name="location", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
+          input(class="event-field", type="text", name="location", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
           label Event Date
-          input(type="date", name="showdate", maxlength="100", tabindex="4", AUTOCOMPLETE="OFF")
+          input(class="event-field", type="date", name="showdate", maxlength="100", tabindex="4", AUTOCOMPLETE="OFF")
           label Description
-          textarea(rows="4", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF")
+          textarea(class="event-field", rows="4", type="text", name="description", tabindex="5", AUTOCOMPLETE="OFF")
           button(class="submit-button" id="eventSubmit" disabled) SUBMIT
           button(class="submit-button" id="eventUpdate" disabled) UPDATE      
           button(class="submit-button" id="eventDelete" disabled) DELETE

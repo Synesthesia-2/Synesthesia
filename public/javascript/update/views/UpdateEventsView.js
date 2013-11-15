@@ -6,13 +6,15 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     'click #eventSubmit': 'postEventUpdate',
     'click #eventUpdate': 'updateEvent',
     'click #eventDelete': 'deleteEvent',
-    'click #eventReset': 'resetForm'
+    'click #eventReset': 'resetForm',
+    'keyup #event-form': 'checkFormFilled'
   },
 
   initialize: function() {
     this.template = this.model.get('templates')['updateEvents'];
     this.collection.on('add remove', this.render.bind(this));
     this.currentModel = null;
+    this.newAdd = true;
   },
 
   render: function() {
@@ -51,6 +53,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     form[1].value = model.get('link');
     form[2].value = model.get('location');
     form[4].value = model.get('description');
+    this.newAdd = true;
     $('#eventUpdate, #eventDelete').prop('disabled', false);
   },
 
@@ -73,6 +76,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     });
     this.currentModel.save(data);
     this.collection.fetch();
+    this.resetForm();
   },
 
   deleteEvent: function(event) {
@@ -80,13 +84,15 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     this.collection.remove(this.currentModel);
     this.currentModel.destroy();
     this.currentModel = null;
+    this.resetForm();
   },
 
   resetForm: function(event) {
-    event.preventDefault();
+    event && event.preventDefault();
     $('#event-form')[0].reset();
     $('#eventUpdate, #eventDelete, #eventSubmit').prop('disabled', true);
     this.currentModel = null;
+    this.newAdd = true;
   },
 
   formatDate: function(date) {
@@ -94,6 +100,24 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     date = date.split('-');
     var month = months[date[1]];
     return month + " " + date[2] + ", " + date[0];
-  }
+  },
 
+  checkFormFilled: function() {
+    if (this.newAdd) {
+      console.log('test');
+      var empty = false;
+      $('#event-form > .event-field').each(function() {
+        if ($(this).val() === '') {
+          empty = true;
+        }
+      });
+
+      if (empty) {
+        $('#eventSubmit').prop('disabled', true);
+      } else {
+        $('#eventSubmit').prop('disabled', false);
+      }
+    }
+  }
+  
 });

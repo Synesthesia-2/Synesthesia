@@ -32,12 +32,12 @@ exports.postNewEvent = function(data, res) {
 };
 
 exports.updateCastMember = function(id, data, res) {
-  var query = "UPDATE `cast` WHERE id=" + id + " SET name='" + data.name + "', portrait='" + data.portrait + "', role='" + data.role + "', bio='" + data.bio + "';";
+  var query = "UPDATE `cast` SET name='" + data.name + "', portrait='" + data.portrait + "', role='" + data.role + "', bio='" + data.bio + "' WHERE id=" + id + " ;";
   makeQuery(res, query, "Model Updated", 201);
 };
 
 exports.updateEvent = function(id, data, res) {
-  var query = "UPDATE `shows` WHERE id=" + id + " SET title='" + data.title + "', link='" + data.link + "', description='" + data.description + "', location='" + data.location + "', showdate='" + data.showdate + "';";
+  var query = "UPDATE `shows` SET title='" + data.title + "', link='" + data.link + "', description='" + data.description + "', location='" + data.location + "', showdate='" + data.showdate + "' WHERE id=" + id + ";";
   makeQuery(res, query, "Model Updated", 201);
 };
 

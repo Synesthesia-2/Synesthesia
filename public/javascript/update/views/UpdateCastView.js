@@ -14,6 +14,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     this.template = this.model.get('templates')['updateCast'];
     this.collection.on('add remove', this.render.bind(this));
     this.currentModel = null;
+    this.newAdd = true;
   },
 
   render: function() {
@@ -52,6 +53,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     form[0].value = model.get('name');
     form[2].value = model.get('role');
     form[3].value = model.get('bio');
+    this.newAdd = false;
     $('#castUpdate, #castDelete').prop('disabled', false);
   },
 
@@ -75,6 +77,7 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     });
     this.currentModel.save(data);
     this.collection.fetch();
+    this.resetForm();
   },
 
   deleteCastMember: function(event) {
@@ -82,28 +85,32 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     this.collection.remove(this.currentModel);
     this.currentModel.destroy();
     this.currentModel = null;
+    this.resetForm();
   },
 
   resetForm: function(event) {
-    event.preventDefault();
+    event && event.preventDefault();
     $('#cast-form')[0].reset();
     $('#castUpdate, #castDelete, #castSubmit').prop('disabled', true);
     this.currentModel = null;
+    this.newAdd = true;
   },
 
   checkFormFilled: function() {
-    var empty = false;
-    $('#cast-form > .cast-field').each(function() {
-      if ($(this).val() === '') {
-        empty = true;
-      }
-    });
+    if (this.newAdd) {
+      var empty = false;
+      $('#cast-form > .cast-field').each(function() {
+        if ($(this).val() === '') {
+          empty = true;
+        }
+      });
 
-    if (empty) {
-      $('#castSubmit').prop('disabled', true);
-    } else {
-      $('#castSubmit').prop('disabled', false);
+      if (empty) {
+        $('#castSubmit').prop('disabled', true);
+      } else {
+        $('#castSubmit').prop('disabled', false);
+      }
     }
   }
-
+  
 });
