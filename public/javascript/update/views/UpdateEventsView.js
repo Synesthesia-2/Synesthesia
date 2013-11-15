@@ -7,6 +7,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     'click #eventUpdate': 'updateEvent',
     'click #eventDelete': 'deleteEvent',
     'click #eventReset': 'resetForm',
+    'click .click-field': 'triggerKeyup',
     'keyup #event-form': 'checkFormFilled'
   },
 
@@ -104,7 +105,6 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
 
   checkFormFilled: function() {
     if (this.newAdd) {
-      console.log('test');
       var empty = false;
       $('#event-form > .event-field').each(function() {
         if ($(this).val() === '') {
@@ -118,6 +118,11 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
         $('#eventSubmit').prop('disabled', false);
       }
     }
+  },
+
+  triggerKeyup: function(event) {
+    console.log('test');
+    this.trigger('keyup');
   }
   
 });
