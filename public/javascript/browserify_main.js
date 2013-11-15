@@ -3,7 +3,10 @@
 // Good rule of thumb for analyser is that -100dB is a very quiet room and 0 is 
 // a very loud input. Under this setup most inputs should avg between -40 and 
 // -5 dB, but it all depends on the environment, input gain, 
-// and analyserminDecibels.
+// and analyser.minDecibels.
+
+var helpers = require('./audioHelpers.js');
+var makePitchAnalyser = require('./makePitchAnalyser.js');
 
 var h1 = $('h1');
 var contextClass = (window.AudioContext ||
@@ -14,7 +17,7 @@ var contextClass = (window.AudioContext ||
 if (contextClass) {
   var audioContext = new contextClass();
 } else {
-  h1.text("web audio is not enabled, sorry."); // For development testing only.
+  h1.text("web audio is not enabled, sorry.");
 }
 
 var state = {
@@ -24,9 +27,9 @@ var state = {
 };
 var server = io.connect('/audio');
 var microphone;
-var hiPass = makeFilter(audioContext,"HIGHPASS",80);
-var loPass = makeFilter(audioContext,"LOWPASS",1200);
-var filters = nodeChain();
+var hiPass = helpers.makeFilter(audioContext,"HIGHPASS",80);
+var loPass = helpers.makeFilter(audioContext,"LOWPASS",1200);
+var filters = helpers.nodeChain();
 filters.add(hiPass,loPass);
 server.on("welcome",function(data){
   if (data.audio) {
@@ -74,5 +77,6 @@ var stopEmitting = function() {
 };
 
 var resumeEmitting = function() {
-  // Can be separate function to resume processing without re-calibrating
+  // In future the future can be separate function
+  // to resume processing without re-calibrating
 };
