@@ -1,21 +1,27 @@
-var makePitchAnalyser = function(context,source) {
-  var analyser = makeAnalyser(context,2048,-30,-144);
+var helpers =   require('./audioHelpers.js');
+
+module.exports = function(context,source) {
+  var analyser = helpers.makeAnalyser(context,2048,-30,-144);
   analyser.threshold = analyser.minDecibels;
   source.connect(analyser);
   var _FFT = new Float32Array(analyser.frequencyBinCount);
+  
   var _findMaxWithI = function(array) {
     var max = Math.max.apply(Math, array);
     var index = Array.prototype.indexOf.call(array,max);
     return [[index-1,array[index-1]],[index,max],[index+1,array[index+1]]];
   };
+
   var _convertToHz = function(buckets) {
     var targetFreq = buckets[1][0];
     var lowD = ((buckets[1][1])-(buckets[0][1]));
     var highD = ((buckets[1][1])-(buckets[2][1]));
     var shift = (lowD < highD ? -(highD - lowD) : (lowD - highD));
-    var adjShift = (shift*0.5)*0.1;
-    return (targetFreq+adjShift)/analyser.frequencyBinCount*(context.sampleRate * 0.5);
+    var aShift = (shift*0.5)*0.1;
+    var f = targetFreq+aShift;
+    return f/analyser.frequencyBinCount*(context.sampleRate*0.5);
   };
+
   var _getPeaks = function(array) {
     var sum = 0;
     var freqs = {};
@@ -36,17 +42,18 @@ var makePitchAnalyser = function(context,source) {
       freqs: freqs
     };
   };
+
   var _noiseCancel = function(freq,diff) {
     notchStrength = 0.7;
     var amt = diff*notchStrength;
     console.log("adding noise cancelling filter at "+freq+"hz with gain "+amt);
     source.disconnect(analyser);
-    var filter = makeFilter(context,"PEAKING",freq,amt);
+    var filter = helpers.makeFilter(context,"PEAKING",freq,amt);
     var chain = analyser.ncFilters;
     if (chain) {
       chain.add(filter);
     } else {
-      chain = analyser.ncFilters = nodeChain();
+      chain = analyser.ncFilters = helpers.nodeChain();
       chain.add(filter);
       source.connect(chain.first);
       chain.connect(analyser);
