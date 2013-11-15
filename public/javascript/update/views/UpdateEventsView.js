@@ -4,6 +4,7 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
   
   events: {
     'click #eventSubmit': 'postEventUpdate',
+    'click #eventUpdate': 'updateEvent',
     'click #eventDelete': 'deleteEvent',
     'click #eventReset': 'resetForm'
   },
@@ -50,7 +51,28 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
     form[1].value = model.get('link');
     form[2].value = model.get('location');
     form[4].value = model.get('description');
-    $('#eventUpdate, #eventDelete').removeAttr('disabled');
+    $('#eventUpdate, #eventDelete').prop('disabled', false);
+  },
+
+  updateEvent: function(event) {
+    event.preventDefault();
+    var data = {};
+    var self = this;
+    _(event.target.form).each(function(field) {
+      if (field.name) {
+        if (field.name === 'showdate') {
+          if (field.value === 'undefined') {
+            data[field.name] = self.currentModel.get('showdate');
+          } else {
+            data[field.name] = self.formatDate(field.value);
+          }
+        } else {
+          data[field.name] = field.value;
+        }
+      }
+    });
+    this.currentModel.save(data);
+    this.collection.fetch();
   },
 
   deleteEvent: function(event) {
@@ -63,7 +85,8 @@ UpdateSpace.UpdateEventsView = Backbone.View.extend({
   resetForm: function(event) {
     event.preventDefault();
     $('#event-form')[0].reset();
-    $('#eventUpdate, #eventDelete, #eventSubmit').prop('disabled');
+    $('#eventUpdate, #eventDelete, #eventSubmit').prop('disabled', true);
+    this.currentModel = null;
   },
 
   formatDate: function(date) {

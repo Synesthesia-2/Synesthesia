@@ -4,8 +4,10 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
   
   events: {
     'click #castSubmit': 'postCastUpdate',
+    'click #castUpdate': 'updateCastMember',
     'click #castDelete': 'deleteCastMember',
-    'click #castReset': 'resetForm'
+    'click #castReset': 'resetForm',
+    'keyup #cast-form': 'checkFormFilled'
   },
 
   initialize: function() {
@@ -50,7 +52,29 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
     form[0].value = model.get('name');
     form[2].value = model.get('role');
     form[3].value = model.get('bio');
-    $('#castUpdate, #castDelete').removeAttr('disabled');
+    $('#castUpdate, #castDelete').prop('disabled', false);
+  },
+
+  updateCastMember: function(event) {
+    event.preventDefault();
+    var data = {};
+    _(event.target.form).each(function(field) {
+      if (field.name) {
+        if(field.name === 'portrait') {
+          if (field.value === 'undefined') {
+            data[field.name] = this.currentModel.get('portrait');
+          } else {
+            var val = field.value.split('\\');
+            val = val[val.length-1];
+            data[field.name] = 'images/cast/' + val;
+          }
+        } else {
+          data[field.name] = field.value;
+        }
+      }
+    });
+    this.currentModel.save(data);
+    this.collection.fetch();
   },
 
   deleteCastMember: function(event) {
@@ -63,7 +87,23 @@ UpdateSpace.UpdateCastView = Backbone.View.extend({
   resetForm: function(event) {
     event.preventDefault();
     $('#cast-form')[0].reset();
-    $('#castUpdate, #castDelete, #castSubmit').prop('disabled');
+    $('#castUpdate, #castDelete, #castSubmit').prop('disabled', true);
+    this.currentModel = null;
+  },
+
+  checkFormFilled: function() {
+    var empty = false;
+    $('#cast-form > .cast-field').each(function() {
+      if ($(this).val() === '') {
+        empty = true;
+      }
+    });
+
+    if (empty) {
+      $('#castSubmit').prop('disabled', true);
+    } else {
+      $('#castSubmit').prop('disabled', false);
+    }
   }
 
 });

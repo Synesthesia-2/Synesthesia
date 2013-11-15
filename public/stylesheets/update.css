@@ -144,6 +144,10 @@ form label {
 form input[type="date"] {
   margin-bottom: 10px;
 }
+form input[type="date"],
+form input[type="file"] {
+  outline: none;
+}
 form input[type="text"] {
   height: 25px;
   width: 540px;

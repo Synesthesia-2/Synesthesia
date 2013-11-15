@@ -38,13 +38,13 @@ html
       section.formField
         form(name="cast-form", id="cast-form", method="post")
           label Name
-          input(type="text", name="name", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
+          input(class="cast-field" type="text", name="name", maxlength="100", tabindex="1", AUTOCOMPLETE="OFF")
           label Portrait Image
-          input(type="file", name="portrait", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
+          input(class="cast-field" type="file", name="portrait", maxlength="255", tabindex="2", AUTOCOMPLETE="OFF")
           label Role
-          input(type="text", name="role", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
+          input(class="cast-field" type="text", name="role", maxlength="100", tabindex="3", AUTOCOMPLETE="OFF")
           label Description
-          textarea(rows="4", type="text", name="bio", tabindex="4", AUTOCOMPLETE="OFF")
+          textarea(class="cast-field" rows="4", type="text", name="bio", tabindex="4", AUTOCOMPLETE="OFF")
           button(class="submit-button" id="castSubmit" disabled) SUBMIT
           button(class="submit-button" id="castUpdate" disabled) UPDATE
           button(class="submit-button" id="castDelete" disabled) DELETE
