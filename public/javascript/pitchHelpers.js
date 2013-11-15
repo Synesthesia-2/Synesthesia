@@ -46,7 +46,7 @@ var makePitchAnalyser = function(context,source) {
     if (chain) {
       chain.add(filter);
     } else {
-      chain = analyser.ncFilters = makeFilterChain();
+      chain = analyser.ncFilters = nodeChain();
       chain.add(filter);
       source.connect(chain.first);
       chain.connect(analyser);
@@ -113,7 +113,7 @@ var makePitchAnalyser = function(context,source) {
     _analyseEnv(time,tStrength,callback);
   };
 
-  analyser.start = function(interval,smooth,callback){ 
+  analyser.start = function(interval,smooth,callback){
     var startInterval = function(){
       return setInterval(function(){
         analyser.getFloatFrequencyData(_FFT);

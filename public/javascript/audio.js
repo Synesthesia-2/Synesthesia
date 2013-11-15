@@ -26,7 +26,7 @@ var server = io.connect('/audio');
 var microphone;
 var hiPass = makeFilter(audioContext,"HIGHPASS",80);
 var loPass = makeFilter(audioContext,"LOWPASS",1200);
-var filters = makeFilterChain();
+var filters = nodeChain();
 filters.add(hiPass,loPass);
 server.on("welcome",function(data){
   if (data.audio) {

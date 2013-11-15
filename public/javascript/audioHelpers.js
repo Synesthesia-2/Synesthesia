@@ -11,7 +11,7 @@ var makeFilter = function(context,type,freq,gain,q) {
   return filter;
 };
 
-var makeFilterChain = function(){
+var nodeChain = function(){
   var chain = {
     first: null,
     last: null,
