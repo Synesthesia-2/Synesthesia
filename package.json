@@ -8,6 +8,7 @@
     "stylus": "*",
     "mysql": "~2.0.0-alpha9",
     "mocha": "*",
-    "chai": "*"
+    "chai": "*",
+    "browserify": "latest"
   }
 }
