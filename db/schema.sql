@@ -9,5 +9,5 @@ CREATE TABLE shows (id int(11) NOT NULL auto_increment, link varchar(255), title
 CREATE TABLE cast_shows (id int(11) NOT NULL auto_increment, cast_id int(11), show_id int(11), PRIMARY KEY(id));
 
 /*  Execute this file from the command line by typing:
- *    mysql < schema.sql
+ *    mysql -u root < schema.sql
  *  to create the database and the tables.*/
