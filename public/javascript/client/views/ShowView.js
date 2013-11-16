@@ -49,11 +49,18 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   setClientDetails: function(data) {
+    console.log(data.mode);
     this.model.set('audioColor', data.audioColor);
     this.model.set('strobe', data.strobe);
-    this.model.set('currentColor', data.currentColor);
+    this.model.set('currentColor', data.mode.color);
     if (!this.model.get('brushId')){
       this.model.set('brushId', data.id);
+    }
+    if (data.audioLights) {
+      console.log('audio lights');
+      this.audioColor();
+    } else if (data.mode.color !== '#000000') {
+      this.updateBackgroundColor({ color: data.mode.color, fadeTime: this.fadeTime });
     }
   },
 
@@ -61,7 +68,7 @@ ClientSpace.ShowView = Backbone.View.extend({
     var strobe = this.model.get('strobe');
     strobe = !strobe;
     this.model.set('strobe', strobe);
-    if (strobe && this.currentColor !== "#000000") {
+    if (strobe && (this.model.get('currentColor') !== "#000000")) {
       this.strobe(true);
     } else if (!strobe) {
       this.strobe(false);
@@ -73,6 +80,7 @@ ClientSpace.ShowView = Backbone.View.extend({
       this.strobe(false);
       this.strobe(true);
     }
+    console.log(data);
     this.model.set('currentColor', data.color);
     this.fadeTime = parseFloat(data.fadeTime);
     this.$el.animate({
