@@ -31,7 +31,6 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   reset: function() {
-    console.log('reset toggled');
     this.strobe(false);
     this.model.set('strobe', false);
     this.fadeTime = 1500;

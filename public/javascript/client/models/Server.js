@@ -14,7 +14,6 @@ ClientSpace.Server = Backbone.Model.extend({
   },
 
   reset: function() {
-    console.log('reset triggered');
     this.trigger('reset');
   },
 

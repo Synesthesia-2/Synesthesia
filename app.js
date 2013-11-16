@@ -161,7 +161,10 @@ dancer.on('connection', function (dancer) {
 conductor.on('connection', function (conductor) {
   // reset on connection
   state.resetMC();
-  io.sockets.emit('reset');
+  clients.emit('reset');
+  dancer.emit('reset');
+  audio.emit('reset');
+  fireworks.emit('reset');
 
   conductor.emit("welcome");
 
