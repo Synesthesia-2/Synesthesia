@@ -1,87 +1,27 @@
-var makeFilter = function(context,type,freq,gain,q) {
-  if (!context) {throw new Error("context argument required");}
-  if (!type || typeof(type) !== "string") {
-    throw new Error("type must be string");
-  }
-  var filter = context.createBiquadFilter();
-  filter.type = filter[type];
-  if (freq) { filter.frequency.value = freq; }
-  if (gain) { filter.gain.value = gain; }
-  if (q) { filter.Q.value = q; }
-  return filter;
-};
+var helpers =   require('./audioHelpers.js');
 
-var makeFilterChain = function(){
-  var chain = {
-    first: null,
-    last: null,
-    output: null
-  };
-  chain.connect = function(node){
-    this.output = node;
-    if (this.last) {this.last.connect(this.output);}
-  };
-  chain.disconnect = function(node){
-    this.output = null;
-    if (this.last) {this.last.disconnect(node);}
-  };
-  chain.add = function(filter){
-    if (arguments.length > 1) {
-      for (var i=0; i<arguments.length; i++) {
-        this.add(arguments[i]);
-      }
-      return this;
-    }
-    if (!this.first) {
-      this.first = filter;
-      this.last = filter;
-      if (this.output) {this.last.connect(this.output);}
-    } else {
-      if (this.output) {
-        this.last.disconnect(this.output);
-        filter.connect(this.output);
-      }
-      this.last.connect(filter);
-      this.last = filter;
-    }
-    return this;
-  };
-  return chain;
-};
-
-var makeAnalyser = function(context,fftSize,maxdec,mindec,smoothing) {
-  if (arguments.length === 3) {
-    smoothing = maxdec;
-    maxdec = undefined;
-  }
-  if (!context) {throw new Error("context argument required");}
-  var analyser = context.createAnalyser();
-  analyser.context = context;
-  if (fftSize) {analyser.fftSize = fftSize;}
-  if (maxdec) {analyser.maxDecibels = maxdec;}
-  if (mindec) {analyser.minDecibels = mindec;}
-  if (smoothing) {analyser.smoothingTimeConstant = smoothing;}
-  return analyser;
-};
-
-var makePitchAnalyser = function(context,source) {
-  var analyser = makeAnalyser(context,2048,-30,-144);
+module.exports = function(context,source) {
+  var analyser = helpers.makeAnalyser(context,2048,-30,-144);
   analyser.threshold = analyser.minDecibels;
   source.connect(analyser);
   var _FFT = new Float32Array(analyser.frequencyBinCount);
+  
   var _findMaxWithI = function(array) {
     var max = Math.max.apply(Math, array);
     var index = Array.prototype.indexOf.call(array,max);
     return [[index-1,array[index-1]],[index,max],[index+1,array[index+1]]];
   };
+
   var _convertToHz = function(buckets) {
     var targetFreq = buckets[1][0];
     var lowD = ((buckets[1][1])-(buckets[0][1]));
     var highD = ((buckets[1][1])-(buckets[2][1]));
     var shift = (lowD < highD ? -(highD - lowD) : (lowD - highD));
-    var adjShift = (shift*0.5)*0.1;
-    return (targetFreq+adjShift)/analyser.frequencyBinCount*(context.sampleRate * 0.5);
+    var aShift = (shift*0.5)*0.1;
+    var f = targetFreq+aShift;
+    return f/analyser.frequencyBinCount*(context.sampleRate*0.5);
   };
+
   var _getPeaks = function(array) {
     var sum = 0;
     var freqs = {};
@@ -102,17 +42,18 @@ var makePitchAnalyser = function(context,source) {
       freqs: freqs
     };
   };
+
   var _noiseCancel = function(freq,diff) {
     notchStrength = 0.7;
     var amt = diff*notchStrength;
     console.log("adding noise cancelling filter at "+freq+"hz with gain "+amt);
     source.disconnect(analyser);
-    var filter = makeFilter(context,"PEAKING",freq,amt);
+    var filter = helpers.makeFilter(context,"PEAKING",freq,amt);
     var chain = analyser.ncFilters;
     if (chain) {
       chain.add(filter);
     } else {
-      chain = analyser.ncFilters = makeFilterChain();
+      chain = analyser.ncFilters = helpers.nodeChain();
       chain.add(filter);
       source.connect(chain.first);
       chain.connect(analyser);
@@ -179,7 +120,20 @@ var makePitchAnalyser = function(context,source) {
     _analyseEnv(time,tStrength,callback);
   };
 
-  analyser.process = function(interval,smooth,callback){
+  analyser.start = function(interval,smooth,callback){
+    var startInterval = function(){
+      return setInterval(function(){
+        analyser.getFloatFrequencyData(_FFT);
+        var targetRange = _findMaxWithI(_FFT);
+        var volume = targetRange[1][1];
+        var hz = _convertToHz(targetRange);
+        var data = {
+          hz: hz,
+          volume: volume
+        };
+        callback(data);
+      }, interval);
+    };
     if (typeof(interval) === 'function') {
       callback = interval;
       interval = undefined;
@@ -189,17 +143,15 @@ var makePitchAnalyser = function(context,source) {
     }
     interval = interval || 60;
     this.smoothingTimeConstant = smooth || 0;
-    setInterval(function(){
-      analyser.getFloatFrequencyData(_FFT);
-      var targetRange = _findMaxWithI(_FFT);
-      var volume = targetRange[1][1];
-      var hz = _convertToHz(targetRange);
-      var data = {
-        hz: hz,
-        volume: volume
-      };
-      callback(data);
-    }, interval);
+    var processor = startInterval();
+    this.end = function() {
+      clearInterval(processor);
+    };
   };
+
+  analyser.end = function(){
+    return "End called but analyser not processing yet.";
+  };
+
   return analyser;
 };

@@ -16,13 +16,13 @@ UpdateSpace.Router = Backbone.Router.extend({
 
   updateCast: function() {
     console.log('cast route');
-    var updateCastView = new UpdateSpace.UpdateCastView({ model: this.model });
+    var updateCastView = new UpdateSpace.UpdateCastView({ model: this.model, collection: this.model.get('cast') });
     this.swapView(updateCastView);
   },
 
   updateEvents: function() {
     console.log('event route');
-    var updateEventsView = new UpdateSpace.UpdateEventsView({ model: this.model });
+    var updateEventsView = new UpdateSpace.UpdateEventsView({ model: this.model, collection: this.model.get('shows') });
     this.swapView(updateEventsView);
   }
 

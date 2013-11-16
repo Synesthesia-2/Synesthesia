@@ -23,6 +23,7 @@ server.listen(8080);
 var io = require('socket.io').listen(server);
 
 var db = require('./server/database_server');
+var helpers = require('./server/helpers');
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
@@ -91,6 +92,42 @@ app.get('/cast', function (req, res) {
 app.get('/upcomingShows', function (req, res) {
   db.getUpcomingShows(res);
 });
+
+// POST DATABASE FILES
+app.post('/cast', function (req, res) {
+  processPost(req, function(data){
+    db.postNewCast(data, res);
+  });
+});
+
+app.post('/upcomingShows', function (req, res) {
+  processPost(req, function(data){
+    db.postNewEvent(data, res);
+  });
+});
+
+// UPDATE DATABASE FILES
+app.put('/cast/:id', function (req, res) {
+  processPost(req, function(data){
+    db.updateCastMember(req.params.id, data, res);
+  });
+});
+
+app.put('/upcomingShows/:id', function (req, res) {
+  processPost(req, function(data){
+    db.updateEvent(req.params.id, data, res);
+  });
+});
+
+// DELETE DATABASE FILES
+app.delete('/cast/:id', function (req, res) {
+  db.deleteCastMember(req.params.id, res);
+});
+
+app.delete('/upcomingShows/:id', function (req, res) {
+  db.deleteEvent(req.params.id, res);
+});
+
 //////////////////////////////////////////
 /// EVENTS
 //////////////////////////////////////////
@@ -140,7 +177,7 @@ conductor.on('connection', function (conductor) {
 
   conductor.on('toggleSound', function (data){
     state.audio = data.sound;
-    audio.emit('startAudio', data);
+    audio.emit('toggleSound', data);
   });
 
   conductor.on('toggleMotion', function (data){
@@ -211,7 +248,9 @@ clients.on('connection', function (client) {
 //////////////////////////////////////////
 
 audio.on('connection', function (audio) {
+  audio.emit('welcome', {audio: state.audio});
   audio.on('audio', function (data){
+    console.log(data);  // Leave in for test logging until Monday
     var clients = io.of('/client');
     if (state.audioLights) {
       clients.emit('audio', data);
