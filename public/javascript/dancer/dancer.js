@@ -2,29 +2,36 @@ var server = io.connect('/dancer');
 var $h1 = $('h1');
 
 server.on('welcome', function(data) {
-  console.log(data);
-  $h1.text('Connected. Motion tracking off.');
+  if (data.tracking) {
+    startTrack();
+  } else {
+    $h1.text('Connected. Motion tracking off.');
+  }
 });
 
 server.on('toggleMotion', function(data) {
   if (data.motion) {
-    console.log('Tracking motion...');
-    $h1.text('Now tracking motion.');
-    initMotionListener();
+    startTrack();
   } else {
-    console.log('Motion tracking off');
-    $h1.text('Motion tracking off.');
-    removeMotionListener();
+    stopTrack();
   }
 });
 
+var startTrack = function() {
+  $h1.text('Now tracking motion.');
+  initMotionListener();
+};
+
+var stopTrack = function() {
+  $h1.text('Motion tracking off.');
+  removeMotionListener();
+};
+
 var initMotionListener = function() {
-  console.log('init');
   window.addEventListener('deviceorientation', boundDeviceMotion);
 };
 
 var removeMotionListener = function() {
-  console.log('remove');
   window.removeEventListener('deviceorientation', boundDeviceMotion);
 };
 

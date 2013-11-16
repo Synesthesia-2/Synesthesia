@@ -18,6 +18,7 @@ ClientSpace.Server = Backbone.Model.extend({
   },
 
   setID: function(data) {
+    console.log(data);
     this.trigger('setClientDetails', data);
   },
 

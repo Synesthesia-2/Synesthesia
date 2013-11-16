@@ -39,12 +39,17 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
-  mode: "default",
+  currentColor: '#000000',
   resetMC: function() {
     this.strobe = false;
     this.audio = false;
     this.audioLights = false;
     this.motionTrack = false;
+  },
+  client: {
+    strobe: this.strobe,
+    audioLights: this.audioLights,
+    color: this.currentColor
   }
 };
 
@@ -145,7 +150,11 @@ fireworks.on('connection', function (firework) {
 //////////////////////////////////////////
 
 dancer.on('connection', function (dancer) {
-  dancer.emit('welcome', "Connected for motion tracking.");
+  console.log('Dancer connects to: ', state.motionTrack);
+  dancer.emit('welcome', {
+    message: "Connected for motion tracking.",
+    tracking: state.motionTrack
+  });
   dancer.on('motionData', function (data) {
     fireworks.emit('motionData', data);
   });
@@ -158,21 +167,20 @@ dancer.on('connection', function (dancer) {
 conductor.on('connection', function (conductor) {
   // reset on connection
   state.resetMC();
-  clients.emit('reset');
+  conductor.broadcast.emit('reset');
 
   conductor.emit("welcome");
 
   conductor.on('changeColor',function (data){
     var clients = io.of('/client');
-    // Do we need to redefine this in each case?
-    state.mode = "changeColor";
+    state.currentColor = data.color;
     clients.emit('changeColor', data);
   });
 
   conductor.on('randomColor', function (data){
     var clients = io.of('/client');
-    state.mode = "randomColor";
-    clients.emit('randomColor', data);
+    state.currentColor = '#000000';    // Set current to black in the case of random
+   clients.emit('randomColor', data);
   });
 
   conductor.on('toggleSound', function (data){
@@ -187,6 +195,7 @@ conductor.on('connection', function (conductor) {
     } else if (!data.paint) {
       state.motionTrack = false;
     }
+    console.log('from conductor: ', state.motionTrack);
     dancer.emit('toggleMotion', data);
   });
 
@@ -226,8 +235,7 @@ clients.on('connection', function (client) {
   client.emit("welcome", {
     id: client.id,
     message: "welcome!",
-    mode: state.mode,
-    strobe: false
+    mode: state.client
   });
 
   client.on('disconnect', function (){
