@@ -163,8 +163,7 @@ conductor.on('connection', function (conductor) {
   state.resetMC();
   clients.emit('reset');
   dancer.emit('reset');
-  audio.emit('reset');
-  fireworks.emit('reset');
+  audio.emit('reset', {});
 
   conductor.emit("welcome");
 

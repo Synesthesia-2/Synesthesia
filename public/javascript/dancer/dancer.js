@@ -9,6 +9,10 @@ server.on('welcome', function(data) {
   }
 });
 
+server.on('reset', function() {
+  stopTrack();
+});
+
 server.on('toggleMotion', function(data) {
   if (data.motion) {
     startTrack();
