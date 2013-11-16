@@ -45,11 +45,6 @@ var state = {
     this.audio = false;
     this.audioLights = false;
     this.motionTrack = false;
-  },
-  client: {
-    strobe: this.strobe,
-    audioLights: this.audioLights,
-    color: this.currentColor
   }
 };
 
@@ -150,7 +145,6 @@ fireworks.on('connection', function (firework) {
 //////////////////////////////////////////
 
 dancer.on('connection', function (dancer) {
-  console.log('Dancer connects to: ', state.motionTrack);
   dancer.emit('welcome', {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
@@ -167,7 +161,7 @@ dancer.on('connection', function (dancer) {
 conductor.on('connection', function (conductor) {
   // reset on connection
   state.resetMC();
-  conductor.broadcast.emit('reset');
+  io.sockets.emit('reset');
 
   conductor.emit("welcome");
 
@@ -195,7 +189,6 @@ conductor.on('connection', function (conductor) {
     } else if (!data.paint) {
       state.motionTrack = false;
     }
-    console.log('from conductor: ', state.motionTrack);
     dancer.emit('toggleMotion', data);
   });
 
@@ -235,7 +228,11 @@ clients.on('connection', function (client) {
   client.emit("welcome", {
     id: client.id,
     message: "welcome!",
-    mode: state.client
+    mode: {
+      color: state.currentColor,
+      strobe: state.strobe,
+      audioLights: state.audioLights
+    }
   });
 
   client.on('disconnect', function (){

@@ -13,7 +13,6 @@ ClientSpace.ShowView = Backbone.View.extend({
     this.fadeOutTimer = 0;
     this.fadeInterval = null;
     this.strobeInt = null;
-    this.currentColor = '#000000';
     this.fadeTime = 1500;
     this.template = this.model.get('templates')['show'];
     this.server = params.server;
@@ -32,11 +31,12 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   reset: function() {
+    console.log('reset toggled');
     this.strobe(false);
     this.model.set('strobe', false);
     this.fadeTime = 1500;
     if (this.strobeInt !== null) clearInterval(this.strobeInt);
-    this.currentColor = '#000000';
+    this.model.set('currentColor', '#000000');
     this.$el.css({'backgroundColor': '#000000'});
   },
 
@@ -50,8 +50,9 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   setClientDetails: function(data) {
+    this.model.set('audioColor', data.audioColor);
     this.model.set('strobe', data.strobe);
-    this.model.set('mode', data.mode);
+    this.model.set('currentColor', data.currentColor);
     if (!this.model.get('brushId')){
       this.model.set('brushId', data.id);
     }
@@ -73,28 +74,18 @@ ClientSpace.ShowView = Backbone.View.extend({
       this.strobe(false);
       this.strobe(true);
     }
-    this.currentColor = data.color;
+    this.model.set('currentColor', data.color);
     this.fadeTime = parseFloat(data.fadeTime);
     this.$el.animate({
-      backgroundColor: this.currentColor
+      backgroundColor: data.color
     }, this.fadeTime);
   },
 
   audioColor: function(data) {
-//    console.log('hz: ' + data.hz + ' volume: ' + data.volume);
     var self = this;
     if (!this.fadeInterval) {
       this.fadeInterval = setInterval(function() {
         self.fadeOutTimer++;
-        if (self.fadeOutTimer > 0 && self.fadeOutTimer % 30 === 0) {
-          // TODO: Match visualizer drift
-          // self.cr = (self.cr * 0.94).toFixed(3);
-          // self.cg = (self.cg * 0.94).toFixed(3);
-          // self.cb = (self.cb * 0.94).toFixed(3);
-          // self.$el.animate({
-          //   'backgroundColor': 'rgb(' + self.cr + ',' + self.cg + ',' + self.cb + ')'
-          // }, 10);
-        }
         if (self.fadeOutTimer === 170) {
           self.fadeOut();
         }
@@ -113,7 +104,6 @@ ClientSpace.ShowView = Backbone.View.extend({
       this.cr=colorHz.rgb()[0];
       this.cg=colorHz.rgb()[1];
       this.cb=colorHz.rgb()[2];
-      console.log('x');
       this.$el.animate({
         'backgroundColor': 'rgb(' + this.cr + ',' + this.cg + ',' + this.cb + ')'
       }, 10);
@@ -131,7 +121,7 @@ ClientSpace.ShowView = Backbone.View.extend({
           backgroundColor: '#000000'
         }, self.fadeTime / 2-2, function() {
           self.$el.animate({
-            backgroundColor: self.currentColor
+            backgroundColor: self.model.get('currentColor')
           }, self.fadeTime / 2-2);
         });
       }, this.fadeTime);
