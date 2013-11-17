@@ -74,6 +74,7 @@ p.HR {
   background-color: #e02443;
   height: 10px;
   padding-bottom: 4px;
+  padding-top: 4px;
 }
 button {
   margin: 20px auto;

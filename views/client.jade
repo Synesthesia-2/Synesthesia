@@ -39,8 +39,15 @@ html
 
     script#castList(type="text/x-handlebars-template")
       h2 {{ currentShow }} cast and crew:
-      div#castList
+      {{#each castMember}}
+      div.castMember
+        img(src="{{ portrait }}")
+        p.castName {{ name }}
+        p.role {{ role }}
+        p.bio {{ bio }}
+      {{/each}}
       button.back Back
+
 
     script#castMember(type="text/x-handlebars-template")
       img(src="{{ portrait }}")
@@ -51,7 +58,13 @@ html
     script#showsList(type="text/x-handlebars-template")
       h1 Upcoming Events
       h3 Click an event to find out more
-      div#showList
+      {{#each upcoming}}
+      a(href="{{ link }}")
+        div
+          p.what {{ what }}
+          p When: {{ when }}
+          p Where: {{ where }}
+      {{/each}}
       button.back Back
 
     script#singleShow(type="text/x-handlebars-template")
