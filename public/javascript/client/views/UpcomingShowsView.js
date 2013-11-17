@@ -9,17 +9,17 @@ ClientSpace.UpcomingShowsView = Backbone.View.extend({
 
   initialize: function() {
     this.template = this.model.get('templates')['showsList'];
-    this.collection.on('add', this.render.bind(this));
+    //this.collection.on('add', this.render.bind(this));
   },
 
   render: function() {
-    var self = this;
+    // var self = this;
     this.$el.html( this.template(this.model.attributes) );
-    this.$el.find('#showList').append(
-      this.collection.map(function(item) {
-        return new ClientSpace.SingleShowView({ clientModel: self.model, model: item }).render();
-      })
-    );
+    // this.$el.find('#showList').append(
+    //   this.collection.map(function(item) {
+    //     return new ClientSpace.SingleShowView({ clientModel: self.model, model: item }).render();
+    //   })
+    // );
     return this;
   },
 
