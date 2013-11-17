@@ -22,9 +22,8 @@ var server = http.createServer(app);
 server.listen(8080);
 var io = require('socket.io').listen(server);
 app.set('io', io);
-require('long-stack-traces'); // for debugging
-var db = require('./server/database_server');
-var helpers = require('./server/helpers');
+// var db = require('./server/database_server');
+// var helpers = require('./server/helpers');
 var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
 
@@ -71,49 +70,53 @@ app.use(function(err, req, res, next){
   res.send(500, 'Houston, your server has a problem.');
 });
 
-// SERVE DATABASE FILES
-app.get('/cast', function (req, res) {
-  db.getCast(res);
-});
+// app.get('/update', function (req, res) {
+//   res.render('update');
+// });
 
-app.get('/upcomingShows', function (req, res) {
-  db.getUpcomingShows(res);
-});
+// // SERVE DATABASE FILES
+// app.get('/cast', function (req, res) {
+//   db.getCast(res);
+// });
 
-// POST DATABASE FILES
-app.post('/cast', function (req, res) {
-  processPost(req, function(data){
-    db.postNewCast(data, res);
-  });
-});
+// app.get('/upcomingShows', function (req, res) {
+//   db.getUpcomingShows(res);
+// });
 
-app.post('/upcomingShows', function (req, res) {
-  processPost(req, function(data){
-    db.postNewEvent(data, res);
-  });
-});
+// // POST DATABASE FILES
+// app.post('/cast', function (req, res) {
+//   processPost(req, function(data){
+//     db.postNewCast(data, res);
+//   });
+// });
 
-// UPDATE DATABASE FILES
-app.put('/cast/:id', function (req, res) {
-  processPost(req, function(data){
-    db.updateCastMember(req.params.id, data, res);
-  });
-});
+// app.post('/upcomingShows', function (req, res) {
+//   processPost(req, function(data){
+//     db.postNewEvent(data, res);
+//   });
+// });
 
-app.put('/upcomingShows/:id', function (req, res) {
-  processPost(req, function(data){
-    db.updateEvent(req.params.id, data, res);
-  });
-});
+// // UPDATE DATABASE FILES
+// app.put('/cast/:id', function (req, res) {
+//   processPost(req, function(data){
+//     db.updateCastMember(req.params.id, data, res);
+//   });
+// });
 
-// DELETE DATABASE FILES
-app.delete('/cast/:id', function (req, res) {
-  db.deleteCastMember(req.params.id, res);
-});
+// app.put('/upcomingShows/:id', function (req, res) {
+//   processPost(req, function(data){
+//     db.updateEvent(req.params.id, data, res);
+//   });
+// });
 
-app.delete('/upcomingShows/:id', function (req, res) {
-  db.deleteEvent(req.params.id, res);
-});
+// // DELETE DATABASE FILES
+// app.delete('/cast/:id', function (req, res) {
+//   db.deleteCastMember(req.params.id, res);
+// });
+
+// app.delete('/upcomingShows/:id', function (req, res) {
+//   db.deleteEvent(req.params.id, res);
+// });
 
 //////////////////////////////////////////
 /// EVENTS

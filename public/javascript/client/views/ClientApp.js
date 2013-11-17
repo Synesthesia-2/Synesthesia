@@ -3,7 +3,6 @@ ClientSpace.ClientApp = Backbone.View.extend({
   className: "mainPage",
 
   initialize: function() {
-
     this.template = this.model.get('templates')['clientApp'];
     this.initializeClientDevice();
     $('body').prepend(this.render().el);
