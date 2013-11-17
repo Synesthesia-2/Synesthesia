@@ -1,6 +1,6 @@
 #Synesthesia
 
-Synesthesia is a sound and movement visualizer developed as a collaboration between Kine-Tech, an arts and technology collective in San Francisco, and Hack Reactor, the premier immersive web development school. 
+Synesthesia is a sound and movement visualizer developed as a collaboration between Kine-Tech, an arts and technology collective in San Francisco, and Hack Reactor, an immersive software engineering academy in the heart of the city. 
 
 Synesthesia mixes motion input from mobile devices and audio input to create visualizations in a web browser. Multiple devices communicate in real time across a single server.
 
@@ -10,25 +10,8 @@ Synesthesia mixes motion input from mobile devices and audio input to create vis
 Requirements: Node.js, npm (Node.js package manager)
 
 To run on your own network:
-  - Clone the repository by doing one of the following:
-    - standard:
-      - go to https://github.com/kinetech/Performance, and on the right side of the screen, click "Download ZIP"
-      - move it to desired directory then unzip it
-    - with git: 
-      - in a terminal window, navigate to the directory you would like to install the program in 
-      - type "git clone https://github.com/kinetech/Performance"
-  - (If necessary) Install Node.js and npm
-    - see https://gist.github.com/isaacs/579814 for instructions on installing Node and npm
-  - Open a terminal window, navigate to the directory you installed the program in
-    - see http://mac.tutsplus.com/tutorials/terminal/navigating-the-terminal-a-gentle-introduction/ for instructions on navigating the terminal
-    - Type these commands:
-      - "npm install" to install all the required packages and their dependencies
-      - "node app.js" to start the program 
-      - Visit "localhost:8080" 
-      - To turn off the server, hit Control-c
-      - To start the server, type "node app.js" again
-
-TODO: Deploy to web, provide link to it here
+  - `git clone https://github.com/kinetech/Performance`
+  - Install node, if necessary, and install dependencies via `npm install`
 
 ##Screenshots:
 
@@ -71,8 +54,7 @@ Output:
 Unit Testing:
   - Mocha
 
-##Challenges:
-
+<!-- ##Challenges:
 
 Consistency of state:
 
@@ -106,7 +88,7 @@ Audio input - Modularity:
 
 ##Codebase map:
 
-TODO: Map the codebase and provide instructions
+TODO: Map the codebase and provide instructions -->
 
 ##License:
 
