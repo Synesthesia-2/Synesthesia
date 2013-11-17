@@ -22,15 +22,20 @@ ClientSpace.Router = Backbone.Router.extend({
 
   index: function(){
     console.log('index route');
-    var indexView = new ClientSpace.IndexView({ model: this.model  });
+    var indexView = new ClientSpace.IndexView({ model: this.model });
     this.swapView(indexView);
   },
 
   showCastList: function() {
     console.log('cast route');
-    var castView = new ClientSpace.CastView({ model: this.model, collection: this.model.get('cast') });
+    var castView = new ClientSpace.CastView({ model: this.model });
     this.swapView(castView);
   },
+  // showCastList: function() {
+  //   console.log('cast route');
+  //   var castView = new ClientSpace.CastView({ model: this.model, collection: this.model.get('cast') });
+  //   this.swapView(castView);
+  // },
 
   showAbout: function() {
     console.log('about route');
@@ -40,9 +45,14 @@ ClientSpace.Router = Backbone.Router.extend({
 
   showUpcomingShows: function() {
     console.log('upcoming shows route');
-    var showsView = new ClientSpace.UpcomingShowsView({ model: this.model, collection: this.model.get('shows') });
+    var showsView = new ClientSpace.UpcomingShowsView({ model: this.model });
     this.swapView(showsView);
   },
+  // showUpcomingShows: function() {
+  //   console.log('upcoming shows route');
+  //   var showsView = new ClientSpace.UpcomingShowsView({ model: this.model, collection: this.model.get('shows') });
+  //   this.swapView(showsView);
+  // },
 
   startShow: function() {
     console.log('start show');
