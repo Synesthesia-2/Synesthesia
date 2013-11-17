@@ -1,0 +1,32 @@
+##Challenges:
+
+
+Consistency of state:
+
+- Keeping all devices informed about the state of the performance, irrespective of when each device joined the performance, required state-tracking and frequent refreshing of the client list on the server side. 
+
+- Keeping communications fluid and consistent between all endpoints, so an event trigger in one place is known and understood elsewhere became more and more challenging with each feature and endpoint added.
+
+- Setting up file structures to keep 5 endpoints and a server all independent and clearly defined, yet easy to navigate and move between. 
+
+- Keeping the 5 endpoints all cohesive in their code structure, so when swapping quickly between endpoints there was a minimal amount of time needed to reorient the user.
+
+
+Visualizations:
+
+- Structuring the data being passed around so varied inputs (audio pitch and volume, mouse movements, gyroscope or accelerometer data from phones) such that they could be mapped to the same visualization required calibration of data output by different phone models to provide the same effects.
+
+
+Inputs:
+
+- Integrating multiple types of input into a cohesive experience. Audio, motion and touch inputs all had to be recognized and used to create the final visualization on the visualizer and the client devices.
+
+
+Audio input - Pitch detection: 
+
+- Webaudio provides basic Fourier Fast Transforms, but by default they're not very accurate. We designed an algorithm to increase the accuracy of the results, down to 1hz. To maximize reliability, we also implemented methods for automatic thresholding and intelligent noise canceling.
+
+
+Audio input - Modularity: 
+
+- Since Webaudio is so new, it doesn't have concise methods for creating multiple filters and analysers in non-trivial audio applications. The code to create and set attributes for multiple nodes is long and repetitive. We created a number of helper methods for working with Webaudio, which helped keep the code more organized and efficient.
