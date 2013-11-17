@@ -32,11 +32,13 @@ var hiPass = helpers.makeFilter(audioContext,"HIGHPASS",80);
 var loPass = helpers.makeFilter(audioContext,"LOWPASS",1200);
 var filters = helpers.nodeChain();
 filters.add(hiPass,loPass);
+
 server.on("welcome",function(data){
   if (data.audio) {
     state.serverReady = true;
   }
 });
+
 server.on("toggleSound",function(data) {
   state.serverReady = data.sound;
   if (!state.emitting && state.inputEnabled && state.serverReady) {
@@ -45,12 +47,14 @@ server.on("toggleSound",function(data) {
     stopEmitting();
   }
 });
+
 server.on("reset", function() {
   state.serverReady = false;
   if (state.emitting) {
     stopEmitting();
   }
 });
+
 var streamLoaded = function(stream) {
   h1.text("Audio input enabled. Waiting for command from server.");
   state.inputEnabled = true;
@@ -86,6 +90,7 @@ var resumeEmitting = function() {
   // In future the future can be separate function
   // to resume processing without re-calibrating
 };
+
 },{"./audioHelpers.js":2,"./makePitchAnalyser.js":3}],2:[function(require,module,exports){
 module.exports = {
   makeFilter: function(context,type,freq,gain,q) {
@@ -218,7 +223,7 @@ module.exports = function(context,source) {
 
   var _setThresh = function(avg,tStr) {
     if (avg > analyser.minDecibels * 0.27) {
-      tStr = 0;
+      tStr = 0.3;
     } else if (avg > analyser.minDecibels * 0.4) {
       tStr *= 0.5;
     }
@@ -311,5 +316,6 @@ module.exports = function(context,source) {
 
   return analyser;
 };
+
 },{"./audioHelpers.js":2}]},{},[1])
 ;
