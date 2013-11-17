@@ -13,14 +13,15 @@ var canvas, gl,
 	countdown,
 	oa, ob, //og, for old alpha, old beta, old gamma
 	cw, ch, //canvas width and height
-	cr, cg, cb, //for color-red, -green, -blue
+	cr=0, cg=0, cb=0, //for color-red, -green, -blue
 	px, pz, //py, position-x, -y, -z
 	modifier, //converts from frequency to color
 	touches = [], //analogue to mouse press
 	totalLines = 60000,
 	numLinesGoal,
 	numLines = totalLines,
-	zFilter=0.8; //Between 0 and 1. Higher is slower change.
+	zFilterLines=0.95, //Between 0 and 1. Higher is slower change.
+	zFilterColor=0.95;
 
 function initialize (data) {
 
@@ -41,21 +42,21 @@ function initialize (data) {
 	}
 
 	if (data.hz) {
-		numLinesGoal = Math.floor((5000/7)*data.volume) + 63000;
-		numLines = numLines*zFilter + numLinesGoal*(1-zFilter);
+		numLinesGoal = 1000*data.volume + 60000;
+		numLines = numLines*zFilterLines + numLinesGoal*(1-zFilterLines);
 		if (numLines>totalLines) {numLines=totalLines;}
-		console.log(numLines,data.volume);
+		// console.log(numLines,data.volume);
 		
 		modifier = (Math.log(data.hz/110)/Math.log(2) % 1) * (-360);
 		colorHz = pusher.color('yellow').hue(modifier.toString());
 
-		cr=colorHz.rgb()[0]/256;
-		cg=colorHz.rgb()[1]/256;
-		cb=colorHz.rgb()[2]/256;
+		cr=cr*zFilterColor+(1-zFilterColor)*colorHz.rgb()[0]/256;
+		cg=cg*zFilterColor+(1-zFilterColor)*colorHz.rgb()[1]/256;
+		cb=cb*zFilterColor+(1-zFilterColor)*colorHz.rgb()[2]/256;
 	}
 
 	function setDisappear() {
-		countdown = setTimeout(function(){touches=[];},2000);
+		countdown = setTimeout(function(){touches=[];},1000);
 	}
 
 	function clearDisappear() {
@@ -96,8 +97,8 @@ function redraw() {
 	// animate color
 	cr = (cr * 0.94).toFixed(3);
 	cg = (cg * 0.94).toFixed(3);
-	cb = (cb * 0.94).toFixed(3);
-	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.3 );
+	cb = (cb * 0.95).toFixed(3);
+	gl.uniform4f( colorLoc, cr, cg, cb, Math.random()+0.35 );
 	
 	// animate and attract particles
 	for( i = 0; i < numLines; i+=2 )
@@ -125,12 +126,12 @@ function redraw() {
 		
 		// vertical
 		p = vertices[bp+4];
-		p += velocities[bp+1];
-		if ( p < -1 ) {
-			p = -1;
+		p += velocities[bp+1]*1.5;
+		if ( p < -0.9 ) {
+			p = -0.9;
 			velocities[bp+1] = Math.abs(velocities[bp+1]);
-		} else if ( p > 1 ) {
-			p = 1;
+		} else if ( p > 0.9 ) {
+			p = 0.9;
 			velocities[bp+1] = -Math.abs(velocities[bp+1]);
 			
 		}
@@ -144,7 +145,7 @@ function redraw() {
 				dy = touches[j] - vertices[bp+1];
 				d = Math.sqrt(dx * dx + dy * dy);
 				
-				if ( d < 2.5 )
+				if ( d < 1 )
 				{
 					if ( d < 0.03 )
 					{
@@ -153,14 +154,14 @@ function redraw() {
 						vertices[bp+3] = (vertices[bp+3] + vertices[bp]) * 0.5;
 						vertices[bp+4] = (vertices[bp+4] + vertices[bp+1]) * 0.5;
 						velocities[bp] = Math.random()*0.4-0.2;
-						velocities[bp+1] = Math.random()*0.4-0.2;
+						velocities[bp+1] = Math.random()*0.4-0.1;
 					} else {
 						dx /= d;
 						dy /= d;
 						d = ( 2 - d ) / 2;
 						d *= d;
-						velocities[bp] += dx * d * 0.03;
-						velocities[bp+1] += dy * d * 0.01;
+						velocities[bp] += dx * d * 0.025;
+						velocities[bp+1] += dy * d * 0.015;
 					}
 				}
 			}

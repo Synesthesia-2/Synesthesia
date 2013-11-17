@@ -19,11 +19,14 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
-server.listen(8080);
+var port = process.env.PORT || 8080;
+server.listen(port);
 var io = require('socket.io').listen(server);
-
+app.set('io', io);
 // var db = require('./server/database_server');
 // var helpers = require('./server/helpers');
+var routes = require('./config/routes.js');
+var middleware = require('./config/middleware.js');
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
@@ -48,36 +51,24 @@ var state = {
   }
 };
 
-// server settings
-app.set('views', __dirname + '/views');
-app.set("view engine", "jade");
-app.use(require('stylus').middleware({ src: __dirname + '/public'}));
-app.use(express.static(__dirname + '/public'));
-io.set('log level', 1);                           // reduce server-side logging
-io.set('browser client gzip', true);              // gzip the static files
+// set middleware
+middleware.setSettings(app, express);
 
 //////////////////////////////////////////
 /// ROUTES
 //////////////////////////////////////////
 
-app.get('/', function (req, res) {
-  res.render('client');
-});
 
-app.get('/conductor', function (req, res) {
-  res.render('conductor');
-});
-
-app.get('/fireworks', function (req, res) {
-  res.render('fireworks');
-});
-
-app.get('/audio', function (req, res) {
-  res.render('audio');
-});
-
-app.get('/dancer', function (req, res) {
-  res.render('dancer');
+// render routes
+app.get('/', routes.renderClient);
+app.get('/conductor', routes.renderConductor);
+app.get('/fireworks', routes.renderFireworks);
+app.get('/audio', routes.renderAudio);
+app.get('/dancer', routes.renderDancer);
+app.get('/update', routes.renderUpdate);
+app.get('*', routes.render404);
+app.use(function(err, req, res, next){
+  res.send(500, 'Houston, your server has a problem.');
 });
 
 // app.get('/update', function (req, res) {
@@ -159,7 +150,6 @@ dancer.on('connection', function (dancer) {
 //////////////////////////////////////////
 
 conductor.on('connection', function (conductor) {
-  // reset on connection
   state.resetMC();
   clients.emit('reset');
   dancer.emit('reset');
@@ -205,7 +195,7 @@ conductor.on('connection', function (conductor) {
   });
 
   conductor.on('audioLightControl', function (data){
-    var clients = io.of('/client'); // not necessary
+    var clients = io.of('/client'); 
     if (data.audio) {
       state.audioLights = true;
     } else {
@@ -224,7 +214,6 @@ conductor.on('connection', function (conductor) {
 //////////////////////////////////////////
 
 clients.on('connection', function (client) {
-  // var clients = io.of('/client');
   state.connections += 1;
 
   client.emit("welcome", {
@@ -241,13 +230,6 @@ clients.on('connection', function (client) {
     state.connections -= 1;
   });
 
-  // client.on('reconnect', function (){
-    // canvas.emit('refresh', data);
-    // client.emit("welcome", {
-    //   id: client.id,
-    //   mode: state.mode
-    // });
-  // });
 });
 
 //////////////////////////////////////////
