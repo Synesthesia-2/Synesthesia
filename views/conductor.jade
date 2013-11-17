@@ -75,10 +75,4 @@ html
       $('body').on('touchmove', '.scrollable', function(e) {
         e.stopPropagation();
       });
-      iosSleepPreventInterval = setInterval(function () {
-        window.location.href = "/conductor";
-        window.setTimeout(function () {
-          window.stop()
-        }, 0);
-      }, 30000);
 

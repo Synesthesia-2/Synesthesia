@@ -22,9 +22,3 @@ html
       $(document).on('touchmove', function(e) {
         e.preventDefault();
       });
-      iosSleepPreventInterval = setInterval(function () {
-        window.location.href = "/dancer";
-        window.setTimeout(function () {
-          window.stop()
-        }, 0);
-      }, 30000);

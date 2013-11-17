@@ -4,7 +4,7 @@ ClientSpace.Shows = Backbone.Collection.extend({
   url: '/upcomingShows',
 
   initialize: function() {
-    this.fetch();
+    //this.fetch();
   }
 
 });

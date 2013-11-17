@@ -101,27 +101,27 @@ ClientSpace.Client = Backbone.Model.extend({
         'bio': 'Weidong has indulged in the fields of science (Ph.D in Physics and MCS Computer Science), dance, photography, and Taiji. Having grown up in China and received high education in US, he has experienced two drastically different cultures. Kinetech demands him to tap into all these past experiences. Weidong envisions Kinetech to be a place for synergy of art and technology, as well as for people with vast different background and training, working together creatively, making beauty that is beyond what’s possible by a single person.'
       },
       'thirteen': {
-        'portrait': 'images/cast/xxx.jpg',
+        'portrait': 'images/cast/george.jpg',
         'name': 'George Bonner',
         'role': '(Server Tech, Audio Detection)',
         'bio': 'spent the last four years as a music professional.  He is currently developing his skills as a software engineer to make the web a more interesting place.  His favorite place in San Francisco is Chinatown, which conveniently is where he happens to live.  Come say hi, he\'d love to meet you.'
       },
       'fourteen': {
-        'portrait': 'images/cast/xxx.jpg',
+        'portrait': 'images/cast/kate.jpg',
         'name': 'Kate Jenkins',
         'role': '(Tech, Visualizations)',
         'bio': 'has been in the Bay Area for most of the past decade doing science (magnets!) and art (blacksmithing!).'
       },
       'fifteen': {
-        'portrait': 'images/cast/xxx.jpg',
-        'name': 'Joey',
-        'role': '(Tech)',
-        'bio': 'is not a baby kangaroo.'
+        'portrait': 'images/cast/joey.jpg',
+        'name': 'Joey Yang',
+        'role': '(Backend, Sockets, Internet, Dancing)',
+        'bio': '"We don\'t make mistakes, we just have happy accidents." -Bob Ross'
       },
       'sixteen': {
-        'portrait': 'images/cast/xxxx.jpg',
+        'portrait': 'images/cast/ryan.jpg',
         'name': 'David Ryan Hall',
-        'role': '(Tech)',
+        'role': '(Merge Conflict Creator)',
         'bio': 'does not like writing bios.'
       },
     });
