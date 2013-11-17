@@ -1,4 +1,5 @@
-exports.setSettings = function(app, io, express){
+exports.setSettings = function(app, express){
+  var io = app.get('io');
   app.set('views', __dirname + '/../views');
   app.set("view engine", "jade");
   app.use(require('stylus').middleware({ src: __dirname + '/../public'}));

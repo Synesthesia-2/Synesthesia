@@ -21,6 +21,7 @@ var http = require('http');
 var server = http.createServer(app);
 server.listen(8080);
 var io = require('socket.io').listen(server);
+app.set('io', io);
 require('long-stack-traces'); // for debugging
 var db = require('./server/database_server');
 var helpers = require('./server/helpers');
@@ -50,18 +51,25 @@ var state = {
   }
 };
 
-middleware.setSettings(app, io, express);
+// set middleware
+middleware.setSettings(app, express);
 
 //////////////////////////////////////////
 /// ROUTES
 //////////////////////////////////////////
 
+
+// render routes
 app.get('/', routes.renderClient);
 app.get('/conductor', routes.renderConductor);
 app.get('/fireworks', routes.renderFireworks);
 app.get('/audio', routes.renderAudio);
 app.get('/dancer', routes.renderDancer);
 app.get('/update', routes.renderUpdate);
+app.get('*', routes.render404);
+app.use(function(err, req, res, next){
+  res.send(500, 'Houston, your server has a problem.');
+});
 
 // SERVE DATABASE FILES
 app.get('/cast', function (req, res) {
