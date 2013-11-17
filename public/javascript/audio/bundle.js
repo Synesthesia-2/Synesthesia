@@ -45,7 +45,12 @@ server.on("toggleSound",function(data) {
     stopEmitting();
   }
 });
-
+server.on("reset", function() {
+  state.serverReady = false;
+  if (state.emitting) {
+    stopEmitting();
+  }
+});
 var streamLoaded = function(stream) {
   h1.text("Audio input enabled. Waiting for command from server.");
   state.inputEnabled = true;

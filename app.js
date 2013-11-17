@@ -39,7 +39,7 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
-  mode: "default",
+  currentColor: '#000000',
   resetMC: function() {
     this.strobe = false;
     this.audio = false;
@@ -145,7 +145,10 @@ fireworks.on('connection', function (firework) {
 //////////////////////////////////////////
 
 dancer.on('connection', function (dancer) {
-  dancer.emit('welcome', "Connected for motion tracking.");
+  dancer.emit('welcome', {
+    message: "Connected for motion tracking.",
+    tracking: state.motionTrack
+  });
   dancer.on('motionData', function (data) {
     fireworks.emit('motionData', data);
   });
@@ -159,20 +162,21 @@ conductor.on('connection', function (conductor) {
   // reset on connection
   state.resetMC();
   clients.emit('reset');
+  dancer.emit('reset');
+  audio.emit('reset');
 
   conductor.emit("welcome");
 
   conductor.on('changeColor',function (data){
     var clients = io.of('/client');
-    // Do we need to redefine this in each case?
-    state.mode = "changeColor";
+    state.currentColor = data.color;
     clients.emit('changeColor', data);
   });
 
   conductor.on('randomColor', function (data){
     var clients = io.of('/client');
-    state.mode = "randomColor";
-    clients.emit('randomColor', data);
+    state.currentColor = '#000000';    // Set current to black in the case of random
+   clients.emit('randomColor', data);
   });
 
   conductor.on('toggleSound', function (data){
@@ -226,8 +230,11 @@ clients.on('connection', function (client) {
   client.emit("welcome", {
     id: client.id,
     message: "welcome!",
-    mode: state.mode,
-    strobe: false
+    mode: {
+      color: state.currentColor,
+      strobe: state.strobe,
+      audioLights: state.audioLights
+    }
   });
 
   client.on('disconnect', function (){

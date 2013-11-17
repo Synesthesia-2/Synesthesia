@@ -1,16 +1,31 @@
 var mysql = require('mysql');
 var helpers = require('./helpers');
+var db_config = require('../db/db_config');
 
-var dbConnection = mysql.createConnection({
-  host: "162.144.2.39",
-  port: '3306',
-  user: "drhall_kinetech",
-  password: "kine-tech-arts",
-  database: "drhall_kinetech",
-  insecureAuth: true
-});
+var dbConnection;
 
-dbConnection.connect();
+function handleDisconnect() {
+  dbConnection = mysql.createConnection(db_config.dbInfo);
+
+  dbConnection.connect(function(err) {
+    if(err) {
+      console.log('error when connecting to db:', err);
+      setTimeout(handleDisconnect, 2000);
+    }
+  });
+
+  dbConnection.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+}
+
+handleDisconnect();
+
 
 exports.getCast = function(res) {
   var query = "SELECT * FROM cast;";

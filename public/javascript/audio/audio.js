@@ -31,16 +31,25 @@ var hiPass = helpers.makeFilter(audioContext,"HIGHPASS",80);
 var loPass = helpers.makeFilter(audioContext,"LOWPASS",1200);
 var filters = helpers.nodeChain();
 filters.add(hiPass,loPass);
+
 server.on("welcome",function(data){
   if (data.audio) {
     state.serverReady = true;
   }
 });
+
 server.on("toggleSound",function(data) {
   state.serverReady = data.sound;
   if (!state.emitting && state.inputEnabled && state.serverReady) {
     startEmitting();
   } else if (state.emitting && !state.serverReady) {
+    stopEmitting();
+  }
+});
+
+server.on("reset", function() {
+  state.serverReady = false;
+  if (state.emitting) {
     stopEmitting();
   }
 });

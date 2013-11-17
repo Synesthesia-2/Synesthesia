@@ -1,5 +1,6 @@
 .DS_Store
 .DS_Store?
+db/
 node_modules/
 public/bower_components
 lib-cov
