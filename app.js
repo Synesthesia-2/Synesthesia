@@ -21,9 +21,10 @@ var http = require('http');
 var server = http.createServer(app);
 server.listen(8080);
 var io = require('socket.io').listen(server);
-
+require('long-stack-traces'); // for debugging
 var db = require('./server/database_server');
 var helpers = require('./server/helpers');
+var routes = require('./config/routes.js');
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
@@ -60,29 +61,12 @@ io.set('browser client gzip', true);              // gzip the static files
 /// ROUTES
 //////////////////////////////////////////
 
-app.get('/', function (req, res) {
-  res.render('client');
-});
-
-app.get('/conductor', function (req, res) {
-  res.render('conductor');
-});
-
-app.get('/fireworks', function (req, res) {
-  res.render('fireworks');
-});
-
-app.get('/audio', function (req, res) {
-  res.render('audio');
-});
-
-app.get('/dancer', function (req, res) {
-  res.render('dancer');
-});
-
-app.get('/update', function (req, res) {
-  res.render('update');
-});
+app.get('/', routes.renderClient);
+app.get('/conductor', routes.renderConductor);
+app.get('/fireworks', routes.renderFireworks);
+app.get('/audio', routes.renderAudio);
+app.get('/dancer', routes.renderDancer);
+app.get('/update', routes.renderUpdate);
 
 // SERVE DATABASE FILES
 app.get('/cast', function (req, res) {
@@ -156,7 +140,6 @@ dancer.on('connection', function (dancer) {
 //////////////////////////////////////////
 
 conductor.on('connection', function (conductor) {
-  // reset on connection
   state.resetMC();
   clients.emit('reset');
 
@@ -164,7 +147,6 @@ conductor.on('connection', function (conductor) {
 
   conductor.on('changeColor',function (data){
     var clients = io.of('/client');
-    // Do we need to redefine this in each case?
     state.mode = "changeColor";
     clients.emit('changeColor', data);
   });
@@ -201,7 +183,7 @@ conductor.on('connection', function (conductor) {
   });
 
   conductor.on('audioLightControl', function (data){
-    var clients = io.of('/client'); // not necessary
+    var clients = io.of('/client'); 
     if (data.audio) {
       state.audioLights = true;
     } else {
@@ -220,7 +202,6 @@ conductor.on('connection', function (conductor) {
 //////////////////////////////////////////
 
 clients.on('connection', function (client) {
-  // var clients = io.of('/client');
   state.connections += 1;
 
   client.emit("welcome", {
@@ -234,13 +215,6 @@ clients.on('connection', function (client) {
     state.connections -= 1;
   });
 
-  // client.on('reconnect', function (){
-    // canvas.emit('refresh', data);
-    // client.emit("welcome", {
-    //   id: client.id,
-    //   mode: state.mode
-    // });
-  // });
 });
 
 //////////////////////////////////////////
