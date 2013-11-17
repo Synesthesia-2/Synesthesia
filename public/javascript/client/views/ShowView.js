@@ -49,7 +49,6 @@ ClientSpace.ShowView = Backbone.View.extend({
   },
 
   setClientDetails: function(data) {
-    console.log(data.mode);
     this.model.set('audioColor', data.audioColor);
     this.model.set('strobe', data.strobe);
     this.model.set('currentColor', data.mode.color);
