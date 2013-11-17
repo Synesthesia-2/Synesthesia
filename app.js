@@ -25,6 +25,7 @@ require('long-stack-traces'); // for debugging
 var db = require('./server/database_server');
 var helpers = require('./server/helpers');
 var routes = require('./config/routes.js');
+var middleware = require('./config/middleware.js');
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
@@ -49,13 +50,7 @@ var state = {
   }
 };
 
-// server settings
-app.set('views', __dirname + '/views');
-app.set("view engine", "jade");
-app.use(require('stylus').middleware({ src: __dirname + '/public'}));
-app.use(express.static(__dirname + '/public'));
-io.set('log level', 1);                           // reduce server-side logging
-io.set('browser client gzip', true);              // gzip the static files
+middleware.setSettings(app, io, express);
 
 //////////////////////////////////////////
 /// ROUTES

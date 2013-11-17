@@ -1,23 +1,23 @@
 exports.renderClient = function(req, res){
-  res.render('../views/client');
+  res.render('client');
 };
 
 exports.renderConductor = function(req, res){
-  res.render('../views/conductor');
+  res.render('conductor');
 };
 
 exports.renderFireworks = function(req, res){
-  res.render('../views/fireworks');
+  res.render('fireworks');
 };
 
 exports.renderAudio = function(req, res){
-  res.render('../views/audio');
+  res.render('audio');
 };
 
 exports.renderDancer = function(req, res){
-  res.render('../views/dancer');
+  res.render('dancer');
 };
 
 exports.renderUpdate = function(req, res){
-  res.render('../views/update');
+  res.render('update');
 };
