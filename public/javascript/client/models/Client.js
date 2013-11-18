@@ -83,13 +83,13 @@ ClientSpace.Client = Backbone.Model.extend({
         'role': '(Visual Artist)',
         'bio': 'is an illustrator, cartoonist, graphic artist, raconteur, and lately designer and publisher of digital books, magazines, and apps. Find out more at PuzzledSquirrel.com, and Thunkism.com.'      },
       'eleven': {
-        'portrait': 'images/cast/XXXXX.jpg',
+        'portrait': 'images/cast/jean.jpg',
         'name': 'Jean Tarantino',
-        'role': 'XXXXX',
-        'bio': 'XXXXXX'
+        'role': '(Sound Artist)',
+        'bio': 'is a multimedia artist. Her electro-acoustic performance experiments explore the ways that we collaborate to create reality through exchange of information and shared experience. Jean graduated in design from UC Berkeley and studied art at CCAC. She has performed at ArtPad and Shoshana Wayne Gallery and has been included in exhibitions at Intersection for the Arts and Southern Exposure Gallery. Jean has work in the collections of the Museum of Fine Arts, Boston and Intersection for the Arts. '
       },
       'twelve': {
-        'portrait': 'images/cast/XXXXX.jpg',
+        'portrait': 'images/cast/laura.jpg',
         'name': 'Laura Rae Bernasconi',
         'role': '(Dancer)',
         'bio': 'began her classical ballet training with Paul E. Curtis Jr. and Shawn Stuart in her hometown of Los Gatos, California. Greatly influenced by teachers Richard Gibson, Maria Veigh, Benjamin Harkarvy, Kristine Elliot, Milton Meyers, David Howard and Robert Joffrey, Laura was educated on scholarship at schools of the San Francisco Ballet, Cleveland Ballet and Jacob\'s Pillow Dance Festival. Laura danced the works of Hans Van Manen, Milton Meyers, George Balanchine and Martin Schlaepfer in New York City and in Europe and performed Classical Odissi Temple dance with the Jyoti Kala Mandir College of Indian Dance in India and the US. Ms. Bernasconi choreographed and performed the “Dance of Salome” for the Bruckner House Orchestra in Linz, Austria, "At Shiva\'s Feet" with Labayen Dance/SF at the Cowell Theater in San Francisco, "Suite Simone" and "Nina in India" for the RAW series at the Garage Artspace, "Sensory Transcendence" for the PILOT series at ODC Dance. She re-staged the opera “Aida” for the dancers of Ballet Deutche Oper am Rheim at the LTU Arena in Düsseldorf, Germany and co-choreographed and performed "Raga", an Acro Yoga Dance dance duet at Dance Mission Theater. Under the mentorship of Enrico Labayen, Laura is rehearsal director, founding member and performer of Labayen Dance/SF and an international guest teacher for Nederlans Dans Theater, Dutch National Ballet, Scapino Ballet, the Henny Jurriens Foundation, La La La Human Steps, Alonzo King\'s LINES Ballet, ODC Dance, Smuin Ballet/SF, the Austrialian Dance Theater, and for Carte Blanche, the National Contemporary Company of Norway. As a certified Sivananda Yoga and Acro Yoga Teacher, Shi\'atsu Massage Therapist, Wellnes Instructor and practitioner of the Alexander Technique, Gyrotonic©, Thai Chi and Thai Massage, Laura fuses the healing and performing arts to raise funds in Amsterdam and SF for such organizations as Mama Cash, the Africa Yoga Project and the Ama-Foundation through her Healing Arts Celebration- a gathering of artists of movement, music, nutritional foods, touch and aroma therapies. Laura has recently returned from Europe to the SF Bay Area to teach for LINES Ballet, ODC Dance, and the South Bay Dance Center. She will choreograph and perform with Carlos Venturo and Dance Through Time and continue to collaborate with Labayen Dance/SF.'
@@ -101,27 +101,27 @@ ClientSpace.Client = Backbone.Model.extend({
         'bio': 'Weidong has indulged in the fields of science (Ph.D in Physics and MCS Computer Science), dance, photography, and Taiji. Having grown up in China and received high education in US, he has experienced two drastically different cultures. Kinetech demands him to tap into all these past experiences. Weidong envisions Kinetech to be a place for synergy of art and technology, as well as for people with vast different background and training, working together creatively, making beauty that is beyond what’s possible by a single person.'
       },
       'thirteen': {
-        'portrait': 'images/cast/xxx.jpg',
+        'portrait': 'images/cast/george.jpg',
         'name': 'George Bonner',
         'role': '(Server Tech, Audio Detection)',
         'bio': 'spent the last four years as a music professional.  He is currently developing his skills as a software engineer to make the web a more interesting place.  His favorite place in San Francisco is Chinatown, which conveniently is where he happens to live.  Come say hi, he\'d love to meet you.'
       },
       'fourteen': {
-        'portrait': 'images/cast/xxx.jpg',
+        'portrait': 'images/cast/kate.jpg',
         'name': 'Kate Jenkins',
         'role': '(Tech, Visualizations)',
         'bio': 'has been in the Bay Area for most of the past decade doing science (magnets!) and art (blacksmithing!).'
       },
       'fifteen': {
-        'portrait': 'images/cast/xxx.jpg',
-        'name': 'Joey',
-        'role': '(Tech)',
-        'bio': 'is not a baby kangaroo.'
+        'portrait': 'images/cast/joey.jpg',
+        'name': 'Joey Yang',
+        'role': '(Backend, Sockets, Internet, Dancing)',
+        'bio': '"We don\'t make mistakes, we just have happy accidents." -Bob Ross'
       },
       'sixteen': {
-        'portrait': 'images/cast/xxxx.jpg',
+        'portrait': 'images/cast/ryan.jpg',
         'name': 'David Ryan Hall',
-        'role': '(Tech)',
+        'role': '(Merge Conflict Creator)',
         'bio': 'does not like writing bios.'
       },
     });

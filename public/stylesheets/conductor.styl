@@ -5,9 +5,7 @@ html, body
   width 100%
   margin 0
   padding 0
-  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(224,36,67,1)), color-stop(100%,rgba(143,13,35,1)));
-  background: -webkit-radial-gradient(center, ellipse cover,  rgba(224,36,67,1) 0%,rgba(143,13,35,1) 100%);
-  background: radial-gradient(ellipse at center,  rgba(224,36,67,1) 0%,rgba(143,13,35,1) 100%);
+  background-color #000000
 
 *
   outline: none
@@ -32,21 +30,6 @@ header h1
 div#specController
   width 100%
   margin-bottom 15px
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(143,13,35,1)), color-stop(100%,rgba(143,13,35,0))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  rgba(143,13,35,1) 0%,rgba(143,13,35,0) 100%); /* Chrome10+,Safari5.1+ */
-  background: linear-gradient(to bottom,  rgba(143,13,35,1) 0%,rgba(143,13,35,0) 100%); /* W3C */
-
-  div#currentBar
-    height 34px
-    width 100%
-    background-color #eee
-    text-align center
-    opacity .9
-
-    h3
-      font-size 20px
-      margin 0
-      padding-top 5px
 
   div#optionBuilder
     padding 14px 0 14px 0
@@ -96,7 +79,7 @@ div#specController
       input[type='range']
         -webkit-appearance none
         border-radius 10px
-        background-color #ED2143
+        background-color #000000
         border 1px solid #999
         width 350px
         padding 0 35px 0 35px
@@ -111,7 +94,7 @@ div#specOptionList
   border 3px solid #999
   width 700px
   height 120px
-  background-color #eee
+  background-color #333333
   border-radius 15px
   
 
@@ -121,20 +104,16 @@ div#specOptionList
     width 146px
     height 80px
     border-radius 15px
-    border 2px solid #ED2143
+    border 2px solid #777
     margin-right 0px
     margin-left 23px
-    background -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(224,36,67,1)), color-stop(100%,rgba(143,13,35,1))); /* Chrome,Safari4+ */
-    background -webkit-linear-gradient(top,  rgba(224,36,67,1) 0%,rgba(143,13,35,1) 100%); /* Chrome10+,Safari5.1+ */
-    background linear-gradient(to bottom,  rgba(224,36,67,1) 0%,rgba(143,13,35,1) 100%); /* W3C */
-    box-shadow 0px 4px 7px #999
+    background-color #000
+    box-shadow 0px 4px 7px #000
     color #fff
     text-align center
 
   .toggled
-    background -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(143,13,35,1)), color-stop(100%,rgba(224,36,67,1))); /* Chrome,Safari4+ */
-    background -webkit-linear-gradient(top,  rgba(143,13,35,1) 0%,rgba(224,36,67,1) 100%); /* Chrome10+,Safari5.1+ */
-    background linear-gradient(to bottom,  rgba(143,13,35,1) 0%,rgba(224,36,67,1) 100%); /* W3C */
+    background-color #333
 
 @media (orientation:landscape)
 

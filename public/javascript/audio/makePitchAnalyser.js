@@ -62,7 +62,7 @@ module.exports = function(context,source) {
 
   var _setThresh = function(avg,tStr) {
     if (avg > analyser.minDecibels * 0.27) {
-      tStr = 0;
+      tStr = 0.2;
     } else if (avg > analyser.minDecibels * 0.4) {
       tStr *= 0.5;
     }

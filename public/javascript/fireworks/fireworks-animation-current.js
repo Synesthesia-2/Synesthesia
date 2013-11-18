@@ -53,18 +53,18 @@ function initialize (data) {
 		cr=cr*zFilterColor+(1-zFilterColor)*colorHz.rgb()[0]/256;
 		cg=cg*zFilterColor+(1-zFilterColor)*colorHz.rgb()[1]/256;
 		cb=cb*zFilterColor+(1-zFilterColor)*colorHz.rgb()[2]/256;
-	}
 
-	function setDisappear() {
-		countdown = setTimeout(function(){touches=[];},1000);
-	}
+		function setDisappear() {
+			countdown = setTimeout(function(){touches=[];},1000);
+		}
 
-	function clearDisappear() {
-		clearTimeout(countdown);
-	}
+		function clearDisappear() {
+			clearTimeout(countdown);
+		}
 
-	if (countdown) {clearDisappear();}
-	setDisappear();
+		if (countdown) {clearDisappear();}
+		setDisappear();
+	}
 
 }
 
