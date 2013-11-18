@@ -16,7 +16,7 @@ To run on your own network:
 
 Once you are running the server, navigate to `localhost:8080/conductor` in a touch-enabled device. Audience members should connect their smartphones to the `/` endpoint. On the laptop that is running the visualization, connect to `/fireworks` and a projector. In a separate tab, navigate to `/audio` and allow microphone input through the dialog. The movement performer should carry or wear a phone connected to `/dancer`.
 
-The conductor endpoint can now control the show. After enabling audio input, the internal or external microphone will calibrate the ambient noise for 5-6 seconds and then begin emitting data that the fireworks visualizer listens for to begin rendering. Manual light show mode will fade through different screen colors on each audience member's phone, allowing the space to be lit according to the pitch of the vocals or to a manually chosen single color. When motion is enabled, the gyroscope data from the `/dancer` endpoint is streamed to the visualization, allowing the firework to dance around in space. 
+The conductor endpoint can now control the show. After enabling audio input, the internal or external microphone will calibrate to compensate for ambient noise for 5-6 seconds and then begin emitting data for the fireworks visualization to render. Manual light show mode will fade through different screen colors on each audience member's phone, allowing the space to be lit according to the pitch of the vocals or to a manually chosen single color. When motion is enabled, the gyroscope data from the `/dancer` endpoint is streamed to the visualization, allowing the firework to move with the performer in space. 
 
 ##Screenshots:
 
