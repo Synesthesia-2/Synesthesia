@@ -2,13 +2,13 @@
   "name": "kin",
   "version": "0.0.1",
   "dependencies": {
-    "express": "latest",
-    "socket.io": "latest",
+    "express": "~3.4.4",
+    "socket.io": "~0.9.16",
     "jade": "*",
     "stylus": "*",
     "mysql": "~2.0.0-alpha9",
     "mocha": "*",
     "chai": "*",
-    "browserify": "latest"
+    "browserify": "~2.35.2"
   }
 }
