@@ -32,11 +32,6 @@ Fireworks visualization
 
 ![Fireworks visualization](/screenshots/fireworks.png "Fireworks display with audio and phone motion")
 
-Dancer screen
-
-![Dancer screen](/screenshots/dancer.png "Dancer display")
-
-
 ##Technology:
 
 Server:
