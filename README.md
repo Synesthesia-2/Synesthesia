@@ -29,7 +29,6 @@ Fireworks visualization
 
 Dancer screen
 
-<img src="/screenshots/dancer.png" width="200" title="Dancer display">
 ![Dancer screen](/screenshots/dancer.png "Dancer display")
 
 
