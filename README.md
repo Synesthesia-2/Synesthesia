@@ -26,7 +26,7 @@ Client home screen
 
 Conductor home screen
 
-![Conductor home screen](/screenshots/conductorScreen.png "Conductor home screen")
+![Conductor home screen](/screenshots/conductorScreen2.png "Conductor home screen")
 
 Fireworks visualization
 
