@@ -43,6 +43,7 @@ Client:
   - Jade / Stylus
   - jQuery
   - Backbone.js
+  - Browserify
 
 Input:
   - Webaudio
