@@ -84,8 +84,3 @@ var stopEmitting = function() {
   state.emitting = false;
   pitchAnalyser.end();
 };
-
-var resumeEmitting = function() {
-  // In future the future can be separate function
-  // to resume processing without re-calibrating
-};
