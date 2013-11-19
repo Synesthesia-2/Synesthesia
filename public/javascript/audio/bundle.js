@@ -86,11 +86,6 @@ var stopEmitting = function() {
   pitchAnalyser.end();
 };
 
-var resumeEmitting = function() {
-  // In future the future can be separate function
-  // to resume processing without re-calibrating
-};
-
 },{"./audioHelpers.js":2,"./makePitchAnalyser.js":3}],2:[function(require,module,exports){
 module.exports = {
   makeFilter: function(context,type,freq,gain,q) {
@@ -223,7 +218,7 @@ module.exports = function(context,source) {
 
   var _setThresh = function(avg,tStr) {
     if (avg > analyser.minDecibels * 0.27) {
-      tStr = 0.3;
+      tStr = 0.2;
     } else if (avg > analyser.minDecibels * 0.4) {
       tStr *= 0.5;
     }
