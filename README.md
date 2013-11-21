@@ -1,8 +1,8 @@
 #Synesthesia
 
-Synesthesia is a sound and movement visualizer developed as a collaboration between Kine-Tech, an arts and technology collective, and Hack Reactor, an immersive software engineering academy. It was first performed in public on November 17, 2013, at The Garage in San Francisco.
+Synesthesia is a sound and movement visualizer developed at Kinetech in San Francisco. It was first performed in public on November 17, 2013, at The Garage in San Francisco.
 
-Synesthesia mixes motion input from mobile devices and audio input during a vocal performance to create visualizations in a web browser that can be projected on stage. A tablet device or laptop computer acts in real time to control which client phones drive the light or motion.
+Synesthesia mixes motion input from mobile devices and audio input to create realtime display in a web browser that can be projected on stage. A tablet device or laptop computer acts in real time to control which client devices drive the light or motion.
 
 
 ##Instructions:
