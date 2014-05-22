@@ -68,6 +68,9 @@ app.get('/dancer', routes.renderDancer);
 app.get('/update', routes.renderUpdate);
 app.get('*', routes.render404);
 app.use(function(err, req, res, next){
+  if(err) {
+    console.log(err);
+  }
   res.send(500, 'Houston, your server has a problem.');
 });
 
