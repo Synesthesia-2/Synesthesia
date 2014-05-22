@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    title Dancer Optical Flow Tracker 
+    meta(http-equiv="content-type", content="text/html; charset=utf-8")
+    meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(name="mobile-web-app-capable", content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style", content="black")
+      
+    link(rel="stylesheet", href="/stylesheets/dancer.css")
+
+    script(src="/socket.io/socket.io.js")
+    script(src="/bower_components/jquery/jquery.min.js")
+    script(src="/javascript/oflow.js")
+
+  body
+    h1 Connecting...
+
+    script(src="javascript/optiflow/optiflow.js")
+    script.
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
