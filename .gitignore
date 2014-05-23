@@ -3,6 +3,13 @@
 db/
 node_modules/
 public/bower_components
+public/javascript/oflow/LICENSE
+public/javascript/oflow/README.md
+public/javascript/oflow/build
+public/javascript/oflow/demo
+public/javascript/oflow/index.html
+public/javascript/oflow/lib
+public/javascript/oflow/src
 lib-cov
 *.seed
 *.log
