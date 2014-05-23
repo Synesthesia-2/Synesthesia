@@ -34,7 +34,9 @@ var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
 var dancer = io.of('/dancer');
 var audio = io.of('/audio');
-var optiflow = io.of('optiflow');
+var optiflow = io.of('/optiflow');
+var linedance = io.of('/linedance');
+
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -43,7 +45,7 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
-  optiFlowTrack: false,
+  optiFlowTrack: true, //init as true for testing
   currentColor: '#000000',
   resetMC: function() {
     this.strobe = false;
@@ -66,7 +68,8 @@ app.get('/', routes.renderClient);
 app.get('/conductor', routes.renderConductor);
 app.get('/fireworks', routes.renderFireworks);
 app.get('/audio', routes.renderAudio);
-app.get('/opticalflow', routes.render('optiflow.jade'));
+app.get('/optiflow', routes.renderOptiFlow);
+app.get('/linedance', routes.renderLineDance);
 app.get('/dancer', routes.renderDancer);
 app.get('/update', routes.renderUpdate);
 app.get('*', routes.render404);
@@ -211,8 +214,13 @@ audio.on('connection', function (audio) {
 //////////////////////////////////////////
 
 optiflow.on('connection', function (optiflow) {
+  //console.log('optiflow connected'); //temp logging to check socket connection establishment
   optiflow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
     tracking: state.optiFlowTrack
   });
+  optiflow.on('optiFlowData', function (optiFlowData) {
+    // console.log(optiFlowData);
+    linedance.emit('optiFlowData', optiFlowData);
+  })
 });
