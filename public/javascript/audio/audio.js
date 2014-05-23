@@ -33,6 +33,7 @@ var filters = helpers.nodeChain();
 filters.add(hiPass,loPass);
 
 server.on("welcome",function(data){
+  console.log(data);
   if (data.audio) {
     state.serverReady = true;
   }
@@ -63,7 +64,7 @@ var streamLoaded = function(stream) {
 };
 
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-navigator.getUserMedia( {audio:true}, streamLoaded);
+navigator.getUserMedia( {audio:true}, streamLoaded, function(data){console.log(data)});
 
 var startEmitting = function() {
   h1.text("Calibrating...");
