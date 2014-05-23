@@ -22,6 +22,14 @@ exports.renderUpdate = function(req, res){
   res.render('update');
 };
 
+exports.renderOptiFlow = function(req, res) {
+  res.render('optiflow');
+}
+
+exports.renderLineDance = function(req, res) {
+  res.render('linedance');
+}
+
 exports.render404 = function(req, res){
   res.writeHead(404);
   res.end("That page doesn't exist. Go to a page that exists.");
