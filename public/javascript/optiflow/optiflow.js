@@ -1,8 +1,13 @@
-var flow = new webCamFlow();
 var server = io.connect('/optiflow');
-
+var flow = new oflow.WebCamFlow();
+var printed = false;
 var sendData = function(optiFlowData) {
   server.emit('optiFlowData', optiFlowData);
+  if (!printed) {
+    console.log(optiFlowData.zones.length);  
+    printed = true;
+    
+  }
 }
 
 server.on('welcome', function(data) {
@@ -18,6 +23,4 @@ server.on('reset', function() {
 });
 
 flow.onCalculated(sendData);
-
-
 
