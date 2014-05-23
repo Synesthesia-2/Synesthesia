@@ -1,36 +1,24 @@
 var server = io.connect('/linedance');
-
 server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
 
-server.on('optiFlowData', function(optiFlowData) {
-  
-    // var circles = 
-    //     .data(optiFlowData.zones)
-    //     .enter()
-    //     .append("circle");
-        // .attr("cx", function(d) { console.log("d",d);return d.x})
-        // .attr("cy", function(d) {return d.y})
-        // .attr("r", function(d) { return Math.max(0.01, (Math.sqrt(Math.pow(d.u, 2) + Math.pow(d.v, 2))))})
-        // .style("stroke", d3.hsl((i = (i + 1) % 360), 1, .5))
-        // .style("stroke-opacity", 1)
-      circle.data(optiFlowData.zones)
-      // .transition()
-        // .duration(2000)
-        // .ease(Math.sqrt)
-        .attr("cx", function(d) { console.log("d",d);return d.x})
-        .attr("cy", function(d) {return d.y})
-        .attr("r", function(d) { return Math.max(0.01, (Math.sqrt(Math.pow(d.u, 2) + Math.pow(d.v, 2))))})
-        .style("stroke", d3.hsl((i = (i + 1) % 360), 1, .5))
-        .style("stroke-opacity", 1)
-        // .attr("r", function(d) {console.log("!!!", (Math.sqrt(Math.pow(d.u, 2) + Math.pow(d.v, 2)))); return Math.max(0.01, (Math.sqrt(Math.pow(d.u, 2) + Math.pow(d.v, 2))))})
-        // .style("stroke-opacity", 1e-6)
-        // .remove();
 
-  
-})
+var throttledUpdate = _.throttle(function(optiFlowData) {
+      if(optiFlowData.zones.length > 1000) {
+        circle.data(optiFlowData.zones)
+          .transition()
+          .duration(100)
+          .attr("cx", function(d) {return d.x})
+          .attr("cy", function(d) {return d.y})
+          .attr("r", function(d) { return Math.max(0.1, (Math.sqrt(Math.pow(d.u, 2) + Math.pow(d.v, 2))))})
+          .style("stroke", "green") //d3.hsl((i = (i + 1) % 360), 1, .5)
+          .style("stroke-opacity", 1)
+      }
+}, 50);
 
+
+server.on('optiFlowData', throttledUpdate);
 
 var width = Math.max(960, innerWidth),
     height = Math.max(500, innerHeight);
