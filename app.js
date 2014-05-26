@@ -59,6 +59,8 @@ var shakebattle = io.of('/shakebattle');
 var spotlights = io.of('/spotlights');
 var grassfield = io.of('/grassfield');
 var particles = io.of('/particles');
+var satellite = io.of('/satellite');
+
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -295,6 +297,7 @@ optiflow.on('connection', function (optiflow) {
     linedance.emit('optiFlowData', optiFlowData);
     flock.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);
+    satellite.emit('optiFlowData', optiFlowData);
   });
 });
 
