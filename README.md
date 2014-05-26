@@ -11,7 +11,7 @@ Requirements: Node.js, npm (Node.js package manager)
 
 To run on your own network:
   - `git clone https://github.com/kinetech/Performance`
-  - Install node, if necessary, and install dependencies via `npm install`
+  - Install node, if necessary, and install dependencies via `npm install` and 'bower install'
   - `node app.js`
 
 Once you are running the server, navigate to `localhost:8080/conductor` in a touch-enabled device. Audience members should connect their smartphones to the `/` endpoint. On the laptop that is running the visualization, connect to `/fireworks` and a projector. In a separate tab, navigate to `/audio` and allow microphone input through the dialog. The movement performer should carry or wear a phone connected to `/dancer`.
