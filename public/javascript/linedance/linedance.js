@@ -8,7 +8,7 @@ var width = Math.max(960, innerWidth), //640
     height = Math.max(500, innerHeight); //480
 
 var throttledUpdate = _.throttle(function(optiFlowData) {
-      if(optiFlowData.zones.length > 1000) {
+      // if(optiFlowData.zones.length > 1000) {
         circle.data(optiFlowData.zones)
           .transition()
           .duration(700)
@@ -17,7 +17,7 @@ var throttledUpdate = _.throttle(function(optiFlowData) {
           .attr("r", function(d) { return Math.max(0.3, (Math.sqrt(Math.pow(d.u, 2) + Math.pow(d.v, 2))))})
           .style("stroke", "green") //d3.hsl((i = (i + 1) % 360), 1, .5)
           .style("stroke-opacity", 1)
-      }
+      // }
 }, 200);
 
 
