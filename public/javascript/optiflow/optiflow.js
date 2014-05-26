@@ -2,6 +2,9 @@ var server = io.connect('/optiflow');
 var flow = new oflow.WebCamFlow();
 var printed = false;
 var sendData = function(optiFlowData) {
+  optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
+    return (index % 4 === 0);
+  });
   server.emit('optiFlowData', optiFlowData);
   if (!printed) {
     console.log(optiFlowData.zones.length);  
