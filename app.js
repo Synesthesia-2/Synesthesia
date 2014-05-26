@@ -98,6 +98,7 @@ app.get('/fone', routes.renderFone);
 app.get('/shakemeter', routes.renderFoneMotion);
 app.get('/shakebattle', routes.renderShakeBattle);
 app.get('/spotlights', routes.renderSpotlights);
+app.get('/satellite', routes.renderSatellite);
 app.get('/dancer', routes.renderDancer);
 app.get('/flock', routes.renderFlock);
 app.get('/update', routes.renderUpdate);
