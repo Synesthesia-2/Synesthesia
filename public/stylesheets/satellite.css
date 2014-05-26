@@ -1,0 +1,34 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: #000;
+}
+h1 {
+  text-align: center;
+  margin-top: 100px;
+  color: #000;
+  letter-spacing: 1px;
+}
+body {
+  margin: 0;
+  background: #000;
+  min-width: 960px;
+}
+rect {
+  fill: none;
+  pointer-events: all;
+}
+circle {
+  fill: none;
+  stroke-width: 2.5px;
+}
+.graticule {
+  fill: none;
+  stroke: #070;
+}
+.boundary {
+  fill: #ccc;
+  fill-opacity: 0.8;
+  stroke: #000;
+}
