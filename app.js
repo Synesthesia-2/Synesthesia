@@ -36,7 +36,7 @@ var dancer = io.of('/dancer');
 var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
 var linedance = io.of('/linedance');
-
+var grassfield = io.of('/grassfield');
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -70,6 +70,7 @@ app.get('/fireworks', routes.renderFireworks);
 app.get('/audio', routes.renderAudio);
 app.get('/optiflow', routes.renderOptiFlow);
 app.get('/linedance', routes.renderLineDance);
+app.get('/grassfield', routes.renderGrassField);
 app.get('/dancer', routes.renderDancer);
 app.get('/update', routes.renderUpdate);
 app.get('*', routes.render404);
@@ -222,5 +223,6 @@ optiflow.on('connection', function (optiflow) {
   optiflow.on('optiFlowData', function (optiFlowData) {
     // console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
+    grassfield.emit('optiFlowData', optiFlowData);
   })
 });
