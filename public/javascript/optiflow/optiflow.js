@@ -4,7 +4,7 @@ var printed = false;
 
 var sendData = function(optiFlowData) {
   optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
-    return (index % 64 === 0);
+    return (index % 32 === 0);
   });
   server.emit('optiFlowData', optiFlowData);
   if (!printed) {
