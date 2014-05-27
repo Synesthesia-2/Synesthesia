@@ -4,7 +4,7 @@ var printed = false;
 
 var sendData = function(optiFlowData) {
   optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
-    return (index % 4 === 0);
+    return (index % 64 === 0);
   });
   server.emit('optiFlowData', optiFlowData);
   if (!printed) {
@@ -14,7 +14,7 @@ var sendData = function(optiFlowData) {
   }
 };
 
-var throttledSendData = _.throttle(sendData, 100);
+var throttledSendData = _.throttle(sendData, 200);
 
 server.on('welcome', function(data) {
   if (data.tracking) {
