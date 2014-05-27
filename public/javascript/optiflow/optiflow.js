@@ -14,6 +14,8 @@ var sendData = function(optiFlowData) {
   }
 };
 
+var throttledSendData = _.throttle(sendData, 200);
+
 server.on('welcome', function(data) {
   if (data.tracking) {
     flow.startCapture();
@@ -26,5 +28,5 @@ server.on('reset', function() {
   flow.stopCapture();
 });
 
-flow.onCalculated(sendData);
+flow.onCalculated(throttledSendData);
 

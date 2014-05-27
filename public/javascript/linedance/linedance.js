@@ -7,7 +7,7 @@ server.on('welcome', function (data) {
 var width = Math.max(960, innerWidth), //640
     height = Math.max(500, innerHeight); //480
 
-var throttledUpdate = _.throttle(function(optiFlowData) {
+var updateData = function(optiFlowData) {
       // if(optiFlowData.zones.length > 1000) {
 
         var circles = svg.selectAll('circle').data(optiFlowData.zones, function(d,i){return (d.x + "x" + d.y);});
@@ -40,21 +40,15 @@ var throttledUpdate = _.throttle(function(optiFlowData) {
           // .attr("r", 50)
           // .style("stroke", "green") //d3.hsl((i = (i + 1) % 360), 1, .5)
           .style("stroke-opacity", 0)
-          // .remove();
+};
 
+var throttledUpdate = _.throttle( updateData, 200);
 
-
-        // circles.exit()
-        //  .transition()
-        //  .duration(700)
-        //  .remove();
-      // }
-}, 200);
 
 
 server.on('optiFlowData', function(data){
   console.log(data.zones.length);
-  throttledUpdate(data);
+  updateData(data);
 });
 
 // var init = [];
