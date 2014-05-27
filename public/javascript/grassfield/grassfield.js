@@ -25,7 +25,6 @@ var update = function(optiFlowData){
   var lineHeight = 0;
   var randomFactor = 16;
   var transitionTime = 300;
-
   var linedata = (optiFlowData.zones);
   // var linedata = reformatOptiFlowZones(optiFlowData);
   // console.log("length: ", optiFlowData.zones.length);
@@ -61,26 +60,66 @@ var update = function(optiFlowData){
         // .style("stroke-opacity", 1);
 };
 
-var randomMovement = function(){
-
-  var lineHeight = 10;
-  var randomFactor = 16;
-
-  // var linedata = reformatOptiFlowZones(optiFlowData);
-  
-  var line = svg.selectAll("line");
-     // .data(linedata, function(d,i) { return (d.x + "x" + d.y);});
-      line
-        .transition()
-        .duration(function(){return Math.random()*500;})
-        .attr("x2", function(line) {return (line.x + (Math.random() - 0.5)*randomFactor) * width / 640;})
-        .attr("y2", function(line) {return (line.y - lineHeight) * height / 480;});
-        // .style("stroke", "green") //d3.hsl((i = (i + 1) % 360), 1, .5)
-        // .style("stroke-opacity", 1);
+var makeDummyData = function(xrange, xstep, ydomain, ystep){
+  var output = [];
+  for (var i=0; i<xrange; i+=xstep){
+    for (var j=0; j<ydomain; j+=ystep){
+      output.push({x:i,y:j});
+    }
+  }
+  return output;
 };
 
+var randomMovement = function(dummydata, transitionTime){
 
+  var lineHeight = 25;
+  var randomFactor = 9;
 
-// d3.timer(randomMovement, 500);
+  console.log(dummydata.length);
+  // debugger;
+  
+  var line = svg.selectAll("path").data(dummydata);
 
-server.on('optiFlowData', update);
+      line
+        .transition()
+        // .each("end",function(){
+        //   d3.select(this)
+            .duration(function(){return Math.random()*transitionTime;})
+            .ease('elastic')
+        .attr("d", function(d){
+          var randomFactor = 5;
+          var rf = randomFactor*(Math.random() - 0.5);
+          var path = "";
+          path += "M" + d.x * width / 640 + "," + d.y * height / 480;
+          path += " Q" + (d.x - lineHeight/8) * width / 640 + "," + (d.y - lineHeight/4) * height / 480;
+          path += " " + (d.x - rf/2) * width / 640 + "," + (d.y - lineHeight/2) * height / 480;
+          path += " T" + (d.x - rf) * width / 640 + "," + (d.y - lineHeight) * height / 480;
+          return path;
+        })
+            .style("stroke", "green");
+        // });
+
+      line.enter()
+        .append('path')
+        .transition()
+        .duration(transitionTime)
+        .attr("d", function(d){
+          var path = "";
+          path += "M" + d.x * width / 640 + "," + d.y * height / 480;
+          path += " Q" + (d.x - lineHeight/8) * width / 640 + "," + (d.y - lineHeight/4) * height / 480;
+          path += " " + (d.x) * width / 640 + "," + (d.y - lineHeight/2) * height / 480;
+          path += " T" + (d.x) * width / 640 + "," + (d.y - lineHeight) * height / 480;
+          return path;
+        })
+        .style("stroke", "red"); 
+ 
+};
+
+var dummydata = makeDummyData(800,16,500,20);
+var transitionTime = 1500;
+
+setInterval(function(){
+  randomMovement(dummydata, transitionTime);
+}, transitionTime);
+
+// server.on('optiFlowData', update);
