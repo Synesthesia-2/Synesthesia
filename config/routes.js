@@ -18,6 +18,10 @@ exports.renderDancer = function(req, res){
   res.render('dancer');
 };
 
+exports.renderFlock = function(req, res){
+  res.render('flock');
+};
+
 exports.renderUpdate = function(req, res){
   res.render('update');
 };

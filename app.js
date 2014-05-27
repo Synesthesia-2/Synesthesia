@@ -33,6 +33,7 @@ var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
 var dancer = io.of('/dancer');
+var flock = io.of('/flock');
 var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
 var linedance = io.of('/linedance');
@@ -71,6 +72,7 @@ app.get('/audio', routes.renderAudio);
 app.get('/optiflow', routes.renderOptiFlow);
 app.get('/linedance', routes.renderLineDance);
 app.get('/dancer', routes.renderDancer);
+app.get('/flock', routes.renderFlock);
 app.get('/update', routes.renderUpdate);
 app.get('*', routes.render404);
 app.use(function(err, req, res, next){
@@ -90,6 +92,10 @@ app.use(function(err, req, res, next){
 
 fireworks.on('connection', function (firework) {
   firework.emit("welcome", "Visualizer connected.");
+});
+
+flock.on('connection', function (flock) {
+  flock.emit("welcome", "Flock visualizer connected.");
 });
 
 //////////////////////////////////////////
@@ -222,5 +228,6 @@ optiflow.on('connection', function (optiflow) {
   optiflow.on('optiFlowData', function (optiFlowData) {
     // console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
+    flock.emit('optiFlowData', optiFlowData);
   })
 });
