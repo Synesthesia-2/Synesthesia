@@ -88,16 +88,16 @@ svg.append("path")
 //transition
 
 
-d3.select("path")
-    .transition()
-    .duration(3000)
-    .attr("d", path2)
-    .transition()
-    .duration(3000)
-    .attr("d", path)
-    .transition()
-    .duration(1000)
-    .attr("d", path4);
+// d3.select("path")
+//     .transition()
+//     .duration(3000)
+//     .attr("d", path2)
+//     .transition()
+//     .duration(3000)
+//     .attr("d", path)
+//     .transition()
+//     .duration(1000)
+//     .attr("d", path4);
 
 
 
@@ -106,7 +106,7 @@ var throttledUpdate = _.throttle(function(optiFlowData) {
     var path = makeProjectionPath(optiFlowData.u, optiFlowData.v);
     d3.select("path")
     .transition()
-    .duration(1000)
+    .duration(300)
     .attr("d", path)
 
 }, 200);
