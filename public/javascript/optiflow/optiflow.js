@@ -14,7 +14,7 @@ var sendData = function(optiFlowData) {
   }
 };
 
-var throttledSendData = _.throttle(sendData, 200);
+var throttledSendData = _.throttle(sendData, 100);
 
 server.on('welcome', function(data) {
   if (data.tracking) {
