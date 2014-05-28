@@ -68,4 +68,4 @@ var boundDeviceMotion = onDeviceMotion.bind(this);
 var boundDeviceOrientation = onDeviceOrientation.bind(this);
 startTrack();
 
-// setInterval(sendDummyAccelData, 100);
+// setInterval(sendDummyAccelData, 10);

@@ -13,11 +13,12 @@ var svg = d3.select("body").append("svg")
     .attr("height", HEIGHT);
 
 svg.append("rect");
+svg.append("text");
 
 var foneVisualize = function(acceleration){
   var bars = d3.select("rect");
+  var text = d3.select("text");
 
-  // this will smoothen the visualization so its not choppy when acceleration differs greatly. 
   var zFilter = function(inputData, previousValue){
     var z = 0.9; // set this between 0 and 1
     return (z*previousValue + (1-z)*inputData);
@@ -27,25 +28,36 @@ var foneVisualize = function(acceleration){
   var nextHeight = zFilter(acceleration,prevHeight);
 
   bars
+    .transition()
+    .duration(100)
     .attr("x", 0)
     .attr("y", HEIGHT - nextHeight)
     .attr("height", nextHeight)
     .attr("width", WIDTH)
-    .style("fill", function(d,i){return "hsl(" + nextHeight + ",100%,50%)";});
+    .style("fill", function(d,i){return "hsl(" + (nextHeight/HEIGHT*360) + ",100%,50%)";});
+
+  text
+    .transition()
+    .duration(100)
+    .attr("x", WIDTH / 2)
+    .attr("y", HEIGHT / 2)
+    .text(Math.floor(nextHeight) + " shakes!")
+    .attr("font-size", "48px")
+    .attr("font-family", "sans-serif")
+    .attr("text-anchor", "middle")
+    .attr("fill", "white");
 };
 
 server.on('motionData', function(data){
   // console.log("Orientation Data: " + (data)); // for testing purposes
-  // foneVisualize(data);
   shakeData += data;
 });
 
 server.on('orientationData', function(data){
-  console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
+  // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
 });
 
 setInterval(function(){
   foneVisualize(shakeData);
-  // console.log("Total shakes: " + shakeData);
   shakeData = 0;
 }, 100);
