@@ -32,7 +32,7 @@ var stopTrack = function() {
 };
 
 var initMotionListener = function() {
-  window.addEventListener('deviceorientation', boundDeviceMotion);
+  window.addEventListener('devicemotion', boundDeviceMotion);
 };
 
 var removeMotionListener = function() {
@@ -40,18 +40,29 @@ var removeMotionListener = function() {
 };
 
 var onDeviceMotion = function(event) {
-  var alpha = event.alpha;
-  var beta = event.beta;
-  var gamma = event.gamma;
-  var data = {
-    alpha: alpha,
-    beta: beta,
-    gamma: gamma,
+  // var alpha = event.alpha;
+  // var beta = event.beta;
+  // var gamma = event.gamma;
+  // var data = {
+  //   alpha: alpha,
+  //   beta: beta,
+  //   gamma: gamma,
+  // };
+  var accel = event.acceleration;
+  var totalAcc = accel.x + accel.y + accel.z;
+  // var motion = event.rotationRate;
+  var motion = {
+    alpha: Math.floor(event.rotationRate.alpha * 1000),
+    beta: Math.floor(event.rotationRate.beta * 1000),
+    gamma: Math.floor(event.rotationRate.gamma * 1000),
   };
-  $('#alpha').text(data.alpha);
-  $('#beta').text(data.beta);
-  $('#gamma').text(data.gamma);
-  server.emit('motionData', data);
+  // motion.alpha = Math.floor(motion.alpha * 1000);
+  // motion.beta = Math.floor(motion.beta * 1000);
+  // motion.gamma = Math.floor(motion.gamma * 1000);
+  $('#alpha').text("Alpha: " + (motion.alpha));
+  $('#beta').text("Beta: " + (motion.beta));
+  $('#gamma').text("Gamma: " + (motion.gamma));
+  server.emit('motionData', [totalAcc, motion]);
 };
 
 var boundDeviceMotion = onDeviceMotion.bind(this);

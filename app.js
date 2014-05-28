@@ -35,7 +35,9 @@ var fireworks = io.of('/fireworks');
 var dancer = io.of('/dancer');
 var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
-var linedance = io.of('/linedance');
+var fone = io.of('/fone');
+var optiflow = io.of('/optiflow');
+var fonemotion = io.of('/fonemotion');
 var grassfield = io.of('/grassfield');
 
 // instantiate state object (keeps track of performance state)
@@ -226,5 +228,22 @@ optiflow.on('connection', function (optiflow) {
     // console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);
+  });
+});
+
+//////////////////////////////////////////
+/// Audience Motion Detection
+//////////////////////////////////////////
+
+fone.on('connection', function (fone) {
+  fone.emit('welcome', {
+    message: "Connected for motion tracking.",
+    tracking: state.motionTrack
+  });
+  fone.on('accData', function (data) {
+    fonemotion.emit('accData', data);
+  });
+  fone.on('motionData', function (data) {
+    fonemotion.emit('motionData', data);
   });
 });

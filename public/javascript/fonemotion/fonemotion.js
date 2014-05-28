@@ -45,7 +45,11 @@ var updateData = function(optiFlowData) {
 };
 
 
-server.on('optiFlowData', function(data){
-  console.log(data.zones.length);
-  updateData(data);
+server.on('accData', function(data){
+  console.log("Accel Data:" + data);
+  // updateData(data);
+});
+server.on('motionData', function(data){
+  console.log("Orientation Data: " + JSON.stringify(data));
+  // updateData(data);
 });
