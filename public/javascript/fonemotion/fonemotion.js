@@ -3,13 +3,45 @@ server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
 
-
-var width = Math.max(960, innerWidth), //640
-    height = Math.max(500, innerHeight); //480
+var WIDTH = Math.max(960, innerWidth), //640
+    HEIGHT = Math.max(500, innerHeight); //480
 
 var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", WIDTH)
+    .attr("height", HEIGHT);
+
+svg.append("rect");
+
+var foneVisualize = function(acceleration){
+  // var bars = svg.selectAll('rect').data(acceleration);
+  var bars = d3.select("rect");//.data(acceleration);
+
+  var zFilter = function(inputData, previousValue){
+    var z = 0.9;
+    return (z*previousValue + (1-z)*inputData);
+  };
+
+  var prevHeight = bars.attr("height");
+  var nextHeight = zFilter(acceleration,prevHeight);
+
+  bars
+    // .append('rect')
+    .attr("x", 0)
+    .attr("y", HEIGHT - nextHeight)
+    .attr("height", nextHeight)
+    .attr("width", WIDTH)
+    .style("fill", function(d,i){return "hsl(" + nextHeight + ",100%,50%)";});
+
+  // bars
+  //   .enter()
+  //   // .append('rect')
+  //   .attr("x", 0)
+  //   .attr("y", height / 2)
+  //   .attr("height", function(d){return d;})
+  //   .attr("width", width);
+
+
+};
 
 var updateData = function(optiFlowData) {
 
@@ -44,12 +76,8 @@ var updateData = function(optiFlowData) {
           .style("stroke-opacity", 0);
 };
 
-
-server.on('accData', function(data){
-  console.log("Accel Data:" + data);
-  // updateData(data);
-});
 server.on('motionData', function(data){
-  console.log("Orientation Data: " + JSON.stringify(data));
+  console.log("Orientation Data: " + (data));
   // updateData(data);
+  foneVisualize(data);
 });
