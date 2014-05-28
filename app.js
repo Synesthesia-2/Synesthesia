@@ -71,6 +71,8 @@ app.get('/audio', routes.renderAudio);
 app.get('/optiflow', routes.renderOptiFlow);
 app.get('/linedance', routes.renderLineDance);
 app.get('/grassfield', routes.renderGrassField);
+app.get('/fone', routes.renderFone);
+app.get('/fonemotion', routes.renderFoneMotion);
 app.get('/dancer', routes.renderDancer);
 app.get('/update', routes.renderUpdate);
 app.get('*', routes.render404);
@@ -224,5 +226,5 @@ optiflow.on('connection', function (optiflow) {
     // console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);
-  })
+  });
 });

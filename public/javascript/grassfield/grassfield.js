@@ -76,6 +76,7 @@ var randomMovement = function(transitionTime, inputData){
   transitionTime = transitionTime || 2000;
   var lineHeight = 25;
   var randomFactor = 9;
+
   inputData = inputData.zones ? inputData.zones: inputData;
   console.log(inputData.length);
   
@@ -106,8 +107,9 @@ var randomMovement = function(transitionTime, inputData){
         .transition()
         .duration(transitionTime/2)
         .attr("d", function(d){
+          var rx = 1*(Math.random() - 0.5);
           var path = "";
-          path += "M" + d.x * width / 640 + "," + d.y * height / 480;
+          path += "M" + (d.x + rx) * width / 640 + "," + d.y * height / 480;
           path += " Q" + (d.x - lineHeight/8) * width / 640 + "," + (d.y - lineHeight/4) * height / 480;
           path += " " + (d.x) * width / 640 + "," + (d.y - lineHeight/2) * height / 480;
           path += " T" + (d.x) * width / 640 + "," + (d.y - lineHeight) * height / 480;

@@ -3,10 +3,10 @@ var flow = new oflow.WebCamFlow();
 var printed = false;
 
 var sendData = function(optiFlowData) {
-  // optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
-  //   return (index % 16 === 0);
-  // });
-  // optiFlowData.zones = optiFlowData.zones.slice(-3);
+  optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
+    return (index % 16 === 0);
+  });
+  // optiFlowData.zones = optiFlowData.zones.slice(150,200);
   server.emit('optiFlowData', optiFlowData);
   if (!printed) {
     console.log(optiFlowData.zones.length);  
