@@ -70,22 +70,22 @@ var makeDummyData = function(xrange, xstep, ydomain, ystep){
   return output;
 };
 
-var randomMovement = function(inputData, transitionTime){
+var randomMovement = function(transitionTime, inputData){
 
+  inputData = inputData || realData;
+  transitionTime = transitionTime || 2000;
   var lineHeight = 25;
   var randomFactor = 9;
   inputData = inputData.zones ? inputData.zones: inputData;
   console.log(inputData.length);
-  // debugger;
   
   var line = svg.selectAll("path").data(inputData, function(d){return d.x + "x" + d.y;});
 
       line
         .transition()
-        // .each("end",function(){
-        //   d3.select(this)
-            .duration(function(){return Math.random()*transitionTime;})
-            .ease('elastic')
+        // .duration(function(){return Math.random()*transitionTime;})
+        .duration(transitionTime/2)
+        .ease('elastic')
         .attr("d", function(d){
           var randomFactor = 5;
           var rf = randomFactor*(Math.random() - 0.5);
@@ -96,14 +96,15 @@ var randomMovement = function(inputData, transitionTime){
           path += " T" + (d.x - d.u - rf) * width / 640 + "," + (d.y - lineHeight) * height / 480;
           return path;
         })
-        // .style("stroke", "yellow"); 
-            .style("stroke", function(d,i){return "hsl(" + 15*(d.u+d.v) + ",100%,50%)";});
-        // });
+       .style("stroke", function(d,i){return "hsl(" + 15*(d.u+d.v) + ",100%,50%)";});
+       // .each("end", function(){
+
+       // });
 
       line.enter()
         .append('path')
         .transition()
-        .duration(transitionTime)
+        .duration(transitionTime/2)
         .attr("d", function(d){
           var path = "";
           path += "M" + d.x * width / 640 + "," + d.y * height / 480;
@@ -112,17 +113,16 @@ var randomMovement = function(inputData, transitionTime){
           path += " T" + (d.x) * width / 640 + "," + (d.y - lineHeight) * height / 480;
           return path;
         })
-        .style("stroke", "white"); 
+        .style("stroke", "white") 
+       .each("end", randomMovement);
  
 };
 
 var realData = [];
-var dummydata = makeDummyData(800,16,500,20);
+// var dummydata = makeDummyData(800,16,500,20);
 var transitionTime = 200;
 
-setInterval(function(){
-  randomMovement(realData, transitionTime*2);
-}, transitionTime);
+setInterval(function(){randomMovement(transitionTime);}, transitionTime);
 
 server.on('optiFlowData', function(data){
   realData = data;
