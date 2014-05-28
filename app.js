@@ -240,8 +240,9 @@ fone.on('connection', function (fone) {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
   });
-  fone.on('accData', function (data) {
-    fonemotion.emit('accData', data);
+  fone.on('orientationData', function (data) {
+    fonemotion.emit('orientationData', data);
+    console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
   });
   fone.on('motionData', function (data) {
     fonemotion.emit('motionData', data);

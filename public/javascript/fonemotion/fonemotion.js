@@ -40,8 +40,12 @@ server.on('motionData', function(data){
   shakeData += data;
 });
 
+server.on('orientationData', function(data){
+  console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
+});
+
 setInterval(function(){
   foneVisualize(shakeData);
-  console.log("Total shakes: " + shakeData);
+  // console.log("Total shakes: " + shakeData);
   shakeData = 0;
 }, 100);

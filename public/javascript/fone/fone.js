@@ -33,23 +33,29 @@ var stopTrack = function() {
 
 var initMotionListener = function() {
   window.addEventListener('devicemotion', boundDeviceMotion);
+  window.addEventListener('deviceorientation', boundDeviceOrientation);
 };
 
 var removeMotionListener = function() {
-  window.removeEventListener('deviceorientation', boundDeviceMotion);
+  window.removeEventListener('devicemotion', boundDeviceMotion);
+  window.removeEventListener('deviceorientation', boundDeviceOrientation);
+};
+
+var onDeviceOrientation = function(event) {
+  var motion = {
+    alpha: Math.floor(event.alpha),
+    beta: Math.floor(event.beta),
+    gamma: Math.floor(event.gamma),
+  };
+  $('#alpha').text("Alpha: " + (motion.alpha));
+  $('#beta').text("Beta: " + (motion.beta));
+  $('#gamma').text("Gamma: " + (motion.gamma));
+  server.emit('orientationData', motion);
 };
 
 var onDeviceMotion = function(event) {
   var accel = event.acceleration;
   var totalAcc = Math.floor(Math.abs(accel.x + accel.y + accel.z));
-  // var motion = {
-  //   alpha: Math.floor(event.rotationRate.alpha * 1000),
-  //   beta: Math.floor(event.rotationRate.beta * 1000),
-  //   gamma: Math.floor(event.rotationRate.gamma * 1000),
-  // };
-  // $('#alpha').text("Alpha: " + (motion.alpha));
-  // $('#beta').text("Beta: " + (motion.beta));
-  // $('#gamma').text("Gamma: " + (motion.gamma));
   server.emit('motionData', totalAcc);
 };
 
@@ -59,6 +65,7 @@ var sendDummyAccelData = function(){
 };
 
 var boundDeviceMotion = onDeviceMotion.bind(this);
+var boundDeviceOrientation = onDeviceOrientation.bind(this);
 startTrack();
 
 // setInterval(sendDummyAccelData, 100);
