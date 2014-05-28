@@ -115,7 +115,7 @@ div#specOptionList button {
 div#specOptionList .toggled {
   background-color: #333;
 }
-@media (orientation:landscape) {
+@media (orientation: landscape) {
   header {
     display: none;
   }

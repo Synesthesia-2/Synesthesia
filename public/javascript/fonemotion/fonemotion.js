@@ -1,4 +1,4 @@
-var server = io.connect('/linedance');
+var server = io.connect('/fonemotion');
 server.on('welcome', function (data) {
     console.log('welcomed', data);
   });

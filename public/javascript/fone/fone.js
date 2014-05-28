@@ -1,4 +1,4 @@
-var server = io.connect('/dancer');
+var server = io.connect('/fone');
 var $h1 = $('h1');
 
 server.on('welcome', function(data) {
@@ -48,7 +48,11 @@ var onDeviceMotion = function(event) {
     beta: beta,
     gamma: gamma,
   };
+  $('#alpha').text(data.alpha);
+  $('#beta').text(data.beta);
+  $('#gamma').text(data.gamma);
   server.emit('motionData', data);
 };
 
 var boundDeviceMotion = onDeviceMotion.bind(this);
+startTrack();
