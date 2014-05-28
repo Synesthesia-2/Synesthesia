@@ -60,7 +60,7 @@ var onDeviceMotion = function(event) {
 };
 
 var sendDummyAccelData = function(){
-  var data = Math.floor(Math.random() * 100);
+  var data = Math.floor(Math.random() * 140);
   server.emit('motionData', data);
 };
 
@@ -68,4 +68,4 @@ var boundDeviceMotion = onDeviceMotion.bind(this);
 var boundDeviceOrientation = onDeviceOrientation.bind(this);
 startTrack();
 
-// setInterval(sendDummyAccelData, 10);
+setInterval(sendDummyAccelData, 10);

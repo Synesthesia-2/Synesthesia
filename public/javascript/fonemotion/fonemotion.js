@@ -26,6 +26,8 @@ var foneVisualize = function(acceleration){
 
   var prevHeight = bars.attr("height");
   var nextHeight = zFilter(acceleration,prevHeight);
+  var displayText = (nextHeight >= HEIGHT) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
+
 
   bars
     .transition()
@@ -41,7 +43,7 @@ var foneVisualize = function(acceleration){
     .duration(100)
     .attr("x", WIDTH / 2)
     .attr("y", HEIGHT / 2)
-    .text(Math.floor(nextHeight) + " shakes!")
+    .text(displayText)
     .attr("font-size", "48px")
     .attr("font-family", "sans-serif")
     .attr("text-anchor", "middle")
