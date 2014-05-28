@@ -70,15 +70,15 @@ var makeDummyData = function(xrange, xstep, ydomain, ystep){
   return output;
 };
 
-var randomMovement = function(dummydata, transitionTime){
+var randomMovement = function(inputData, transitionTime){
 
   var lineHeight = 25;
   var randomFactor = 9;
-
-  console.log(dummydata.length);
+  inputData = inputData.zones ? inputData.zones: inputData;
+  console.log(inputData.length);
   // debugger;
   
-  var line = svg.selectAll("path").data(dummydata);
+  var line = svg.selectAll("path").data(inputData, function(d){return d.x + "x" + d.y;});
 
       line
         .transition()
@@ -93,10 +93,11 @@ var randomMovement = function(dummydata, transitionTime){
           path += "M" + d.x * width / 640 + "," + d.y * height / 480;
           path += " Q" + (d.x - lineHeight/8) * width / 640 + "," + (d.y - lineHeight/4) * height / 480;
           path += " " + (d.x - rf/2) * width / 640 + "," + (d.y - lineHeight/2) * height / 480;
-          path += " T" + (d.x - rf) * width / 640 + "," + (d.y - lineHeight) * height / 480;
+          path += " T" + (d.x - d.u - rf) * width / 640 + "," + (d.y - lineHeight) * height / 480;
           return path;
         })
-            .style("stroke", "green");
+        // .style("stroke", "yellow"); 
+            .style("stroke", function(d,i){return "hsl(" + 15*(d.u+d.v) + ",100%,50%)";});
         // });
 
       line.enter()
@@ -111,15 +112,18 @@ var randomMovement = function(dummydata, transitionTime){
           path += " T" + (d.x) * width / 640 + "," + (d.y - lineHeight) * height / 480;
           return path;
         })
-        .style("stroke", "red"); 
+        .style("stroke", "white"); 
  
 };
 
+var realData = [];
 var dummydata = makeDummyData(800,16,500,20);
-var transitionTime = 1500;
+var transitionTime = 200;
 
 setInterval(function(){
-  randomMovement(dummydata, transitionTime);
+  randomMovement(realData, transitionTime*2);
 }, transitionTime);
 
-// server.on('optiFlowData', update);
+server.on('optiFlowData', function(data){
+  realData = data;
+});

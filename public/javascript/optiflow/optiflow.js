@@ -3,9 +3,9 @@ var flow = new oflow.WebCamFlow();
 var printed = false;
 
 var sendData = function(optiFlowData) {
-  optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
-    return (index % 32 === 0);
-  });
+  // optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
+  //   return (index < 800);
+  // });
   server.emit('optiFlowData', optiFlowData);
   if (!printed) {
     console.log(optiFlowData.zones.length);  
@@ -14,7 +14,7 @@ var sendData = function(optiFlowData) {
   }
 };
 
-var throttledSendData = _.throttle(sendData, 200);
+var throttledSendData = _.throttle(sendData, 50);
 
 server.on('welcome', function(data) {
   if (data.tracking) {
