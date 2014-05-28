@@ -1,12 +1,13 @@
 ConductorSpace.MainView = Backbone.View.extend({
 
   events: {
-    'touchstart .color': 'sendColor',
-    'touchstart .random': 'sendRandomColor',
+    'click .color': 'sendColor',
+    'click .random': 'sendRandomColor',
     'click #toggleSound': 'toggleSound',
-    'touchstart #toggleMotion': 'toggleMotion',
-    'touchstart #toggleStrobe': 'toggleStrobe',
-    'touchstart #toggleAudioLights': 'toggleAudioLights',
+    'click #toggleMotion': 'toggleMotion',
+    'click #toggleOptiflowFlocking': 'toggleOptiflowFlocking',
+    'click #toggleStrobe': 'toggleStrobe',
+    'click #toggleAudioLights': 'toggleAudioLights',
     'change #fader': 'updateFadeTime'
   },
 
@@ -44,6 +45,10 @@ ConductorSpace.MainView = Backbone.View.extend({
 
   toggleMotion: function() {
     this.model.toggleMotion();
+  },
+
+  toggleOptiflowFlocking: function() {
+    this.model.toggleOptiflowTracking();
   },
 
   toggleStrobe: function() {

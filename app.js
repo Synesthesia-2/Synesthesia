@@ -47,6 +47,7 @@ var state = {
   audioLights: false,
   motionTrack: false,
   optiFlowTrack: true, //init as true for testing
+  optiflowFlocking: false,
   currentColor: '#000000',
   resetMC: function() {
     this.strobe = false;
@@ -149,6 +150,17 @@ conductor.on('connection', function (conductor) {
       state.motionTrack = false;
     }
     dancer.emit('toggleMotion', data);
+  });
+
+  conductor.on('toggleOptiflowFlocking', function (data){
+    var flock = io.of('/flock');
+    if (data.flocking) {
+      state.optiflowFlocking = true;
+    } else {
+      state.optiflowFlocking = false;
+    }
+    flock.emit('toggleOptiflowFlocking', data);
+    console.log('toggleOptiflowFlocking: ', data.flocking);
   });
 
   conductor.on('toggleStrobe', function (data){

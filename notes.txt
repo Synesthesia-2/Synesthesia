@@ -1,0 +1,20 @@
+to add a conductor toggle control
+now with more Backbone!
+
+
+many edits. edited files:
+
+conductor.jade
+  added a button
+
+conductor.styl
+  added a width and height factor variable to squeeze the existing content
+
+flock.js
+  listens for 'toggleOptiflowFlocking' to be emitted by server, and it will check and match the state
+
+app.js
+
+public/conductor/models/conductor.js
+public/views/ConductorApp.js
+public/views/MainView.js

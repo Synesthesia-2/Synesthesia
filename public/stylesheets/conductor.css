@@ -15,7 +15,7 @@ body {
 }
 header {
   width: 100%;
-  height: 75px;
+  height: 50.025000000000006px;
   margin: 0;
   padding: 0;
   background-color: #ed2143;
@@ -25,7 +25,7 @@ header h1 {
   color: #fff;
   text-align: center;
   margin: 0;
-  padding-top: 15px;
+  padding-top: 10.005px;
 }
 div#specController {
   width: 100%;
@@ -33,7 +33,7 @@ div#specController {
 }
 div#specController div#optionBuilder {
   padding: 14px 0 14px 0;
-  width: 700px;
+  width: 466.90000000000003px;
   margin: 0 auto;
 }
 div#specController div#optionBuilder h2 {
@@ -51,58 +51,58 @@ div#specController div#optionBuilder button {
   border-radius: 10px;
   background-color: #fff;
   display: inline-block;
-  height: 120px;
+  height: 80.04px;
 }
 div#specController div#optionBuilder button.color {
-  width: 120px;
+  width: 80.04px;
   margin: 10px 20px 15px 0;
 }
 div#specController div#optionBuilder button.random {
-  float: right;
-  width: 260px;
+  width: 380.19px;
   font-size: 18px;
-  font-weight: 800;
-  margin: 10px 20px 15px 140px;
+  font-weight: 100;
+  margin: 10px 20px 15px 0;
 }
 div#specController div#optionBuilder p {
-  padding-top: 15px;
-  margin-top: 30px;
+  padding-top: 10.005px;
+  margin-top: 20.01px;
   float: left;
   font-size: 25px;
   color: #fff;
   letter-spacing: 1.5px;
+  text-align: center;
 }
 div#specController div#optionBuilder form {
-  float: right;
   display: inline-block;
-  margin-top: 30px;
+  margin-top: 20.01px;
+  margin-left: 4px;
 }
 div#specController div#optionBuilder form input[type='range'] {
   -webkit-appearance: none;
   border-radius: 10px;
   background-color: #000;
   border: 1px solid #999;
-  width: 350px;
+  width: 333.5px;
   padding: 0 35px 0 35px;
-  height: 60px;
+  height: 26.68px;
 }
 div#specController div#optionBuilder form input[type='range']::-webkit-slider-thumb {
-  width: 65px;
-  height: 65px;
+  width: 23.345000000000002px;
+  height: 23.345000000000002px;
 }
 div#specOptionList {
   margin: 0 auto;
   border: 3px solid #999;
-  width: 700px;
-  height: 120px;
+  width: 466.90000000000003px;
+  height: 80.04px;
   background-color: #333;
   border-radius: 15px;
 }
 div#specOptionList button {
-  margin-top: 18px;
-  padding: 10px;
-  width: 146px;
-  height: 80px;
+  margin-top: 12.006px;
+  padding: 6.67px;
+  width: 66.7px;
+  height: 53.36px;
   border-radius: 15px;
   border: 2px solid #777;
   margin-right: 0px;
@@ -111,11 +111,12 @@ div#specOptionList button {
   box-shadow: 0px 4px 7px #000;
   color: #fff;
   text-align: center;
+  font-size: 0.8em;
 }
 div#specOptionList .toggled {
   background-color: #333;
 }
-@media (orientation:landscape) {
+@media (orientation: landscape) {
   header {
     display: none;
   }

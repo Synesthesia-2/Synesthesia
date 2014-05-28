@@ -4,9 +4,8 @@ var printed = false;
 
 var sendData = function(optiFlowData) {
   optiFlowData.zones = optiFlowData.zones.filter(function(flowzone, index){
-    return (index % 10 === 0);
+    return (index % 4 === 0);
   });
-  if (optiFlowData.zones.length < 252) {console.log((optiFlowData));}
   server.emit('optiFlowData', optiFlowData);
   if (!printed) {
     console.log(optiFlowData.zones.length);  
@@ -14,6 +13,8 @@ var sendData = function(optiFlowData) {
     
   }
 };
+
+var throttledSendData = _.throttle(sendData, 200);
 
 server.on('welcome', function(data) {
   if (data.tracking) {
@@ -27,5 +28,5 @@ server.on('reset', function() {
   flow.stopCapture();
 });
 
-flow.onCalculated(sendData);
+flow.onCalculated(throttledSendData);
 
