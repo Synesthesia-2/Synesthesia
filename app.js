@@ -20,13 +20,18 @@ var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var port = process.env.PORT || 8080;
+var oscPort = process.env.OSC_PORT || 3333;
 server.listen(port);
 var io = require('socket.io').listen(server);
+var oscIo = require('node-osc');
 app.set('io', io);
+app.set('oscIo', oscIo);
 // var db = require('./server/database_server');
 // var helpers = require('./server/helpers');
 var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
+
+console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
@@ -38,6 +43,8 @@ var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
 var linedance = io.of('/linedance');
 
+var osc = new oscIo.Client('127.0.0.1', oscPort);
+osc.send('/oscAddress', 200);
 
 // instantiate state object (keeps track of performance state)
 var state = {

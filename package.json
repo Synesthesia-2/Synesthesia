@@ -9,6 +9,7 @@
     "mysql": "~2.0.0-alpha9",
     "mocha": "*",
     "chai": "*",
-    "browserify": "~2.35.2"
+    "browserify": "~2.35.2",
+    "node-osc": "~0.2.1"
   }
 }
