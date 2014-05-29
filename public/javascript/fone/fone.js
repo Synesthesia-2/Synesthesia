@@ -62,8 +62,9 @@ var onDeviceOrientation = function(event) {
 
 var onDeviceMotion = function(event) {
   var accel = event.acceleration;
-  var totalAcc = Math.floor(Math.abs(accel.x + accel.y + accel.z));
+  var totalAcc = Math.floor(Math.abs(accel.x) + Math.abs(accel.y) + Math.abs(accel.z));
   currentOrientation.totalAcc = totalAcc;
+  currentOrientation.accel = accel;
   server.emit('motionData', currentOrientation);
 };
 

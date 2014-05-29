@@ -22,9 +22,25 @@ var foneVisualize = function(acceleration){
     return (z*previousValue + (1-z)*inputData);
   };
 
+  // Insert your favorite shake-messages here.
+  var labels = {
+    0: "So weak.",
+    1: "Do you even shake bro?",
+    2: "Warm up then come back.",
+    3: "D+.",
+    4: "Hey, not bad.",
+    5: "Legit shaker!",
+    6: "Do you do this for a living?",
+    7: "Crushing it!!",
+    8: "DANGER: shakebuffer almost full!!",
+    9: "WARNING: You're breaking the system!!!",
+    10: "SHAKE OVERLOAD!SHAKE OVERLOAD!SHAKE OVERLOAD!",
+  };
+
   var prevHeight = bars.attr("height");
   var nextHeight = zFilter(acceleration,prevHeight);
-  var displayText = (nextHeight >= HEIGHT) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
+  var displayText = (nextHeight >= HEIGHT) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes";
+  var subText = labels[Math.floor(10 * nextHeight/HEIGHT)] || "";
 
 
   bars
@@ -41,7 +57,7 @@ var foneVisualize = function(acceleration){
     .duration(100)
     .attr("x", WIDTH / 2)
     .attr("y", HEIGHT / 2)
-    .text(displayText)
+    .text(subText + " " + displayText)
     .attr("font-size", "48px")
     .attr("font-family", "sans-serif")
     .attr("text-anchor", "middle")

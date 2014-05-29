@@ -24,6 +24,7 @@ var shakeBattleVisualize = function(shakedata){
 
   var prevHeight = bars.attr("height");
   var nextHeight = zFilter(shakedata,prevHeight);
+  console.log(nextHeight - shakedata);
   var displayText = (Math.abs(nextHeight) >= HEIGHT/2) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
 
 
@@ -51,8 +52,11 @@ var shakeBattleVisualize = function(shakedata){
 server.on('motionData', function(data){
   // console.log(data);
   var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); // checks for sign of beta
-  console.log("Orientation Data: " + (shakeSign)); // for testing purposes
+  // console.log("Orientation Data: " + (shakeSign)); // for testing purposes
+  var raw = Math.floor(data.accel.x + data.accel.y + data.accel.z);
+  var abs = Math.floor(Math.abs(data.accel.x) + Math.abs(data.accel.y) + Math.abs(data.accel.z));
   shakeBalance += shakeSign;
+  // console.log(shakeBalance);
 });
 
 server.on('orientationData', function(data){
