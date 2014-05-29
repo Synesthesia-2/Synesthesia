@@ -1,6 +1,7 @@
 var server = io.connect('/fone');
 var $h1 = $('h1');
 var currentOrientation = {};
+currentOrientation.id = Math.floor(Math.random() * 10000);
 
 server.on('welcome', function(data) {
   if (data.tracking) {

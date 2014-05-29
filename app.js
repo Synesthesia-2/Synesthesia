@@ -254,4 +254,7 @@ fone.on('connection', function (fone) {
     shakebattle.emit('motionData', data);
     spotlights.emit('motionData', data);
   });
+  fone.on('disconnect', function(){
+    // spotlights.emit()
+  });
 });
