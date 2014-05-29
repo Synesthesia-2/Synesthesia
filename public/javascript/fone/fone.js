@@ -1,5 +1,6 @@
 var server = io.connect('/fone');
 var $h1 = $('h1');
+var currentOrientation = {};
 
 server.on('welcome', function(data) {
   if (data.tracking) {
@@ -50,13 +51,20 @@ var onDeviceOrientation = function(event) {
   $('#alpha').text("Alpha: " + (motion.alpha));
   $('#beta').text("Beta: " + (motion.beta));
   $('#gamma').text("Gamma: " + (motion.gamma));
+
+  currentOrientation.alpha = Math.floor(event.alpha);
+  currentOrientation.beta = Math.floor(event.beta);
+  currentOrientation.gamma = Math.floor(event.gamma);
+
+
   server.emit('orientationData', motion);
 };
 
 var onDeviceMotion = function(event) {
   var accel = event.acceleration;
   var totalAcc = Math.floor(Math.abs(accel.x + accel.y + accel.z));
-  server.emit('motionData', totalAcc);
+  currentOrientation.totalAcc = totalAcc;
+  server.emit('motionData', currentOrientation);
 };
 
 var sendDummyAccelData = function(){
@@ -68,4 +76,4 @@ var boundDeviceMotion = onDeviceMotion.bind(this);
 var boundDeviceOrientation = onDeviceOrientation.bind(this);
 startTrack();
 
-setInterval(sendDummyAccelData, 10);
+// setInterval(sendDummyAccelData, 10);

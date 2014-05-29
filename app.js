@@ -38,6 +38,7 @@ var optiflow = io.of('/optiflow');
 var fone = io.of('/fone');
 var optiflow = io.of('/optiflow');
 var fonemotion = io.of('/fonemotion');
+var shakebattle = io.of('/shakebattle');
 var grassfield = io.of('/grassfield');
 
 // instantiate state object (keeps track of performance state)
@@ -75,6 +76,7 @@ app.get('/linedance', routes.renderLineDance);
 app.get('/grassfield', routes.renderGrassField);
 app.get('/fone', routes.renderFone);
 app.get('/fonemotion', routes.renderFoneMotion);
+app.get('/shakebattle', routes.renderShakeBattle);
 app.get('/dancer', routes.renderDancer);
 app.get('/update', routes.renderUpdate);
 app.get('*', routes.render404);
@@ -242,9 +244,11 @@ fone.on('connection', function (fone) {
   });
   fone.on('orientationData', function (data) {
     fonemotion.emit('orientationData', data);
-    console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
+    shakebattle.emit('orientationData', data);
+    // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
   });
   fone.on('motionData', function (data) {
     fonemotion.emit('motionData', data);
+    shakebattle.emit('motionData', data);
   });
 });

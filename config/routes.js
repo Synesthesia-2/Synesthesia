@@ -42,6 +42,10 @@ exports.renderFoneMotion= function(req, res) {
   res.render('fonemotion');
 };
 
+exports.renderShakeBattle= function(req, res) {
+  res.render('shakebattle');
+};
+
 exports.render404 = function(req, res){
   res.writeHead(404);
   res.end("That page doesn't exist. Go to a page that exists.");

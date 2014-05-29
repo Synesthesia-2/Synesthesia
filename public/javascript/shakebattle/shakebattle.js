@@ -1,11 +1,11 @@
-var server = io.connect('/fonemotion');
+var server = io.connect('/shakebattle');
 server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
 
 var WIDTH = Math.max(960, innerWidth); //640
 var HEIGHT = Math.max(500, innerHeight); //480
-var shakeData = 0;
+var shakeBalance = 0;
 var svg = d3.select("body").append("svg")
     .attr("width", WIDTH)
     .attr("height", HEIGHT);
@@ -13,7 +13,7 @@ var svg = d3.select("body").append("svg")
 svg.append("rect");
 svg.append("text");
 
-var foneVisualize = function(acceleration){
+var shakeBattleVisualize = function(shakedata){
   var bars = d3.select("rect");
   var text = d3.select("text");
 
@@ -23,16 +23,16 @@ var foneVisualize = function(acceleration){
   };
 
   var prevHeight = bars.attr("height");
-  var nextHeight = zFilter(acceleration,prevHeight);
-  var displayText = (nextHeight >= HEIGHT) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
+  var nextHeight = zFilter(shakedata,prevHeight);
+  var displayText = (Math.abs(nextHeight) >= HEIGHT/2) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
 
 
   bars
     .transition()
     .duration(100)
     .attr("x", 0)
-    .attr("y", HEIGHT - nextHeight)
-    .attr("height", nextHeight)
+    .attr("y", (HEIGHT / 2) + Math.min(0, nextHeight))
+    .attr("height", Math.abs(nextHeight))
     .attr("width", WIDTH)
     .style("fill", function(d,i){return "hsl(" + (nextHeight/HEIGHT*360) + ",100%,50%)";});
 
@@ -49,8 +49,10 @@ var foneVisualize = function(acceleration){
 };
 
 server.on('motionData', function(data){
-  // console.log("Orientation Data: " + (data)); // for testing purposes
-  shakeData += data.totalAcc;
+  // console.log(data);
+  var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); // checks for sign of beta
+  console.log("Orientation Data: " + (shakeSign)); // for testing purposes
+  shakeBalance += shakeSign;
 });
 
 server.on('orientationData', function(data){
@@ -58,7 +60,7 @@ server.on('orientationData', function(data){
 });
 
 setInterval(function(){
-  foneVisualize(shakeData);
-  // server.emit("shakeData", shakeData);
-  shakeData = 0;
+  shakeBattleVisualize(shakeBalance);
+  // server.emit("shakeBalance", shakeBalance);
+  // shakeBalance = 0;
 }, 100);
