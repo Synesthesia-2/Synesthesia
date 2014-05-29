@@ -1,4 +1,4 @@
-var server = io.connect('/fonemotion');
+var server = io.connect('/shakemeter');
 server.on('welcome', function (data) {
     console.log('welcomed', data);
   });

@@ -37,8 +37,9 @@ var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
 var fone = io.of('/fone');
 var optiflow = io.of('/optiflow');
-var fonemotion = io.of('/fonemotion');
+var shakemeter = io.of('/shakemeter');
 var shakebattle = io.of('/shakebattle');
+var spotlights = io.of('/spotlights');
 var grassfield = io.of('/grassfield');
 
 // instantiate state object (keeps track of performance state)
@@ -75,8 +76,9 @@ app.get('/optiflow', routes.renderOptiFlow);
 app.get('/linedance', routes.renderLineDance);
 app.get('/grassfield', routes.renderGrassField);
 app.get('/fone', routes.renderFone);
-app.get('/fonemotion', routes.renderFoneMotion);
+app.get('/shakemeter', routes.renderFoneMotion);
 app.get('/shakebattle', routes.renderShakeBattle);
+app.get('/spotlights', routes.renderSpotlights);
 app.get('/dancer', routes.renderDancer);
 app.get('/update', routes.renderUpdate);
 app.get('*', routes.render404);
@@ -242,13 +244,14 @@ fone.on('connection', function (fone) {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
   });
-  fone.on('orientationData', function (data) {
-    fonemotion.emit('orientationData', data);
-    shakebattle.emit('orientationData', data);
-    // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
-  });
+  // fone.on('orientationData', function (data) {
+  //   shakemeter.emit('orientationData', data);
+  //   shakebattle.emit('orientationData', data);
+  //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
+  // });
   fone.on('motionData', function (data) {
-    fonemotion.emit('motionData', data);
+    shakemeter.emit('motionData', data);
     shakebattle.emit('motionData', data);
+    spotlights.emit('motionData', data);
   });
 });

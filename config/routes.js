@@ -39,11 +39,15 @@ exports.renderFone = function(req, res) {
 };
 
 exports.renderFoneMotion= function(req, res) {
-  res.render('fonemotion');
+  res.render('shakemeter');
 };
 
 exports.renderShakeBattle= function(req, res) {
   res.render('shakebattle');
+};
+
+exports.renderSpotlights= function(req, res) {
+  res.render('spotlights');
 };
 
 exports.render404 = function(req, res){

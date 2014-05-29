@@ -43,28 +43,22 @@ var removeMotionListener = function() {
 };
 
 var onDeviceOrientation = function(event) {
-  var motion = {
-    alpha: Math.floor(event.alpha),
-    beta: Math.floor(event.beta),
-    gamma: Math.floor(event.gamma),
-  };
-  $('#alpha').text("Alpha: " + (motion.alpha));
-  $('#beta').text("Beta: " + (motion.beta));
-  $('#gamma').text("Gamma: " + (motion.gamma));
-
   currentOrientation.alpha = Math.floor(event.alpha);
   currentOrientation.beta = Math.floor(event.beta);
   currentOrientation.gamma = Math.floor(event.gamma);
 
+  $('#alpha').text("Alpha: " + (currentOrientation.alpha));
+  $('#beta').text("Beta: " + (currentOrientation.beta));
+  $('#gamma').text("Gamma: " + (currentOrientation.gamma));
 
-  server.emit('orientationData', motion);
+  // server.emit('orientationData', motion);
 };
 
 var onDeviceMotion = function(event) {
   var accel = event.acceleration;
   var totalAcc = Math.floor(Math.abs(accel.x) + Math.abs(accel.y) + Math.abs(accel.z));
-  currentOrientation.totalAcc = totalAcc;
   currentOrientation.accel = accel;
+  currentOrientation.totalAcc = totalAcc;
   server.emit('motionData', currentOrientation);
 };
 
@@ -75,6 +69,6 @@ var sendDummyAccelData = function(){
 
 var boundDeviceMotion = onDeviceMotion.bind(this);
 var boundDeviceOrientation = onDeviceOrientation.bind(this);
-startTrack();
+startTrack(); // for testing
 
 // setInterval(sendDummyAccelData, 10);
