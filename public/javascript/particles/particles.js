@@ -1,4 +1,4 @@
-var server = io.connect('/flock');
+var server = io.connect('/particles');
 
  server.on('welcome', function(data) {
     console.log("particle visualizer welcomed", data);
@@ -45,9 +45,9 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
                 velocitySpread: new THREE.Vector3(5,5,5),
 
                 colorStart: (new THREE.Color()).setRGB(0, 0, 0),
-                colorStartSpread: new THREE.Vector3(.1, .1, .1),
-                colorEnd: (new THREE.Color()).setRGB(0.02, 0.5, 0.06),
-                colorEndSpread: new THREE.Vector3(.1, 1, .1),
+                colorStartSpread: new THREE.Vector3(0.1, 0.1, 0.1),
+                colorEnd: (new THREE.Color()).setRGB(0.12, 0.35, 0.06),
+                colorEndSpread: new THREE.Vector3(0.5, 1, 0.1),
                 sizeStart: 10,
                 sizeMiddle: 4,
                 sizeEnd: 10,
@@ -73,7 +73,7 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
                 sizeMiddle: .1,
                 sizeEnd: 3,
 
-                particleCount: 1000
+                particleCount: 100
             });
 
             particleGroup.addEmitter( emitter );
@@ -81,9 +81,6 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
           // particleGroup.addEmitter( emitter2 );
             
           scene.add( particleGroup.mesh );
-
-          document.querySelector('.numParticles').textContent =
-            'Total particles: ' + emitter.numParticles;
         }
 
         var scale = 0.05;
@@ -96,7 +93,7 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
             now *= scale
                 emitter.position.x +=  Math.cos(3 * now + 0.7);
                 emitter.position.y +=  Math.cos(2 * now + 0.2);
-                emitter.position.z +=  Math.cos(7 * now );
+                emitter.position.z =  0.5 * (1 + Math.cos(7 * now ) );
 
                 // emitter.position.x += (Math.random() - 0.5 ) * 5;
             // if (now % 18 === 0 ) {
@@ -110,7 +107,7 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
             //     console.log(mouseVector);
             // }
             
-            render( 0.128 );
+            render( 0.032 );
         }
 
 
@@ -122,8 +119,10 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
         //// data format: [ '#bundle', 2.3283064365386963e-10, [ '/cur', 73, 320, 240 ] ]
         ///// blob data listener
         server.on('blob', function(data) {
+            console.log(data);
             var blobdata = data[2];
-            console.log('blobbed!');
+            console.log('blobbed!!!!');
+            console.log(blobdata);
             var blobx = blobdata[2];
             var bloby = blobdata[3];
             mouseVector.set(
