@@ -42,23 +42,6 @@ var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
 
-webcamio.sockets.on('connection', function (socket) {
-  socket.on("config", function (obj) {
-    // oscServer = new osc.Server(obj.server.port, obj.server.host);
-    // oscClient = new osc.Client(obj.client.host, obj.client.port);
-
-    // oscClient.send('/status', socket.sessionId + ' connected');
-
-    oscServer.on('message', function(msg, rinfo) {
-      // console.log(msg, rinfo);
-      socket.emit("message", msg);
-    });
-  });
-  socket.on("message", function (obj) {
-    oscClient.send(obj);
-  });
-});
-
 // define socket.io spaces
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
@@ -119,6 +102,26 @@ app.use(function(err, req, res, next){
 //////////////////////////////////////////
 /// EVENTS
 //////////////////////////////////////////
+
+webcamio.sockets.on('connection', function (socket) {
+  socket.on("config", function (obj) {
+    // oscServer = new osc.Server(obj.server.port, obj.server.host);
+    // oscClient = new osc.Client(obj.client.host, obj.client.port);
+
+    // oscClient.send('/status', socket.sessionId + ' connected');
+
+    oscServer.on('message', function(msg, rinfo) {
+      // console.log(msg, rinfo);
+      socket.emit("message", msg);
+      flock.emit("blob", msg);
+      console.log('Sent blob to flock!');
+    });
+  });
+  socket.on("message", function (obj) {
+    
+    oscClient.send(obj);
+  });
+});
 
 //////////////////////////////////////////
 /// Visualizer events

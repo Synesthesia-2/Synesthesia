@@ -55,6 +55,7 @@ Boid.prototype.flock = function(boids) {
   var borders = this.borders();
   // console.log(new PIXI.Vector(0,0).add(separation).add(alignment).add(cohesion).add(borders));
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
+  this.acceleration.add(cohesion).add(borders);
 };
 
 Boid.prototype.update = function() {
@@ -79,22 +80,23 @@ Boid.prototype.borders = function() {
   var vector = new PIXI.Vector(0, 0);
   var position = this.position;
   var radius = this.radius;
-  var size = view.size;
+  // var size = view.size;
+
   if (position.x < -radius) {
     vector.x = borderFactor;
-    console.log('off left');
+    console.log('off left', this.container.position);
   }
   if (position.y < -radius) {
     vector.y = borderFactor;
-    console.log('off top');
+    console.log('off top', this.container.position);
   }
   if (position.x > size.x + radius) {
     vector.x = -borderFactor;
-    console.log('off right');
+    console.log('off right', this.container.position);
   }
   if (position.y > size.y + radius) {
     vector.y = -borderFactor;
-    console.log('off bottom');
+    console.log('off bottom', this.container.position);
   }
   // if (! (vector.length() === 0) ) {
   //   this.position.add(vector);
@@ -143,6 +145,7 @@ Boid.prototype.separate = function(boids) {
   }
   // Average -- divide by how many
   if (count > 0)
+    console.log(count);
     steer.divideScalar(count);
   if (! (steer.length() === 0) ) {
     // Implement Reynolds: Steering = Desired - Velocity
@@ -187,7 +190,7 @@ Boid.prototype.align = function(boids) {
 // calculate steering vector towards that location
 Boid.prototype.cohesion = function(boids) {
   // Using square of distance to ease calculations
-  var neighborDist = 100*100;
+  var neighborDist = 400*400;
   var sum = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
@@ -200,6 +203,7 @@ Boid.prototype.cohesion = function(boids) {
     }
   }
   if (count > 0) {
+    console.log('sum ', sum, ' count', count);
     sum.divideScalar(count);
     // Steer towards the location
     return this.steer(sum, false);
@@ -283,6 +287,7 @@ Boid.prototype.cohesion = function(boids) {
     }
 
     function init() {
+      var boidContainers = [];
         // for (var i = 0; i < GRID_LINES; i++) {
         //     makeBox(i, false);
         //     makeBox(i, true);
@@ -311,16 +316,25 @@ Boid.prototype.cohesion = function(boids) {
         // }
 
         // Add the boids:
-        for (var i = 0; i < 1; i++) {
+        for (var i = 0; i < 100; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
-          console.log(position);
           var boid = new Boid(position, 50, 5);
-          // console.log(boid.position);
+          var boidContainer = new PIXI.DisplayObjectContainer();
+          var boidGraphic = new PIXI.Graphics();
+          boidGraphic.beginFill(0xff00ff);
+          boidGraphic.drawCircle(0, 0, 6);
+          boidGraphic.endFill();
+
+
+          boidContainer.addChild(boidGraphic);
+          boidContainer.alpha = 0.5;
+
+          boid.container = boidContainer;
+          boidContainers.push(boidContainer);
+
           boids.push(boid);
-          boid.graphic = new PIXI.Graphics();
-          boid.graphic.beginFill(0xff00ff);
-          boid.graphic.drawCircle(0, 0, 2);
-          _target.addChild(boid.graphic);
+          
+          _target.addChild(boidContainer);
         }
     }
 
@@ -407,7 +421,7 @@ Boid.prototype.cohesion = function(boids) {
           if (point)
             boids[i].arrive(point);
         }
-        boids[i].graphic.position = boids[i].position;
+        boids[i].container.position = boids[i].position;
         boids[i].run(boids);
       }
     }

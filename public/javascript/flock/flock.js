@@ -12,6 +12,11 @@ $(document).ready(function() {
     window.boidData = {u: data.u, v: data.v};
   });
 
+  server.on('blob', function(data) {
+    console.log('blobbed!');
+    window.blobData = data;
+  })
+
   server.on('toggleOptiflowFlocking', function(data) {
     console.log('toggleOptiflowFlocking', data.flocking);
     optiFlowTracking = data.flocking;
