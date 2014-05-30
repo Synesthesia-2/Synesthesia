@@ -14,7 +14,8 @@ var projectionParams = {
   tilt: 25,
   prevTilt:0,
   clipAngle: (Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6),
-  precision: .1
+  precision: .1,
+  colorClass: 'graticule'
 };
 
 
@@ -145,16 +146,17 @@ var nextMove = function () {
     // globe.attr("stroke", 'red');
     // console.log(globe);
     if(projectionParams.prevTilt !== projectionParams.tilt) {
-      console.log("tilting!")
+      console.log("tilting!", projectionParams.tilt);
       projectionParams.prevTilt = projectionParams.tilt;
       nextPath = makeProjPath2(projectionParams);
       globe
         .transition()
-        .duration(200)
+        .duration(2000)
         // .attr("opacity", 0.2)
         // .transition()
         // .duration(10)
         .attr("d", nextPath)
+        .attr("class", projectionParams.colorClass)
         // .transition()
         // .duration(2000)
         // .attr("opacity", 0.9)
@@ -164,11 +166,11 @@ var nextMove = function () {
         .each("end", nextMove)
 
     } else {
-      console.log(projectionParams.center, 'center');
+      // console.log(projectionParams.center, 'center');
       nextPath = makeProjPath2(projectionParams);
       globe
         .transition()
-        .duration(3000)
+        .duration(1500)
         .attr("d", nextPath)
         .each("end", nextMove)
     }
@@ -187,8 +189,8 @@ var nextMove = function () {
 }
 d3.select("path")
     .transition()
-    .duration(500)
-    .attr("d", path2) //move center
+    .duration(1000)
+    .attr("d", path) //move center
     // .transition()
     // .duration(500)
     // .attr("opacity", 0.5) //fade out
@@ -238,25 +240,27 @@ var throttledUpdate = _.throttle(function(optiFlowData) {
     // .duration(300)
     // .attr("d", path)
     if (!optiFlowData) {
-        console.log("no data!!!!");
+        // console.log("no data!!!!");
     } else {
-        console.log(optiFlowData.u, optiFlowData.v, "data in")
+        // console.log(optiFlowData.u, optiFlowData.v, "data in")
     };
-    var threshold = 0.01;
+    var threshold = 0.005;
     if( Math.random() < threshold ) {
-        var tiltScale = (Math.random() - 0.5) * 7;
-        projectionParams.tilt += tiltScale;
+        var tiltScale = (Math.random() - 0.5) * 25;
+        projectionParams.tilt = tiltScale;
+        projectionParams.colorClass = 'rpath';
     } 
     else {
-        console.log("centershift");
-        if ((Math.abs(optiFlowData.u) > 0.3 ||  Math.abs(optiFlowData.v) > 0.3 )){
+        // console.log("centershift");
+        if ((Math.abs(optiFlowData.u) > 0.5 ||  Math.abs(optiFlowData.v) > 0.5 )){
             var scaledU = optiFlowData.u * 2;
             var scaledV  = optiFlowData.v * 2;
-            projectionParams.center = [scaledU, scaledV];
+            projectionParams.center[0] += scaledU;
+            projectionParams.center[1] += scaledV;
         } else {
             // projectionParams.center = [Math.random() * 5, Math.random() * 5]
-            projectionParams.center[0] += 0.05;
-            projectionParams.center[1] += 0.05;
+            // projectionParams.center[0] += 0.05;
+            // projectionParams.center[1] += 0.05;
         }
     }
     // nextMove();
