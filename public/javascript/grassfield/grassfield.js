@@ -10,16 +10,6 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-// var reformatOptiFlowZones = function (optiFlowData) {
-//   var zones = optiFlowData.zones;
-//   var scalingFactor = 3;
-//   _.each(zones, function(zone) {
-//     zone.xPrime = zone.x + scalingFactor*zone.u;
-//     zone.yPrime = zone.y + scalingFactor*zone.v;
-//   });
-//   return zones;
-// };
-
 var update = function(optiFlowData){
 
   var lineHeight = 0;
