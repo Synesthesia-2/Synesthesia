@@ -55,7 +55,7 @@ Boid.prototype.flock = function(boids) {
   var borders = this.borders();
   // console.log(new PIXI.Vector(0,0).add(separation).add(alignment).add(cohesion).add(borders));
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
-  this.acceleration.add(cohesion).add(borders);
+  // this.acceleration.add(cohesion).add(borders);
 };
 
 Boid.prototype.update = function() {
@@ -83,20 +83,20 @@ Boid.prototype.borders = function() {
   // var size = view.size;
 
   if (position.x < -radius) {
-    vector.x = borderFactor;
-    console.log('off left', this.container.position);
+    vector.x = borderFactor * (-radius - position.x);
+    // console.log('off left', this.container.position);
   }
-  if (position.y < -radius) {
-    vector.y = borderFactor;
-    console.log('off top', this.container.position);
+  if (position.y < -radius){
+    vector.y = borderFactor * (-radius - position.y);
+    // console.log('off top', this.container.position);
   }
-  if (position.x > size.x + radius) {
-    vector.x = -borderFactor;
-    console.log('off right', this.container.position);
+  if (position.x > size.x + radius){
+    vector.x = -borderFactor * (position.x - size.x - radius);
+    // console.log('off right', this.container.position);
   }
   if (position.y > size.y + radius) {
-    vector.y = -borderFactor;
-    console.log('off bottom', this.container.position);
+    vector.y = -borderFactor * (position.y - size.y - radius);
+    // console.log('off bottom', this.container.position);
   }
   // if (! (vector.length() === 0) ) {
   //   this.position.add(vector);
@@ -105,6 +105,7 @@ Boid.prototype.borders = function() {
     //   segments[i].point += vector;
     // }
   // }
+  if (vector.length() !== 0) console.log('border vector ', vector);
   return vector;
 };
 
@@ -112,8 +113,8 @@ Boid.prototype.borders = function() {
 // Takes a second argument, if true, it slows down as it approaches
 // the target
 Boid.prototype.steer = function(target, slowdown) {
-  var steer,
-    desired = target.clone().sub(this.position);
+  var steer;
+  var desired = target.clone().sub(this.position);
   var distance = desired.length();
   // Two options for desired vector magnitude
   // (1 -- based on distance, 2 -- maxSpeed)
@@ -124,7 +125,8 @@ Boid.prototype.steer = function(target, slowdown) {
     desired.setLength( this.maxSpeed );
   }
   steer = desired.clone().sub(this.vector);
-  steer.setLength( Math.min(this.maxForce, steer.length) );
+  console.log('the STEER!!;: ', desired.clone().sub(this.vector));
+  // steer.setLength( Math.min(this.maxForce, steer.length) );
   return steer;
 };
 
@@ -316,7 +318,7 @@ Boid.prototype.cohesion = function(boids) {
         // }
 
         // Add the boids:
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < 10; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           var boid = new Boid(position, 50, 5);
           var boidContainer = new PIXI.DisplayObjectContainer();
@@ -396,6 +398,9 @@ Boid.prototype.cohesion = function(boids) {
     }
 
     function animate() {
+        var stats = document.getElementById('stats');
+        stats.innerHTML = '';
+
         requestAnimFrame(animate);
 
         var temp = renderTexture;
@@ -415,15 +420,18 @@ Boid.prototype.cohesion = function(boids) {
         _renderer.render(_stage);
 
         for (var i = 0, l = boids.length; i < l; i++) {
-        if (groupTogether) {
-          var length = ((i + event.count / 30) % l) / l * heartPath.length;
-          var point = heartPath.getPointAt(length);
-          if (point)
-            boids[i].arrive(point);
+          if (groupTogether) {
+            var length = ((i + event.count / 30) % l) / l * heartPath.length;
+            var point = heartPath.getPointAt(length);
+            if (point)
+              boids[i].arrive(point);
+          }
+          boids[i].container.position = boids[i].position;
+          boids[i].run(boids);
+
+          msg = stats.innerHTML;
+          stats.innerHTML = msg + '<p class="' + (boids[i].position.x === NaN || boids[i].position.y === NaN ? 'nan' : '') + '">boid ' + i + ': ' + boids[i].position.x + ' ' + boids[i].position.y + '</p>';
         }
-        boids[i].container.position = boids[i].position;
-        boids[i].run(boids);
-      }
     }
 
     //Helper function to convert degrees to radians.
