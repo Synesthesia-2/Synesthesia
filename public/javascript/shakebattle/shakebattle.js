@@ -25,12 +25,12 @@ var shakeBattleVisualize = function(shakedata){
     return (z*previousValue + (1-z)*inputData);
   };
 
+  // Get previous height value and flip sign if negative shakes were winning.
   var prevHeight = bars.attr("y") < (HEIGHT/2) ? -1*(bars.attr("height")) : bars.attr("height");
   shakedata = shakedata / DIFFICULTY;
   var nextHeight = zFilter(shakedata,prevHeight);
 
   var displayText = (Math.abs(nextHeight) >= HEIGHT/2) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
-
 
   bars
     .transition()
@@ -54,7 +54,8 @@ var shakeBattleVisualize = function(shakedata){
 };
 
 server.on('motionData', function(data){
-  var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); // checks for sign of beta
+  // checks for sign of beta
+  var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); 
   shakeBalance += shakeSign;
 });
 
