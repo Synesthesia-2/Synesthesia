@@ -26,10 +26,8 @@ var shakeBattleVisualize = function(shakedata){
   };
 
   var prevHeight = bars.attr("y") < (HEIGHT/2) ? -1*(bars.attr("height")) : bars.attr("height");
-  // var nextHeight = shakedata;
+  shakedata = shakedata / DIFFICULTY;
   var nextHeight = zFilter(shakedata,prevHeight);
-
-  nextHeight = nextHeight / DIFFICULTY;
 
   var displayText = (Math.abs(nextHeight) >= HEIGHT/2) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
 
