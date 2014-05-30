@@ -18,14 +18,19 @@ var shakeBattleVisualize = function(shakedata){
   var bars = d3.select("rect");
   var text = d3.select("text");
 
+  var DIFFICULTY = 4; // Increase this to make shakes count for less
+
   var zFilter = function(inputData, previousValue){
     var z = 0.9; // set this between 0 and 1
     return (z*previousValue + (1-z)*inputData);
   };
 
-  var prevHeight = bars.attr("height");
+  var prevHeight = bars.attr("y") < (HEIGHT/2) ? -1*(bars.attr("height")) : bars.attr("height");
+  // var nextHeight = shakedata;
   var nextHeight = zFilter(shakedata,prevHeight);
-  console.log(nextHeight - shakedata);
+
+  nextHeight = nextHeight / DIFFICULTY;
+
   var displayText = (Math.abs(nextHeight) >= HEIGHT/2) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
 
 
@@ -51,21 +56,10 @@ var shakeBattleVisualize = function(shakedata){
 };
 
 server.on('motionData', function(data){
-  // console.log(data);
   var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); // checks for sign of beta
-  // console.log("Orientation Data: " + (shakeSign)); // for testing purposes
-  var raw = Math.floor(data.accel.x + data.accel.y + data.accel.z);
-  var abs = Math.floor(Math.abs(data.accel.x) + Math.abs(data.accel.y) + Math.abs(data.accel.z));
   shakeBalance += shakeSign;
-  // console.log(shakeBalance);
-});
-
-server.on('orientationData', function(data){
-  // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
 });
 
 setInterval(function(){
   shakeBattleVisualize(shakeBalance);
-  // server.emit("shakeBalance", shakeBalance);
-  // shakeBalance = 0;
 }, 100);
