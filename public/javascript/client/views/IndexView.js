@@ -4,6 +4,7 @@ ClientSpace.IndexView = Backbone.View.extend({
   
   events: {
     "click .startShow":  "startShow",
+    "click .shakeShow":  "shakeShow",
     "click .cast":  "showCastList",
     "click .upcomingShows":  "showUpcomingShows",
     "click .about":  "showAbout"
@@ -20,6 +21,10 @@ ClientSpace.IndexView = Backbone.View.extend({
 
   startShow: function() {
     this.model.startShow();
+  },
+
+  shakeShow: function() {
+    this.model.shakeShow();
   },
 
   showCastList: function(e) {

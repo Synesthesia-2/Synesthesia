@@ -29,12 +29,16 @@ html
         p Welcome to
         p.showTitle {{ currentShow }}
       button.startShow Connect and Start Show
+      button.shakeShow Play with interactive visualizations!
       button.cast Tonights Performers
       button.about About Kine-Tech
       button.upcomingShows Upcoming Events
       p.HR Created at Hack Reactor
 
     script#show(type="text/x-handlebars-template")
+      button#exitShow Quit
+
+    script#shake(type="text/x-handlebars-template")
       button#exitShow Quit
 
     script#castList(type="text/x-handlebars-template")
@@ -106,6 +110,7 @@ html
     script(src="javascript/client/views/UpcomingShowsView.js")
     script(src="javascript/client/views/SingleShowView.js")
     script(src="javascript/client/views/ShowView.js")
+    script(src="javascript/client/views/ShakeView.js")
 
     script(src="javascript/client/router/router.js")
   

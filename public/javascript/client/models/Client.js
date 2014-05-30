@@ -25,6 +25,10 @@ ClientSpace.Client = Backbone.Model.extend({
     this.trigger('startShow', this);
   },
 
+  shakeShow: function() {
+    this.trigger('shakeShow', this);
+  },
+
   loadIndex: function() {
     this.trigger('loadIndex', this);
   },

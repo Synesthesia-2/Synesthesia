@@ -10,6 +10,7 @@ ClientSpace.Router = Backbone.Router.extend({
     "showCastList": "showCastList",
     "showUpcomingShows": "showUpcomingShows",
     "show": "startShow",
+    "shake": "shakeShow",
     "about": "showAbout"
   },
   
@@ -61,6 +62,16 @@ ClientSpace.Router = Backbone.Router.extend({
       var server = new ClientSpace.Server();
       var showView = new ClientSpace.ShowView({ model: that.model, server: server });
       that.swapView(showView);
+    });
+  },
+
+  shakeShow: function() {
+    console.log('shake show');
+    var that = this;
+    this.$el.fadeOut(1000, function(){
+      var server = new ClientSpace.Server();
+      var shakeView = new ClientSpace.ShakeView({model: that.model, server: server});
+      that.swapView(shakeView);
     });
   }
 
