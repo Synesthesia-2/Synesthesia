@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title Particle Visualizer
+    meta(http-equiv="content-type", content="text/html; charset=utf-8")
+    link(type="text/css", rel="stylesheet", href="stylesheets/particles.css")
+
+    script(src="/socket.io/socket.io.js")
+    script(src="/javascript/THREE-r65.min.js")
+    script(src="/javascript/ShaderParticles.min.js")
+    script(src="/bower_components/jquery/jquery.min.js")
+    script#shader-fs(type="x-shader/x-fragment").
+        #ifdef GL_ES
+          precision highp float;
+          #endif
+          
+         uniform vec4 color;
+         
+        void main(void) {
+         gl_FragColor = color;
+        }
+    
+    script#shader-vs(type="x-shader/x-vertex").
+      attribute vec3 vertexPosition;
+
+      uniform mat4 modelViewMatrix;
+      uniform mat4 perspectiveMatrix;
+
+      void main(void) {
+        gl_Position = perspectiveMatrix * modelViewMatrix * vec4(vertexPosition, 1.0);
+      }
+  body
+    p(class="numParticles")
+    script(src="/javascript/particles/particles.js")
