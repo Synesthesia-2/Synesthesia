@@ -18,7 +18,7 @@ var shakeBattleVisualize = function(shakedata){
   var bars = d3.select("rect");
   var text = d3.select("text");
 
-  var DIFFICULTY = 4; // Increase this to make shakes count for less
+  var DIFFICULTY = 25; // Increase this to make shakes count for less
 
   var zFilter = function(inputData, previousValue){
     var z = 0.9; // set this between 0 and 1
