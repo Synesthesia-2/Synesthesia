@@ -20,6 +20,7 @@
     "fastclick": "~1.0.2",
     "tweenlite": "~1.11.5",
     "tweenjs": "*",
-    "two": "~0.3.0"
+    "two": "~0.3.0",
+    "threejs": "*"
   }
 }

@@ -1,43 +1,21 @@
 // // Adapted from Flocking Processing example by Daniel Schiffman:
 // // http://processing.org/learning/topics/flocking.html
 
-/*
-      ___           ___           ___           ___           ___           ___           ___
-     /\  \         /\  \         /\__\         /\  \         /\  \         /\__\         /\  \
-     \:\  \       /::\  \       /::|  |       /::\  \       /::\  \       /::|  |        \:\  \
-      \:\  \     /:/\:\  \     /:|:|  |      /:/\:\  \     /:/\:\  \     /:|:|  |         \:\  \
-      /::\  \   /::\~\:\  \   /:/|:|  |__   /:/  \:\  \   /::\~\:\  \   /:/|:|  |__       /::\  \
-     /:/\:\__\ /:/\:\ \:\__\ /:/ |:| /\__\ /:/__/_\:\__\ /:/\:\ \:\__\ /:/ |:| /\__\     /:/\:\__\
-    /:/  \/__/ \/__\:\/:/  / \/__|:|/:/  / \:\  /\ \/__/ \:\~\:\ \/__/ \/__|:|/:/  /    /:/  \/__/
-   /:/  /           \::/  /      |:/:/  /   \:\ \:\__\    \:\ \:\__\       |:/:/  /    /:/  /
-   \/__/            /:/  /       |::/  /     \:\/:/  /     \:\ \/__/       |::/  /     \/__/
-                   /:/  /        /:/  /       \::/  /       \:\__\         /:/  /
-                   \/__/         \/__/         \/__/         \/__/         \/__/
-      ___           ___           ___           ___           ___           ___
-     /\  \         /\  \         /\  \         /\  \         /\  \         /\  \
-    /::\  \       /::\  \       /::\  \       /::\  \       /::\  \       /::\  \
-   /:/\ \  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\ \  \
-  _\:\~\ \  \   /::\~\:\  \   /::\~\:\  \   /:/  \:\  \   /::\~\:\  \   _\:\~\ \  \
- /\ \:\ \ \__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/__/ \:\__\ /:/\:\ \:\__\ /\ \:\ \ \__\
- \:\ \:\ \/__/ \/__\:\/:/  / \/__\:\/:/  / \:\  \  \/__/ \:\~\:\ \/__/ \:\ \:\ \/__/
-  \:\ \:\__\        \::/  /       \::/  /   \:\  \        \:\ \:\__\    \:\ \:\__\
-   \:\/:/  /         \/__/        /:/  /     \:\  \        \:\ \/__/     \:\/:/  /
-    \::/  /                      /:/  /       \:\__\        \:\__\        \::/  /
-     \/__/                       \/__/         \/__/         \/__/         \/__/
+var view = {
+  size: {
+    width: window.innerWidth,
+    height: window.innerHeight
+  }
+};
 
- * Simulation #479 - Mesh Block
- *
- * Based on http://geometrydaily.tumblr.com/post/54913997818/479-mesh-block-a-new-minimal-geometric
- *
- * Dependencies -
- * Pixi js  v 1.5.1 - https://github.com/GoodBoyDigital/pixi.js/
- * TweenMax - http://www.greensock.com/get-started-js/
- * Greensock EasePack - http://www.greensock.com/get-started-js/
- */
+var boids = [];
+var groupTogether = false;
+
+
 var Boid = function(position, maxSpeed, maxForce) {
     var strength = Math.random() * 0.5;
-    this.acceleration = new PIXI.Point();
-    this.vector = PIXI.Point(Math.random(), Math.random());
+    this.acceleration = new PIXI.Vector();
+    this.vector = new PIXI.Vector(Math.random(), Math.random());
     this.position = position.clone();
     this.radius = 30;
     this.maxSpeed = maxSpeed + strength;
@@ -54,78 +32,78 @@ Boid.prototype.run = function(boids) {
   } else {
     this.align(boids);
   }
-  this.borders();
+  // this.borders();
   this.update();
-  this.moveHead();
+  // this.moveHead();
 };
 
 Boid.prototype.createItems = function() {
-  this.head = new PIXI.Circle(0,0,5);
+  // this.head = new PIXI.Circle(0,0,5);
 
-  this.path = new Path({
-    strokeColor: 'white',
-    strokeWidth: 2,
-    strokeCap: 'round'
-  });
-  for (var i = 0; i < this.amount; i++)
-    this.path.add(new Point());
-
-  this.shortPath = new Path({
-    strokeColor: 'white',
-    strokeWidth: 4,
-    strokeCap: 'round'
-  });
-  for (var i = 0; i < Math.min(3, this.amount); i++)
-    this.shortPath.add(new Point());
 };
 
 Boid.prototype.moveHead = function() {
-  this.head.position = this.position;
-  this.head.rotation = this.vector.angle;
+  // this.head.position = this.position;
+  // this.head.rotation = this.vector.angle;
 };
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
-  var separation = this.separate(boids) * 3;
+  var separation = this.separate(boids).multiplyScalar(3);
   var alignment = this.align(boids);
   var cohesion = this.cohesion(boids);
-  this.acceleration += separation + alignment + cohesion;
+  var borders = this.borders();
+  // console.log(new PIXI.Vector(0,0).add(separation).add(alignment).add(cohesion).add(borders));
+  this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
 };
 
 Boid.prototype.update = function() {
   // Update velocity
-  this.vector += this.acceleration;
+  this.vector.add(this.acceleration);
   // Limit speed (vector#limit?)
-  this.vector.length = Math.min(this.maxSpeed, this.vector.length);
-  this.position += this.vector;
+  this.vector.setLength( Math.min(this.maxSpeed, this.vector.length()) );
+  this.position.add(this.vector);
   // Reset acceleration to 0 each cycle
-  this.acceleration = new Point();
+  this.acceleration = new PIXI.Vector(0,0);
 };
 
 Boid.prototype.seek = function(target) {
-  this.acceleration += this.steer(target, false);
+  this.acceleration.add(this.steer(target, false));
 };
 
 Boid.prototype.arrive = function(target) {
-  this.acceleration += this.steer(target, true);
+  this.acceleration.add(this.steer(target, true));
 };
 
 Boid.prototype.borders = function() {
-  var vector = new Point();
+  var vector = new PIXI.Vector(0, 0);
   var position = this.position;
   var radius = this.radius;
   var size = view.size;
-  if (position.x < -radius) vector.x = size.width + radius;
-  if (position.y < -radius) vector.y = size.height + radius;
-  if (position.x > size.width + radius) vector.x = -size.width -radius;
-  if (position.y > size.height + radius) vector.y = -size.height -radius;
-  if (!vector.isZero()) {
-    this.position += vector;
-    var segments = this.path.segments;
-    for (var i = 0; i < this.amount; i++) {
-      segments[i].point += vector;
-    }
+  if (position.x < -radius) {
+    vector.x = borderFactor;
+    console.log('off left');
   }
+  if (position.y < -radius) {
+    vector.y = borderFactor;
+    console.log('off top');
+  }
+  if (position.x > size.x + radius) {
+    vector.x = -borderFactor;
+    console.log('off right');
+  }
+  if (position.y > size.y + radius) {
+    vector.y = -borderFactor;
+    console.log('off bottom');
+  }
+  // if (! (vector.length() === 0) ) {
+  //   this.position.add(vector);
+    // var segments = this.path.segments;
+    // for (var i = 0; i < this.amount; i++) {
+    //   segments[i].point += vector;
+    // }
+  // }
+  return vector;
 };
 
 // A method that calculates a steering vector towards a target
@@ -133,44 +111,44 @@ Boid.prototype.borders = function() {
 // the target
 Boid.prototype.steer = function(target, slowdown) {
   var steer,
-    desired = target - this.position;
-  var distance = desired.length;
+    desired = target.clone().sub(this.position);
+  var distance = desired.length();
   // Two options for desired vector magnitude
   // (1 -- based on distance, 2 -- maxSpeed)
   if (slowdown && distance < 100) {
     // This damping is somewhat arbitrary:
-    desired.length = this.maxSpeed * (distance / 100);
+    desired.setLength( this.maxSpeed * (distance / 100) );
   } else {
-    desired.length = this.maxSpeed;
+    desired.setLength( this.maxSpeed );
   }
-  steer = desired - this.vector;
-  steer.length = Math.min(this.maxForce, steer.length);
+  steer = desired.clone().sub(this.vector);
+  steer.setLength( Math.min(this.maxForce, steer.length) );
   return steer;
 };
 
 Boid.prototype.separate = function(boids) {
   var desiredSeperation = 60;
-  var steer = new Point();
+  var steer = new PIXI.Vector(0, 0);
   var count = 0;
   // For every boid in the system, check if it's too close
   for (var i = 0, l = boids.length; i < l; i++) {
     var other = boids[i];
-    var vector = this.position - other.position;
+    var vector = this.position.clone().sub(other.position);
     var distance = vector.length;
     if (distance > 0 && distance < desiredSeperation) {
       // Calculate vector pointing away from neighbor
-      steer += vector.normalize(1 / distance);
+      steer.add( vector.normalize(1 / distance) );
       count++;
     }
   }
   // Average -- divide by how many
   if (count > 0)
-    steer /= count;
-  if (!steer.isZero()) {
+    steer.divideScalar(count);
+  if (! (steer.length() === 0) ) {
     // Implement Reynolds: Steering = Desired - Velocity
-    steer.length = this.maxSpeed;
-    steer -= this.vector;
-    steer.length = Math.min(steer.length, this.maxForce);
+    steer.setLength(this.maxSpeed);
+    steer.sub(this.vector);
+    steer.setLength( Math.min(steer.length, this.maxForce) );
   }
   return steer;
 };
@@ -178,25 +156,28 @@ Boid.prototype.separate = function(boids) {
 // Alignment
 // For every nearby boid in the system, calculate the average velocity
 Boid.prototype.align = function(boids) {
-  var neighborDist = 25;
-  var steer = new Point();
+  // Using square of distance to ease calculations
+  var neighborDist = 25*25;
+  var steer = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
     var other = boids[i];
-    var distance = this.position.getDistance(other.position);
-    if (distance > 0 && distance < neighborDist) {
-      steer += other.vector;
+    // We just need to find the square of the distance — less calculation
+    var distanceSq = this.position.distanceToSq(other.position);
+    if (distanceSq > 0 && distanceSq < neighborDist) {
+      steer.add(other.vector);
+      console.log(steer);
       count++;
     }
   }
 
   if (count > 0)
-    steer /= count;
-  if (!steer.isZero()) {
+    steer.divideScalar(count);
+  if (! (steer.length() === 0) ) {
     // Implement Reynolds: Steering = Desired - Velocity
-    steer.length = this.maxSpeed;
-    steer -= this.vector;
-    steer.length = Math.min(steer.length, this.maxForce);
+    steer.setLength(this.maxSpeed);
+    steer.sub(this.vector);
+    steer.setLength( Math.min(steer.length, this.maxForce) );
   }
   return steer;
 };
@@ -205,26 +186,28 @@ Boid.prototype.align = function(boids) {
 // For the average location (i.e. center) of all nearby boids,
 // calculate steering vector towards that location
 Boid.prototype.cohesion = function(boids) {
-  var neighborDist = 100;
-  var sum = new Point();
+  // Using square of distance to ease calculations
+  var neighborDist = 100*100;
+  var sum = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
     var other = boids[i];
-    var distance = this.position.getDistance(other.position);
-    if (distance > 0 && distance < neighborDist) {
-      sum += other.position; // Add location
+    // Square of distance to ease calculations
+    var distanceSq = this.position.distanceToSq(other.position);
+    if (distanceSq > 0 && distanceSq < neighborDist) {
+      sum.add(other.position); // Add location
       count++;
     }
   }
   if (count > 0) {
-    sum /= count;
+    sum.divideScalar(count);
     // Steer towards the location
     return this.steer(sum, false);
   }
   return sum;
 };
 
-(function() {
+// (function() {
     var size = {
       x: window.innerWidth,
       y: window.innerHeight
@@ -255,6 +238,7 @@ Boid.prototype.cohesion = function(boids) {
     // document.getElementById("canvas-holder").appendChild(_renderer.view);
     document.body.appendChild(_renderer.view);
     //Constants -
+    var borderFactor = 3;
     var GRID_LINES = 17;
     var BOX_SIZE = 11;
     var BOX_PADDING = 3;
@@ -299,32 +283,44 @@ Boid.prototype.cohesion = function(boids) {
     }
 
     function init() {
-var boid = new Boid(new PIXI.Point(0,0),5,.5);
-        for (var i = 0; i < GRID_LINES; i++) {
-            makeBox(i, false);
-            makeBox(i, true);
-        }
+        // for (var i = 0; i < GRID_LINES; i++) {
+        //     makeBox(i, false);
+        //     makeBox(i, true);
+        // }
 
-        _boxes = shuffle(_boxes);
-        var thisBox;
-        var boxDelay;
+        // _boxes = shuffle(_boxes);
+        // var thisBox;
+        // var boxDelay;
 
-        for (var k = 0; k < _totalBoxes; k++) {
+        // for (var k = 0; k < _totalBoxes; k++) {
 
-            thisBox = _boxes[k];
-            boxDelay = 1 + (BOX_TWEEN_DELAY_STEP * k);
+        //     thisBox = _boxes[k];
+        //     boxDelay = 1 + (BOX_TWEEN_DELAY_STEP * k);
 
-            _target.addChild(thisBox);
+        //     _target.addChild(thisBox);
 
-            //fade them in, in order -
-            TweenLite.to(thisBox, BOX_TWEEN_TIME / 2, {
-                alpha: 1,
-                delay: boxDelay
-            });
-            TweenLite.to(thisBox.myGraphics.scale, BOX_TWEEN_TIME, {
-                x: 1,
-                delay: boxDelay
-            });
+        //     //fade them in, in order -
+        //     TweenLite.to(thisBox, BOX_TWEEN_TIME / 2, {
+        //         alpha: 1,
+        //         delay: boxDelay
+        //     });
+        //     TweenLite.to(thisBox.myGraphics.scale, BOX_TWEEN_TIME, {
+        //         x: 1,
+        //         delay: boxDelay
+        //     });
+        // }
+
+        // Add the boids:
+        for (var i = 0; i < 1; i++) {
+          var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
+          console.log(position);
+          var boid = new Boid(position, 50, 5);
+          // console.log(boid.position);
+          boids.push(boid);
+          boid.graphic = new PIXI.Graphics();
+          boid.graphic.beginFill(0xff00ff);
+          boid.graphic.drawCircle(0, 0, 2);
+          _target.addChild(boid.graphic);
         }
     }
 
@@ -394,7 +390,7 @@ var boid = new Boid(new PIXI.Point(0,0),5,.5);
         _stage.worldAlpha = .5;
         count += .01;
         // outputSprite.alpha *= Math.sin(count);
-        _target.rotation -= 0.01;
+        // _target.rotation -= 0.01;
         renderTexture.render(_stage, true);
         outputSprite.setTexture(renderTexture);
         outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * 0.2;
@@ -403,6 +399,17 @@ var boid = new Boid(new PIXI.Point(0,0),5,.5);
 
         renderTexture.render(outputSprite);
         _renderer.render(_stage);
+
+        for (var i = 0, l = boids.length; i < l; i++) {
+        if (groupTogether) {
+          var length = ((i + event.count / 30) % l) / l * heartPath.length;
+          var point = heartPath.getPointAt(length);
+          if (point)
+            boids[i].arrive(point);
+        }
+        boids[i].graphic.position = boids[i].position;
+        boids[i].run(boids);
+      }
     }
 
     //Helper function to convert degrees to radians.
@@ -417,33 +424,23 @@ var boid = new Boid(new PIXI.Point(0,0),5,.5);
         return o;
     }
 
-})();
+// })();
 
 
 
 
 // var heartPath = new paper.Path('M514.69629,624.70313c-7.10205,-27.02441 -17.2373,-52.39453 -30.40576,-76.10059c-13.17383,-23.70703 -38.65137,-60.52246 -76.44434,-110.45801c-27.71631,-36.64355 -44.78174,-59.89355 -51.19189,-69.74414c-10.5376,-16.02979 -18.15527,-30.74951 -22.84717,-44.14893c-4.69727,-13.39893 -7.04297,-26.97021 -7.04297,-40.71289c0,-25.42432 8.47119,-46.72559 25.42383,-63.90381c16.94775,-17.17871 37.90527,-25.76758 62.87354,-25.76758c25.19287,0 47.06885,8.93262 65.62158,26.79834c13.96826,13.28662 25.30615,33.10059 34.01318,59.4375c7.55859,-25.88037 18.20898,-45.57666 31.95215,-59.09424c19.00879,-18.32178 40.99707,-27.48535 65.96484,-27.48535c24.7373,0 45.69531,8.53564 62.87305,25.5957c17.17871,17.06592 25.76855,37.39551 25.76855,60.98389c0,20.61377 -5.04102,42.08691 -15.11719,64.41895c-10.08203,22.33203 -29.54687,51.59521 -58.40723,87.78271c-37.56738,47.41211 -64.93457,86.35352 -82.11328,116.8125c-13.51758,24.0498 -23.82422,49.24902 -30.9209,75.58594z');
 
-// var boids = [];
-// var groupTogether = false;
-
-// Add the boids:
-// for (var i = 0; i < 30; i++) {
-//   var position = Point.random() * view.size;
-//   boids.push(new Boid(position, 10, 0.05));
-// }
-
-
 // function onFrame(event) {
-//   for (var i = 0, l = boids.length; i < l; i++) {
-//     if (groupTogether) {
-//       var length = ((i + event.count / 30) % l) / l * heartPath.length;
-//       var point = heartPath.getPointAt(length);
-//       if (point)
-//         boids[i].arrive(point);
-//     }
-//     boids[i].run(boids);
-//   }
+  // for (var i = 0, l = boids.length; i < l; i++) {
+  //   if (groupTogether) {
+  //     var length = ((i + event.count / 30) % l) / l * heartPath.length;
+  //     var point = heartPath.getPointAt(length);
+  //     if (point)
+  //       boids[i].arrive(point);
+  //   }
+  //   boids[i].run(boids);
+  // }
 // }
 
 // // Reposition the heart path whenever the window is resized:
