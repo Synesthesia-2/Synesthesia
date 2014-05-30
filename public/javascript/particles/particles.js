@@ -4,10 +4,7 @@ var server = io.connect('/flock');
     console.log("particle visualizer welcomed", data);
 });
 
-server.on('blob', function(data) {
-    console.log('blobbed!');
-    window.blobData = data;
-});
+
 
 var scene, camera, renderer, stats, stats2, clock, emitter, emitter2, particleGroup;
 
@@ -122,12 +119,16 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
             renderer.render( scene, camera );
         }
 
-
-        // Add mousemove listener to move the `emitter`.
-        document.addEventListener( 'mousemove', function( e ) {
+        //// data format: [ '#bundle', 2.3283064365386963e-10, [ '/cur', 73, 320, 240 ] ]
+        ///// blob data listener
+        server.on('blob', function(data) {
+            var blobdata = data[2];
+            console.log('blobbed!');
+            var blobx = blobdata[2];
+            var bloby = blobdata[3];
             mouseVector.set(
-                (e.clientX / window.innerWidth) * 2 - 1,
-                -(e.clientY / window.innerHeight) * 2 + 1,
+                (blobx / window.innerWidth) * 2 - 1,
+                -(bloby / window.innerHeight) * 2 + 1,
                 0.5
             );
 
@@ -135,9 +136,24 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
 
             emitter.position.x = mouseVector.x * camera.fov;
             emitter.position.y = mouseVector.y * camera.fov;
-            emitter2.position.x = (mouseVector.x + .0003 ) * camera.fov;
-            emitter2.position.y = (mouseVector.y + .0003) * camera.fov;
-        }, false );
+            // emitter2.position.x = (mouseVector.x + .0003 ) * camera.fov;
+            // emitter2.position.y = (mouseVector.y + .0003) * camera.fov;
+        });
+
+        // document.addEventListener( 'mousemove', function( e ) {
+        //     mouseVector.set(
+        //         (e.clientX / window.innerWidth) * 2 - 1,
+        //         -(e.clientY / window.innerHeight) * 2 + 1,
+        //         0.5
+        //     );
+
+        //     projector.unprojectVector( mouseVector, camera );
+
+        //     emitter.position.x = mouseVector.x * camera.fov;
+        //     emitter.position.y = mouseVector.y * camera.fov;
+        //     emitter2.position.x = (mouseVector.x + .0003 ) * camera.fov;
+        //     emitter2.position.y = (mouseVector.y + .0003) * camera.fov;
+        // }, false );
 
 
         window.addEventListener( 'resize', function() {
