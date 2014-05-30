@@ -51,9 +51,13 @@ var flock = io.of('/flock');
 var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
 var linedance = io.of('/linedance');
-
 var osc = new oscIo.Client('127.0.0.1', oscPort);
 osc.send('/oscAddress', 200);
+var fone = io.of('/fone');
+var shakemeter = io.of('/shakemeter');
+var shakebattle = io.of('/shakebattle');
+var spotlights = io.of('/spotlights');
+var grassfield = io.of('/grassfield');
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -88,6 +92,11 @@ app.get('/fireworks', routes.renderFireworks);
 app.get('/audio', routes.renderAudio);
 app.get('/optiflow', routes.renderOptiFlow);
 app.get('/linedance', routes.renderLineDance);
+app.get('/grassfield', routes.renderGrassField);
+app.get('/fone', routes.renderFone);
+app.get('/shakemeter', routes.renderFoneMotion);
+app.get('/shakebattle', routes.renderShakeBattle);
+app.get('/spotlights', routes.renderSpotlights);
 app.get('/dancer', routes.renderDancer);
 app.get('/flock', routes.renderFlock);
 app.get('/update', routes.renderUpdate);
@@ -277,5 +286,33 @@ optiflow.on('connection', function (optiflow) {
     // console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
     flock.emit('optiFlowData', optiFlowData);
-  })
+    grassfield.emit('optiFlowData', optiFlowData);
+  });
 });
+
+//////////////////////////////////////////
+/// Audience Motion Detection
+//////////////////////////////////////////
+
+fone.on('connection', function (fone) {
+  fone.emit('sessionId', fone.id);
+  fone.emit('welcome', {
+    message: "Connected for motion tracking.",
+    tracking: state.motionTrack
+  });
+  // fone.on('orientationData', function (data) {
+  //   shakemeter.emit('orientationData', data);
+  //   shakebattle.emit('orientationData', data);
+  //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
+  // });
+  fone.on('motionData', function (data) {
+    shakemeter.emit('motionData', data);
+    shakebattle.emit('motionData', data);
+    spotlights.emit('motionData', data);
+  });
+  fone.on('disconnect', function(){
+    console.log(fone.id + " disconnected.");
+    spotlights.emit("foneDisconnect", fone.id);
+  });
+});
+

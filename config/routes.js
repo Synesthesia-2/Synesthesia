@@ -28,11 +28,31 @@ exports.renderUpdate = function(req, res){
 
 exports.renderOptiFlow = function(req, res) {
   res.render('optiflow');
-}
+};
 
 exports.renderLineDance = function(req, res) {
   res.render('linedance');
-}
+};
+
+exports.renderGrassField = function(req, res) {
+  res.render('grassfield');
+};
+
+exports.renderFone = function(req, res) {
+  res.render('fone');
+};
+
+exports.renderFoneMotion= function(req, res) {
+  res.render('shakemeter');
+};
+
+exports.renderShakeBattle= function(req, res) {
+  res.render('shakebattle');
+};
+
+exports.renderSpotlights= function(req, res) {
+  res.render('spotlights');
+};
 
 exports.render404 = function(req, res){
   res.writeHead(404);
