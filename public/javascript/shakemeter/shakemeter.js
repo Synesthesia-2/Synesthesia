@@ -7,6 +7,7 @@ var WIDTH = Math.max(960, innerWidth); //640
 var HEIGHT = Math.max(500, innerHeight); //480
 var shakeData = 0;
 var svg = d3.select("body").append("svg")
+    .style("background-color", "black")
     .attr("width", WIDTH)
     .attr("height", HEIGHT);
 

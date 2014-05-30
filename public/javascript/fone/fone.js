@@ -1,7 +1,11 @@
 var server = io.connect('/fone');
 var $h1 = $('h1');
 var currentOrientation = {};
-currentOrientation.id = Math.floor(Math.random() * 10000);
+// currentOrientation.id = Math.floor(Math.random() * 10000);
+
+server.on('sessionId', function(data){
+  currentOrientation.id = data;
+});
 
 server.on('welcome', function(data) {
   if (data.tracking) {
@@ -51,8 +55,6 @@ var onDeviceOrientation = function(event) {
   $('#alpha').text("Alpha: " + (currentOrientation.alpha));
   $('#beta').text("Beta: " + (currentOrientation.beta));
   $('#gamma').text("Gamma: " + (currentOrientation.gamma));
-
-  // server.emit('orientationData', motion);
 };
 
 var onDeviceMotion = function(event) {

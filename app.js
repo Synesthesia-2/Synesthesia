@@ -240,6 +240,7 @@ optiflow.on('connection', function (optiflow) {
 //////////////////////////////////////////
 
 fone.on('connection', function (fone) {
+  fone.emit('sessionId', fone.id);
   fone.emit('welcome', {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
@@ -255,6 +256,8 @@ fone.on('connection', function (fone) {
     spotlights.emit('motionData', data);
   });
   fone.on('disconnect', function(){
-    // spotlights.emit()
+    console.log(fone.id + " disconnected.");
+    spotlights.emit("foneDisconnect", fone.id);
   });
 });
+
