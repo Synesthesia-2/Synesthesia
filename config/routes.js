@@ -54,6 +54,10 @@ exports.renderSpotlights= function(req, res) {
   res.render('spotlights');
 };
 
+exports.renderParticles= function(req, res) {
+  res.render('particles');
+};
+
 exports.render404 = function(req, res){
   res.writeHead(404);
   res.end("That page doesn't exist. Go to a page that exists.");

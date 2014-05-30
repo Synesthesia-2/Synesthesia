@@ -58,6 +58,7 @@ var shakemeter = io.of('/shakemeter');
 var shakebattle = io.of('/shakebattle');
 var spotlights = io.of('/spotlights');
 var grassfield = io.of('/grassfield');
+var particles = io.of('/particles');
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -100,6 +101,7 @@ app.get('/spotlights', routes.renderSpotlights);
 app.get('/dancer', routes.renderDancer);
 app.get('/flock', routes.renderFlock);
 app.get('/update', routes.renderUpdate);
+app.get('/particles', routes.renderParticles);
 app.get('*', routes.render404);
 app.use(function(err, req, res, next){
   if(err) {
@@ -123,7 +125,8 @@ webcamio.sockets.on('connection', function (socket) {
       // console.log(msg, rinfo);
       socket.emit("message", msg);
       flock.emit("blob", msg);
-      console.log('Sent blob to flock!');
+      particles.emit("blob", msg);
+      console.log('Sent blob to flock and particles!');
     });
   });
   socket.on("message", function (obj) {
@@ -141,6 +144,10 @@ fireworks.on('connection', function (firework) {
 });
 
 flock.on('connection', function (flock) {
+  flock.emit("welcome", "Flock visualizer connected.");
+});
+
+particles.on('connection', function (flock) {
   flock.emit("welcome", "Flock visualizer connected.");
 });
 
