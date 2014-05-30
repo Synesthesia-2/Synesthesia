@@ -123,7 +123,8 @@ webcamio.sockets.on('connection', function (socket) {
       // console.log(msg, rinfo);
       socket.emit("message", msg);
       flock.emit("blob", msg);
-      console.log('Sent blob to flock!');
+      particles.emit("blob", msg);
+      console.log('Sent blob to flock and particles!', msg);
     });
   });
   socket.on("message", function (obj) {
