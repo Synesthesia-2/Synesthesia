@@ -1,3 +1,14 @@
+var server = io.connect('/flock');
+
+ server.on('welcome', function(data) {
+    console.log("particle visualizer welcomed", data);
+});
+
+server.on('blob', function(data) {
+    console.log('blobbed!');
+    window.blobData = data;
+});
+
 var scene, camera, renderer, stats, stats2, clock, emitter, emitter2, particleGroup;
 
 var mouseX, mouseY, mouseVector = new THREE.Vector3(),

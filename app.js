@@ -148,7 +148,7 @@ flock.on('connection', function (flock) {
 });
 
 particles.on('connection', function (flock) {
-  flock.emit("welcome", "Flock visualizer connected.");
+  particles.emit("welcome", "Particle visualizer connected.");
 });
 
 //////////////////////////////////////////
