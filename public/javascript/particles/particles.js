@@ -14,20 +14,15 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
             renderer.setSize( window.innerWidth, window.innerHeight );
             renderer.setClearColor(0x000000);
 
-            stats = new Stats();
             clock = new THREE.Clock();
 
-            stats.domElement.style.position = 'absolute';
-            stats.domElement.style.top = '0';
-
             document.body.appendChild( renderer.domElement );
-            document.body.appendChild( stats.domElement );
         }
 
         // Create particle group and emitter
         function initParticles() {
           particleGroup = new SPE.Group({
-            texture: THREE.ImageUtils.loadTexture('./img/smokeparticle.png'),
+            texture: THREE.ImageUtils.loadTexture('./images/smokeparticle.png'),
             maxAge: 2
           });
 
@@ -108,7 +103,6 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
             // }
             
             render( 0.128 );
-            stats.update();
         }
 
 
@@ -125,7 +119,6 @@ var mouseX, mouseY, mouseVector = new THREE.Vector3(),
                 -(e.clientY / window.innerHeight) * 2 + 1,
                 0.5
             );
-            // console.log(mouseVector);
 
             projector.unprojectVector( mouseVector, camera );
 
