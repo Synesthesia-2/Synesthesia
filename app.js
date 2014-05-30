@@ -307,11 +307,6 @@ fone.on('connection', function (fone) {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
   });
-  // fone.on('orientationData', function (data) {
-  //   shakemeter.emit('orientationData', data);
-  //   shakebattle.emit('orientationData', data);
-  //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
-  // });
   fone.on('motionData', function (data) {
     shakemeter.emit('motionData', data);
     shakebattle.emit('motionData', data);

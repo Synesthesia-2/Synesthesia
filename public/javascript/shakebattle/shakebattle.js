@@ -18,21 +18,19 @@ var shakeBattleVisualize = function(shakedata){
   var bars = d3.select("rect");
   var text = d3.select("text");
 
-  var DIFFICULTY = 4; // Increase this to make shakes count for less
+  var DIFFICULTY = 25; // Increase this to make shakes count for less
 
   var zFilter = function(inputData, previousValue){
     var z = 0.9; // set this between 0 and 1
     return (z*previousValue + (1-z)*inputData);
   };
 
+  // Get previous height value and flip sign if negative shakes were winning.
   var prevHeight = bars.attr("y") < (HEIGHT/2) ? -1*(bars.attr("height")) : bars.attr("height");
-  // var nextHeight = shakedata;
+  shakedata = shakedata / DIFFICULTY;
   var nextHeight = zFilter(shakedata,prevHeight);
 
-  nextHeight = nextHeight / DIFFICULTY;
-
   var displayText = (Math.abs(nextHeight) >= HEIGHT/2) ? "MAX SHAKES!!!1" : Math.floor(nextHeight) + " shakes!";
-
 
   bars
     .transition()
@@ -56,7 +54,8 @@ var shakeBattleVisualize = function(shakedata){
 };
 
 server.on('motionData', function(data){
-  var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); // checks for sign of beta
+  // checks for sign of beta
+  var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); 
   shakeBalance += shakeSign;
 });
 
