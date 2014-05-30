@@ -150,14 +150,14 @@ var nextMove = function () {
       nextPath = makeProjPath2(projectionParams);
       globe
         .transition()
-        .duration(2000)
+        .duration(200)
         // .attr("opacity", 0.2)
         // .transition()
         // .duration(10)
         .attr("d", nextPath)
-        .transition()
-        .duration(2000)
-        .attr("opacity", 0.9)
+        // .transition()
+        // .duration(2000)
+        // .attr("opacity", 0.9)
         // .transition()
         // .duration(1000)
         // .attr("opacity", 0.3)
@@ -187,7 +187,7 @@ var nextMove = function () {
 }
 d3.select("path")
     .transition()
-    .duration(3000)
+    .duration(500)
     .attr("d", path2) //move center
     // .transition()
     // .duration(500)
@@ -249,14 +249,14 @@ var throttledUpdate = _.throttle(function(optiFlowData) {
     } 
     else {
         console.log("centershift");
-        if ((optiFlowData.u !== 0 ||  optiFlowData.v !== 0 )){
-            var scaledU = optiFlowData.u * 3;
-            var scaledV  = optiFlowData.v * 3;
+        if ((Math.abs(optiFlowData.u) > 0.3 ||  Math.abs(optiFlowData.v) > 0.3 )){
+            var scaledU = optiFlowData.u * 2;
+            var scaledV  = optiFlowData.v * 2;
             projectionParams.center = [scaledU, scaledV];
         } else {
             // projectionParams.center = [Math.random() * 5, Math.random() * 5]
-            projectionParams.center[0] += 0.5;
-            projectionParams.center[1] += 0.5;
+            projectionParams.center[0] += 0.05;
+            projectionParams.center[1] += 0.05;
         }
     }
     // nextMove();
