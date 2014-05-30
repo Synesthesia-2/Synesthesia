@@ -10,7 +10,7 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var updateData = function(optiFlowData) {
+var circleVisualize = function(optiFlowData) {
 
   var hslFactor = 15;
   // Key function ensures data-join updates proper elements.
@@ -41,5 +41,5 @@ var updateData = function(optiFlowData) {
 };
 
 server.on('optiFlowData', function(data){
-  updateData(data);
+  circleVisualize(data);
 });
