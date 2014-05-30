@@ -3,6 +3,7 @@ ConductorSpace.Conductor = Backbone.Model.extend({
   initialize: function() {
     this.set('strobe', false);
     this.set('motion', false);
+    this.set('optiflowFlocking', false);
     this.set('sound', false);
     this.set('audioLightControl', false);
   },
@@ -25,6 +26,7 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     this.initialize();
     $('#toggleSound').removeClass('toggled');
     $('#toggleMotion').removeClass('toggled');
+    $('#toggleOptiflowTracking').removeClass('toggled');
     $('#toggleStrobe').removeClass('toggled');
   },
 
@@ -43,6 +45,20 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     } else {
       $('#toggleMotion').removeClass('toggled');
       $('#toggleMotion').text('START MOTION TRACKING');
+    }
+  },
+
+  toggleOptiflowTracking: function() {
+    var optiflowFlocking = this.get('optiflowFlocking');
+    optiflowFlocking = !optiflowFlocking;
+    this.trigger('toggleOptiflowFlocking', { optiflowFlocking: optiflowFlocking });
+    this.set('optiflowFlocking', optiflowFlocking);
+    if (optiflowFlocking) {
+      $('#toggleOptiflowFlocking').addClass('toggled');
+      $('#toggleOptiflowFlocking').text('STOP MOTION TRACKING');
+    } else {
+      $('#toggleOptiflowFlocking').removeClass('toggled');
+      $('#toggleOptiflowFlocking').text('START MOTION TRACKING');
     }
   },
 

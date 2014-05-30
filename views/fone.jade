@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Dancer Optical Flow Tracker 
+    title Dancer Motion Tracker 
     meta(http-equiv="content-type", content="text/html; charset=utf-8")
     meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
@@ -12,13 +12,18 @@ html
 
     script(src="/socket.io/socket.io.js")
     script(src="/bower_components/jquery/jquery.min.js")
-    script(src="/bower_components/underscore/underscore-min.js")
-    script(src="/javascript/oflow/dist/oflow.js")
+
 
   body
+    div#alpha
+    div#beta
+    div#gamma
+    div#x
+    div#y
+    div#z
     h1 Connecting...
 
-    script(src="javascript/optiflow/optiflow.js")
+    script(src="javascript/fone/fone.js")
     script.
       $(document).on('touchmove', function(e) {
         e.preventDefault();

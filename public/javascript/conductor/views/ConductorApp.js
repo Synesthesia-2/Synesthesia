@@ -10,6 +10,7 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     Backbone.history.start({pushstate:true});
     this.model.on('toggleSound', this.toggleSound.bind(this));
     this.model.on('toggleMotion', this.toggleMotion.bind(this));
+    this.model.on('toggleOptiflowFlocking', this.toggleOptiflowFlocking.bind(this));
     this.model.on('toggleStrobe', this.toggleStrobe.bind(this));
     this.model.on('audioLightControl', this.audioLightControl.bind(this));
     this.model.on('changeColor', this.sendColor.bind(this));
@@ -37,8 +38,13 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.server.emit('toggleMotion', { motion: data.motion });
   },
 
+  toggleOptiflowFlocking: function(data) {
+    this.server.emit('toggleOptiflowFlocking', { flocking: data.optiflowFlocking });
+  },
+
   audioLightControl: function(data) {
     this.server.emit('audioLightControl', { audio: data.audioLightControl });
+    console.log('toggleSound in ConductorApp.js');
   },
 
   toggleSound: function(data) {

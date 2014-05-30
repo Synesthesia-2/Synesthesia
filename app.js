@@ -20,21 +20,45 @@ var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var port = process.env.PORT || 8080;
+var oscPort = process.env.OSC_PORT || 3333;
 server.listen(port);
 var io = require('socket.io').listen(server);
+var oscIo = require('node-osc');
 app.set('io', io);
+app.set('oscIo', oscIo);
 // var db = require('./server/database_server');
 // var helpers = require('./server/helpers');
 var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
+
+console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
+
+ // --- osc routing 
+var webcamio = require('socket.io').listen(8081);
+
+webcamio.set('log level', 1);
+
+var oscServer, oscClient;
+oscServer = new oscIo.Server(3333, '127.0.0.1');
+oscClient = new oscIo.Client(3334, '127.0.0.1');
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var fireworks = io.of('/fireworks');
 var dancer = io.of('/dancer');
+var flock = io.of('/flock');
 var audio = io.of('/audio');
-var optiflow = io.of('optiflow');
+var optiflow = io.of('/optiflow');
+var linedance = io.of('/linedance');
+var osc = new oscIo.Client('127.0.0.1', oscPort);
+osc.send('/oscAddress', 200);
+var fone = io.of('/fone');
+var shakemeter = io.of('/shakemeter');
+var shakebattle = io.of('/shakebattle');
+var spotlights = io.of('/spotlights');
+var grassfield = io.of('/grassfield');
+var particles = io.of('/particles');
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -43,7 +67,8 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
-  optiFlowTrack: false,
+  optiFlowTrack: true, //init as true for testing
+  optiflowFlocking: false,
   currentColor: '#000000',
   resetMC: function() {
     this.strobe = false;
@@ -66,9 +91,17 @@ app.get('/', routes.renderClient);
 app.get('/conductor', routes.renderConductor);
 app.get('/fireworks', routes.renderFireworks);
 app.get('/audio', routes.renderAudio);
-app.get('/opticalflow', routes.render('optiflow.jade'));
+app.get('/optiflow', routes.renderOptiFlow);
+app.get('/linedance', routes.renderLineDance);
+app.get('/grassfield', routes.renderGrassField);
+app.get('/fone', routes.renderFone);
+app.get('/shakemeter', routes.renderFoneMotion);
+app.get('/shakebattle', routes.renderShakeBattle);
+app.get('/spotlights', routes.renderSpotlights);
 app.get('/dancer', routes.renderDancer);
+app.get('/flock', routes.renderFlock);
 app.get('/update', routes.renderUpdate);
+app.get('/particles', routes.renderParticles);
 app.get('*', routes.render404);
 app.use(function(err, req, res, next){
   if(err) {
@@ -81,12 +114,41 @@ app.use(function(err, req, res, next){
 /// EVENTS
 //////////////////////////////////////////
 
+webcamio.sockets.on('connection', function (socket) {
+  socket.on("config", function (obj) {
+    // oscServer = new osc.Server(obj.server.port, obj.server.host);
+    // oscClient = new osc.Client(obj.client.host, obj.client.port);
+
+    // oscClient.send('/status', socket.sessionId + ' connected');
+
+    oscServer.on('message', function(msg, rinfo) {
+      // console.log(msg, rinfo);
+      socket.emit("message", msg);
+      flock.emit("blob", msg);
+      particles.emit("blob", msg);
+      console.log('Sent blob to flock and particles!');
+    });
+  });
+  socket.on("message", function (obj) {
+    
+    oscClient.send(obj);
+  });
+});
+
 //////////////////////////////////////////
 /// Visualizer events
 //////////////////////////////////////////
 
 fireworks.on('connection', function (firework) {
   firework.emit("welcome", "Visualizer connected.");
+});
+
+flock.on('connection', function (flock) {
+  flock.emit("welcome", "Flock visualizer connected.");
+});
+
+particles.on('connection', function (flock) {
+  particles.emit("welcome", "Particle visualizer connected.");
 });
 
 //////////////////////////////////////////
@@ -140,6 +202,17 @@ conductor.on('connection', function (conductor) {
       state.motionTrack = false;
     }
     dancer.emit('toggleMotion', data);
+  });
+
+  conductor.on('toggleOptiflowFlocking', function (data){
+    var flock = io.of('/flock');
+    if (data.flocking) {
+      state.optiflowFlocking = true;
+    } else {
+      state.optiflowFlocking = false;
+    }
+    flock.emit('toggleOptiflowFlocking', data);
+    console.log('toggleOptiflowFlocking: ', data.flocking);
   });
 
   conductor.on('toggleStrobe', function (data){
@@ -211,8 +284,42 @@ audio.on('connection', function (audio) {
 //////////////////////////////////////////
 
 optiflow.on('connection', function (optiflow) {
+  //console.log('optiflow connected'); //temp logging to check socket connection establishment
   optiflow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
     tracking: state.optiFlowTrack
   });
+  optiflow.on('optiFlowData', function (optiFlowData) {
+    // console.log(optiFlowData);
+    linedance.emit('optiFlowData', optiFlowData);
+    flock.emit('optiFlowData', optiFlowData);
+    grassfield.emit('optiFlowData', optiFlowData);
+  });
 });
+
+//////////////////////////////////////////
+/// Audience Motion Detection
+//////////////////////////////////////////
+
+fone.on('connection', function (fone) {
+  fone.emit('sessionId', fone.id);
+  fone.emit('welcome', {
+    message: "Connected for motion tracking.",
+    tracking: state.motionTrack
+  });
+  // fone.on('orientationData', function (data) {
+  //   shakemeter.emit('orientationData', data);
+  //   shakebattle.emit('orientationData', data);
+  //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
+  // });
+  fone.on('motionData', function (data) {
+    shakemeter.emit('motionData', data);
+    shakebattle.emit('motionData', data);
+    spotlights.emit('motionData', data);
+  });
+  fone.on('disconnect', function(){
+    console.log(fone.id + " disconnected.");
+    spotlights.emit("foneDisconnect", fone.id);
+  });
+});
+
