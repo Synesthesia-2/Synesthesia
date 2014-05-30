@@ -27,6 +27,9 @@ circle {
   fill: none;
   stroke: #070;
 }
+.rpath {
+  stroke: #500;
+}
 .boundary {
   fill: #ccc;
   fill-opacity: 0.8;
