@@ -1,6 +1,7 @@
 var server = io.connect('/fone');
 var $h3 = $('h3');
 var currentOrientation = {};
+var isTracking = false;
 
 server.on('sessionId', function(data){
   currentOrientation.id = data;
@@ -26,8 +27,17 @@ server.on('toggleMotion', function(data) {
   }
 });
 
+var toggleTracking = function(){
+  isTracking = !isTracking;
+  if (isTracking) {
+    startTrack();
+  } else {
+    stopTrack();
+  }
+};
+
 var startTrack = function() {
-  $h3.text('Now tracking motion.');
+  $h3.text('Connected. Now tracking motion.');
   initMotionListener();
 };
 
@@ -73,6 +83,6 @@ var sendDummyAccelData = function(){
 var boundDeviceMotion = onDeviceMotion.bind(this);
 var boundDeviceOrientation = onDeviceOrientation.bind(this);
 
-$(startTrack); // for testing
+// $(startTrack); // for testing
 
 // setInterval(sendDummyAccelData, 10);

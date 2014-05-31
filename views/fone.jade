@@ -26,6 +26,7 @@ html
     br
     p Have fun playing with them and experiencing the synthesis of tech and art!
     h3 Connecting...
+    button#tracking Toggle tracking on/off
     a(href="/")
         button Quit
 
@@ -40,3 +41,4 @@ html
       $(document).on('ready',function(){
         startTrack();
         });
+      $('#tracking').click(toggleTracking);

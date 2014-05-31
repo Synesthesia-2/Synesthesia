@@ -4,7 +4,6 @@
 html,
 body {
   width: 100%;
-  overflow: hidden;
   padding: 0;
   margin: 0;
   background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #e02443), color-stop(100%, #8f0d23));
