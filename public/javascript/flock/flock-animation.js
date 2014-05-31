@@ -50,7 +50,7 @@ Boid.prototype.moveHead = function() {
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
-  var separation = this.separate(boids).multiplyScalar(10);
+  var separation = this.separate(boids).multiplyScalar(40);
   var alignment = this.align(boids).multiplyScalar(50);
   var cohesion = this.cohesion(boids).multiplyScalar(40);
   var borders = this.borders().multiplyScalar(2.5);
@@ -65,6 +65,7 @@ Boid.prototype.update = function() {
   this.position.add(this.vector);
   // Reset acceleration to 0 each cycle
   // this.acceleration = new PIXI.Vector(0,0);
+  this.acceleration.multiplyScalar(.5);
 };
 
 Boid.prototype.seek = function(target) {
@@ -72,7 +73,7 @@ Boid.prototype.seek = function(target) {
 };
 
 Boid.prototype.arrive = function(target) {
-  this.acceleration.add(this.steer(target, true));
+  this.acceleration.add(this.steer(target, true)).multiplyScalar(50);
 };
 
 Boid.prototype.borders = function() {
@@ -122,9 +123,9 @@ Boid.prototype.steer = function(target, slowdown) {
   // (1 -- based on distance, 2 -- maxSpeed)
   if (slowdown && distance < 100) {
     // This damping is somewhat arbitrary:
-    desired.setLength( this.maxSpeed * (distance / 100) );
+    desired.setLength( this.maxSpeed * (1 / distance ) );
   } else {
-    desired.setLength( this.maxSpeed );
+    // desired.setLength( this.maxSpeed );
   }
   steer = desired.clone().sub(this.vector);
   steer.setLength( Math.min(this.maxForce, steer.length()) );
@@ -250,7 +251,7 @@ Boid.prototype.cohesion = function(boids) {
     var outputSprite = new PIXI.Sprite(currentTexture);
     var count = 0;
 
-    _stage.addChild(outputSprite);
+    // _stage.addChild(outputSprite);
 
     // add render view to DOM
     // document.getElementById("canvas-holder").appendChild(_renderer.view);
@@ -324,10 +325,10 @@ Boid.prototype.cohesion = function(boids) {
         // }
 
         // Add the boids:
-        for (var i = 0; i < 250; i++) {
+        for (var i = 0; i < 200; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           // var position = new PIXI.Point(size.x/2 + Math.random(), size.y/2 + Math.random());
-          var boid = new Boid(position, 4, 30);
+          var boid = new Boid(position, 4, 2);
           var boidContainer = new PIXI.DisplayObjectContainer();
           var boidGraphic = new PIXI.Graphics();
           boidGraphic.beginFill(0x002244);
@@ -390,33 +391,37 @@ Boid.prototype.cohesion = function(boids) {
         // stats.innerHTML = '';
         requestAnimFrame(animate);
 
-        var temp = renderTexture;
+        // var temp = renderTexture;
         // renderTexture = renderTexture2;
         // renderTexture2 = temp;
         // _target.worldAlpha = .5;
         count += .01;
         // outputSprite.alpha *= Math.sin(count);
         // _target.rotation -= 0.01;
-        renderTexture.render(_stage, true);
-        outputSprite.setTexture(renderTexture);
-        outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * .2;
+        // renderTexture.render(_stage, true);
+        // outputSprite.setTexture(renderTexture);
+        // outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * .2;
         // renderTexture2.render(_stage, false);
-        outputSprite.alpha = .5;
+        // outputSprite.alpha = .5;
         // outputSprite.scale = new PIXI.Point(.5,.5);
-        _renderer.render(_stage);
+        // _renderer.render(_stage);
 
-        temp.render(outputSprite);
-        outputSprite.setTexture(temp);
+        // temp.render(outputSprite);
+        // outputSprite.setTexture(temp);
         _renderer.render(_stage);
 
         for (var i = 0, l = boids.length; i < l; i++) {
           var boid = boids[i];
 
           if (groupTogether) {
-            var length = heartPath.length;
-            var point = heartPath[length];
-            if (point)
-              boid.arrive(point);
+            // boid.arrive(new PIXI.Vector(view.size.width/2, view.size.height/2))
+            for (var i = 0, l = boids.length; i < l; i++) {
+              var length = ((i + (count * 100)) / 30) % l * heartPath.length;
+              var vector = heartPath[length];
+              if (vector) {
+                boid.arrive(vector);
+              }
+            }
           }
           boid.container.position = boid.position;
           boid.vector.normalize();
@@ -452,8 +457,12 @@ Boid.prototype.cohesion = function(boids) {
 
 
 var heartPath = [];
-for (var i = 0; i < 200; i++) {
-  heartPath.push(new PIXI.Point(i*4, i*4));
+var steps = 30;
+for (var i = 0; i < steps; i++) {
+  heartPath.push(new PIXI.Vector(
+    (view.size.width / 2) + 300 * Math.cos(2 * Math.PI * i / steps),
+    (view.size.height / 2) + 300 * Math.sin(2 * Math.PI * i / steps)
+  ));
 }
 console.log(heartPath);
 
