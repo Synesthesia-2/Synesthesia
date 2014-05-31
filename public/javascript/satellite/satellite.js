@@ -225,21 +225,24 @@ var collectOptiFlowData = function (optiFlowData) {
     }
 };
 
-var scaleToScreenCoords = function (coorArr) {
+var scaleToScreenCoords = function (coordArr) {
+    console.log("scale to screen")
     var x = coordArr[0] / camWidth;
     var y = coordArr[1] / camHeight;
     // x and y should now be in range (0, 1);
     x = x * 4 - 2; //sets x to be in range (-2, 2)
     y = y * 6;
+    console.log([x,y]);
     return [x, y];
 
 };
 var getBlobCoords = function (blobData) {
+  console.log('getBlobCoords');
   var x, y;
   if(blobData[2][0] === '/cur') {
       x = blobData[2][2];
       y = blobData[2][3]; 
-      blobCoords = scaleToScreenCoords(x, y);     
+      blobCoords = scaleToScreenCoords([x, y]);     
   }
 };
 var getFreq = function ( audioData ) {

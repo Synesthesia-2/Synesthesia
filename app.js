@@ -129,7 +129,7 @@ webcamio.sockets.on('connection', function (socket) {
       socket.emit("message", msg);
       flock.emit("blob", msg);
       particles.emit("blob", msg);
-      satellite.emit("blob", msg)
+      satellite.emit("blob", msg);
       console.log('Sent blob to flock, satellite, and particles!');
     });
   });
@@ -151,8 +151,16 @@ flock.on('connection', function (flock) {
   flock.emit("welcome", "Flock visualizer connected.");
 });
 
-particles.on('connection', function (flock) {
+particles.on('connection', function (particles) {
   particles.emit("welcome", "Particle visualizer connected.");
+});
+
+satellite.on('connection', function(satellite) {
+  satellite.emit('hello','hi');
+  var d = [["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]],["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]]];
+  for (var i = 0; i < d.length; i++) {
+      satellite.emit('blob', d[i]);
+  }
 });
 
 //////////////////////////////////////////
@@ -295,7 +303,7 @@ optiflow.on('connection', function (optiflow) {
     tracking: state.optiFlowTrack
   });
   optiflow.on('optiFlowData', function (optiFlowData) {
-    // console.log(optiFlowData);
+    // console.log(optiFlowData); 
     linedance.emit('optiFlowData', optiFlowData);
     flock.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);
