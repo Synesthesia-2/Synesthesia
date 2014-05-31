@@ -13,15 +13,16 @@ var groupTogether = false;
 
 
 var Boid = function(position, maxSpeed, maxForce) {
-    var strength = Math.random();
+    var strength = Math.random()*2 + 2;
     this.acceleration = new PIXI.Vector();
-    this.vector = new PIXI.Vector(Math.random(), Math.random()).multiplyScalar(5).add(new PIXI.Vector(4,4));
+    this.vector = new PIXI.Vector(Math.random(), Math.random()).multiplyScalar(50).add(new PIXI.Vector(10,10));
     this.position = position.clone();
     this.radius = 30;
     this.maxSpeed = maxSpeed + strength;
     this.maxForce = maxForce + strength;
     this.amount = strength * 10 + 10;
     this.count = 0;
+    this.flap = Math.random() * .5 + .5;
     this.createItems();
 };
 
@@ -49,10 +50,10 @@ Boid.prototype.moveHead = function() {
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
-  var separation = this.separate(boids).multiplyScalar(.03);
-  var alignment = this.align(boids).multiplyScalar(.5);
-  var cohesion = this.cohesion(boids).multiplyScalar(.8);
-  var borders = this.borders().multiplyScalar(1);
+  var separation = this.separate(boids).multiplyScalar(40);
+  var alignment = this.align(boids).multiplyScalar(50);
+  var cohesion = this.cohesion(boids).multiplyScalar(40);
+  var borders = this.borders().multiplyScalar(2.5);
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
 };
 
@@ -64,6 +65,7 @@ Boid.prototype.update = function() {
   this.position.add(this.vector);
   // Reset acceleration to 0 each cycle
   // this.acceleration = new PIXI.Vector(0,0);
+  this.acceleration.multiplyScalar(.5);
 };
 
 Boid.prototype.seek = function(target) {
@@ -71,7 +73,7 @@ Boid.prototype.seek = function(target) {
 };
 
 Boid.prototype.arrive = function(target) {
-  this.acceleration.add(this.steer(target, true));
+  this.acceleration.add(this.steer(target, true)).multiplyScalar(50);
 };
 
 Boid.prototype.borders = function() {
@@ -105,7 +107,7 @@ Boid.prototype.borders = function() {
     //   segments[i].point += vector;
     // }
   // }
-  if (vector.length() !== 0) console.log('border vector ', vector);
+  // if (vector.length() !== 0) console.log('border vector ', vector);
   return vector;
 };
 
@@ -121,9 +123,9 @@ Boid.prototype.steer = function(target, slowdown) {
   // (1 -- based on distance, 2 -- maxSpeed)
   if (slowdown && distance < 100) {
     // This damping is somewhat arbitrary:
-    desired.setLength( this.maxSpeed * (distance / 100) );
+    desired.setLength( this.maxSpeed * (1 / distance ) );
   } else {
-    desired.setLength( this.maxSpeed );
+    // desired.setLength( this.maxSpeed );
   }
   steer = desired.clone().sub(this.vector);
   steer.setLength( Math.min(this.maxForce, steer.length()) );
@@ -132,7 +134,7 @@ Boid.prototype.steer = function(target, slowdown) {
 };
 
 Boid.prototype.separate = function(boids) {
-  var desiredSeperation = 30;
+  var desiredSeperation = Math.pow(100, 2);
   var steer = new PIXI.Vector(0, 0);
   var count = 0;
   // For every boid in the system, check if it's too close
@@ -140,10 +142,10 @@ Boid.prototype.separate = function(boids) {
     var other = boids[i];
     // since this. and other. poisition are PIXI.Points, need to create a new Vector out of that point
     var vector = new PIXI.Vector(this.position.clone().sub(other.position));
-    var distance = vector.length();
-    if (distance > 0 && distance < desiredSeperation) {
+    var distanceSq = vector.lengthSq();
+    if (distanceSq > 0 && distanceSq < desiredSeperation) {
       // Calculate vector pointing away from neighbor
-      steer.add( vector.normalize(1 / distance) );
+      steer.add( vector.multiplyScalar(1 / (distanceSq * distanceSq) ) );
       count++;
     }
   }
@@ -166,7 +168,7 @@ Boid.prototype.separate = function(boids) {
 // For every nearby boid in the system, calculate the average velocity
 Boid.prototype.align = function(boids) {
   // Using square of distance to ease calculations
-  var neighborDist = 25*25;
+  var neighborDist = Math.pow(250, 2);
   var steer = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
@@ -197,7 +199,7 @@ Boid.prototype.align = function(boids) {
 // calculate steering vector towards that location
 Boid.prototype.cohesion = function(boids) {
   // Using square of distance to ease calculations
-  var neighborDist = 60 * 60;
+  var neighborDist = Math.pow(600, 2);
   var sum = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
@@ -224,7 +226,7 @@ Boid.prototype.cohesion = function(boids) {
       y: window.innerHeight
     };
     // create an new instance of a pixi _stage - and set it to be interactive
-    var _stage = new PIXI.Stage(0x000000);
+    var _stage = new PIXI.Stage(0xd9e2cc);
     _stage.setInteractive(true);
 
     // create a _renderer instance
@@ -240,10 +242,16 @@ Boid.prototype.cohesion = function(boids) {
     var renderTexture2 = new PIXI.RenderTexture(size.x, size.y);
     var currentTexture = renderTexture;
 
+    var _target = new PIXI.DisplayObjectContainer();
+    // _target.pivot = new PIXI.Point(LINE_SIZE / 2, LINE_SIZE / 2);
+    // _target.position.x = size.x / 2;
+    // _target.position.y = size.y / 2;
+    // _target.rotation = degreesToRadians(45);
+    _stage.addChild(_target);
     var outputSprite = new PIXI.Sprite(currentTexture);
     var count = 0;
 
-    _stage.addChild(outputSprite);
+    // _stage.addChild(outputSprite);
 
     // add render view to DOM
     // document.getElementById("canvas-holder").appendChild(_renderer.view);
@@ -265,12 +273,6 @@ Boid.prototype.cohesion = function(boids) {
     var _boxes = [];
     var _totalBoxes = GRID_LINES * 2;
 
-    // var _target = new PIXI.DisplayObjectContainer();
-    // _target.pivot = new PIXI.Point(LINE_SIZE / 2, LINE_SIZE / 2);
-    // _target.position.x = size.x / 2;
-    // _target.position.y = size.y / 2;
-    // _target.rotation = degreesToRadians(45);
-    // _stage.addChild(_target);
 
     //Main loop -
     init();
@@ -323,26 +325,26 @@ Boid.prototype.cohesion = function(boids) {
         // }
 
         // Add the boids:
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 200; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           // var position = new PIXI.Point(size.x/2 + Math.random(), size.y/2 + Math.random());
-          var boid = new Boid(position, 6, .5);
+          var boid = new Boid(position, 4, 2);
           var boidContainer = new PIXI.DisplayObjectContainer();
           var boidGraphic = new PIXI.Graphics();
-          boidGraphic.beginFill(0xff00ff);
-          boidGraphic.drawCircle(0, 0, 6);
+          boidGraphic.beginFill(0x002244);
+          boidGraphic.drawCircle(0, 0, 4);
           boidGraphic.endFill();
 
 
           boidContainer.addChild(boidGraphic);
-          boidContainer.alpha = boid.vector.normalize().length();
+          boidContainer.alpha = boid.vector.length() / boid.maxSpeed;
 
           boid.container = boidContainer;
           boidContainers.push(boidContainer);
 
           boids.push(boid);
           
-          // _target.addChild(boidContainer);
+          _target.addChild(boidContainer);
           _stage.addChild(boidContainer);
         }
     }
@@ -381,64 +383,59 @@ Boid.prototype.cohesion = function(boids) {
     }
 
     function onMouseDown() {
-        var box;
-        var mult;
-        for (var i = _boxes.length - 1; i >= 0; i--) {
-            box = _boxes[i];
-            mult = (Math.random() > 0.5) ? -1 : 1;
-            if (box.isVertical) {
-                TweenLite.to(box.position, BOX_REMOVE_TWEEN_TIME, {
-                    y: box.origY + (LINE_SIZE * mult),
-                    delay: BOX_REMOVE_TWEEN_TIME_STEP * (_boxes.length - i)
-                });
-            } else {
-                TweenLite.to(box.position, BOX_REMOVE_TWEEN_TIME, {
-                    x: box.origX + (LINE_SIZE * mult),
-                    delay: BOX_REMOVE_TWEEN_TIME_STEP * (_boxes.length - i)
-                });
-            }
-
-            if (i === 0) {
-                TweenLite.delayedCall((BOX_REMOVE_TWEEN_TIME_STEP * _totalBoxes) + 0.5, bringBoxesBackOn);
-            }
-        }
+        groupTogether = !groupTogether;
     }
 
     function animate() {
-        var stats = document.getElementById('stats');
-        stats.innerHTML = '';
+        // var stats = document.getElementById('stats');
+        // stats.innerHTML = '';
         requestAnimFrame(animate);
 
         // var temp = renderTexture;
         // renderTexture = renderTexture2;
         // renderTexture2 = temp;
-        // _stage.worldAlpha = .5;
+        // _target.worldAlpha = .5;
         count += .01;
         // outputSprite.alpha *= Math.sin(count);
         // _target.rotation -= 0.01;
         // renderTexture.render(_stage, true);
         // outputSprite.setTexture(renderTexture);
-        // outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * 0.2;
+        // outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * .2;
         // renderTexture2.render(_stage, false);
-
-        _renderer.render(_stage);
-
-        // renderTexture.render(outputSprite);
+        // outputSprite.alpha = .5;
+        // outputSprite.scale = new PIXI.Point(.5,.5);
         // _renderer.render(_stage);
 
-        for (var i = 0, l = boids.length; i < l; i++) {
-          if (groupTogether) {
-            var length = ((i + event.count / 30) % l) / l * heartPath.length;
-            var point = heartPath.getPointAt(length);
-            if (point)
-              boids[i].arrive(point);
-          }
-          boids[i].container.position = boids[i].position;
+        // temp.render(outputSprite);
+        // outputSprite.setTexture(temp);
+        _renderer.render(_stage);
 
-          boids[i].container.alpha = Math.abs(boids[i].vector.normalize().x)/2 + Math.abs(boids[i].vector.normalize().y)/2;
-          boids[i].run(boids);
-          msg = stats.innerHTML;
-          stats.innerHTML = msg + '<p>' + parseInt(boids[i].position.x) + ' ' + parseInt(boids[i].position.y) + '</p>';
+        for (var i = 0, l = boids.length; i < l; i++) {
+          var boid = boids[i];
+
+          if (groupTogether) {
+            // boid.arrive(new PIXI.Vector(view.size.width/2, view.size.height/2))
+            for (var i = 0, l = boids.length; i < l; i++) {
+              var length = ((i + (count * 100)) / 30) % l * heartPath.length;
+              var vector = heartPath[length];
+              if (vector) {
+                boid.arrive(vector);
+              }
+            }
+          }
+          boid.container.position = boid.position;
+          boid.vector.normalize();
+
+          boid.count += (1 + boid.flap);
+          boid.container.alpha = 1.1 - ( 1 / (boid.vector.lengthSq() + 1) ) ;
+          boid.container.rotation = boid.vector.rad() + .7707;
+
+          var flapFactor = boid.count * boid.vector.lengthSq() * .3;
+          boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .85, .6);
+
+          boid.run(boids);
+          // msg = stats.innerHTML;
+          // stats.innerHTML = msg + '<p>' + boid.container.rotation + '</p>';
         }
     }
 
@@ -459,7 +456,15 @@ Boid.prototype.cohesion = function(boids) {
 
 
 
-// var heartPath = new paper.Path('M514.69629,624.70313c-7.10205,-27.02441 -17.2373,-52.39453 -30.40576,-76.10059c-13.17383,-23.70703 -38.65137,-60.52246 -76.44434,-110.45801c-27.71631,-36.64355 -44.78174,-59.89355 -51.19189,-69.74414c-10.5376,-16.02979 -18.15527,-30.74951 -22.84717,-44.14893c-4.69727,-13.39893 -7.04297,-26.97021 -7.04297,-40.71289c0,-25.42432 8.47119,-46.72559 25.42383,-63.90381c16.94775,-17.17871 37.90527,-25.76758 62.87354,-25.76758c25.19287,0 47.06885,8.93262 65.62158,26.79834c13.96826,13.28662 25.30615,33.10059 34.01318,59.4375c7.55859,-25.88037 18.20898,-45.57666 31.95215,-59.09424c19.00879,-18.32178 40.99707,-27.48535 65.96484,-27.48535c24.7373,0 45.69531,8.53564 62.87305,25.5957c17.17871,17.06592 25.76855,37.39551 25.76855,60.98389c0,20.61377 -5.04102,42.08691 -15.11719,64.41895c-10.08203,22.33203 -29.54687,51.59521 -58.40723,87.78271c-37.56738,47.41211 -64.93457,86.35352 -82.11328,116.8125c-13.51758,24.0498 -23.82422,49.24902 -30.9209,75.58594z');
+var heartPath = [];
+var steps = 30;
+for (var i = 0; i < steps; i++) {
+  heartPath.push(new PIXI.Vector(
+    (view.size.width / 2) + 300 * Math.cos(2 * Math.PI * i / steps),
+    (view.size.height / 2) + 300 * Math.sin(2 * Math.PI * i / steps)
+  ));
+}
+console.log(heartPath);
 
 // function onFrame(event) {
   // for (var i = 0, l = boids.length; i < l; i++) {
