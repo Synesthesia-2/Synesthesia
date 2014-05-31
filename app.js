@@ -175,6 +175,7 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     state.currentColor = data.color;
     clients.emit('changeColor', data);
+    flock.emit('changeColor', data);
   });
 
   conductor.on('randomColor', function (data){
