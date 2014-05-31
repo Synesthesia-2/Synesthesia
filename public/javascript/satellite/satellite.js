@@ -3,80 +3,70 @@ server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
 
-var width = Math.max(260, innerWidth), //640
-    height = Math.max(260, innerHeight); //480
+//note: expect camera resolution to be 640 x 480
+var width = Math.max(320, innerWidth),
+    height = Math.max(240, innerHeight);
+var camWidth = 640,
+    camHeight = 480;
+
+var centerShifting = false;
+var tilting = false;
+
+var yOffset = 3;
+var flowDataScalingFactor = 1;
+var xMax = 2,
+    xMin = -2,
+    yMin = 0,
+    yMax = 5;
+
+var blobCoords = [0, 3];
+var blobWobble = false;
+var wobbleFactor = 0.3;
+
+
+//////////////////////////
+//  Projection Data Ranges
+/////////
+//  center x (-2,2)
+//  center y (0, 6)
+//  tilt (-20 20)
+//////////////////////////
+
 
 var projectionParams = {
   distance: 1.1,
-  scale: 6500,
+  scale: 8500,
   rotate: [76.00, -34.50, 32.12],
-  center: [-2, 5],
+  center: [0, 3],
   tilt: 25,
   prevTilt:0,
   clipAngle: (Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6),
-  precision: .1,
-  colorClass: 'graticule'
+  precision: 0.1,
+  colorClass: 'graticule',
+  freq: 440
 };
 
 
 
-var projection = d3.geo.satellite()
-    .distance(1.1)
-    .scale(6500)
-    .rotate([76.00, -34.50, 32.12])
-    .center([-2, 5])
-    .tilt(25)
-    .clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
-    .precision(.1);
-/////////
+var zFilter = function(inputData, previousValue, zVal){
+    var z = zVal || 0.9; // set this between 0 and 1
+    return (z*previousValue + (1-z)*inputData);
+};
+
+var randomCenterAdjustment = function(blobCoords, scalingFactor) {
+    blobCoords[0] += (Math.random() - 0.5) * scalingFactor;
+    blobCoords[1] += (Math.random() - 0.5) * scalingFactor;
+    return blobCoords;
+};
+
+var tiltChange = function () {
+    var tilt = Math.random() * 45 - 20; //tilt will be between -20 and +25
+    projectionParams.tilt = tilt;
+    tilting = true;
+};
 
 
-var projection2 = d3.geo.satellite()
-    .distance(1.1)
-    .scale(6500)
-    .rotate([76.00, -34.50, 32.12])
-    .center([-4, 2])
-    .tilt(25)
-    .clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
-    .precision(.1);
-
-
-var projection3 = d3.geo.satellite()
-    .distance(1.1)
-    .scale(6500)
-    .rotate([76.00, -34.50, 32.12])
-    .center([-4, 2])
-    .tilt(23)
-    .clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
-    .precision(.1);
-
-var projection4 = d3.geo.satellite()
-    .distance(1.1)
-    .scale(6500)
-    .rotate([76.00, -34.50, 32.12])
-    .center([-4, 2])
-    .tilt(11)
-    .clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
-    .precision(.1);
-
-
-//////
-
-var makeProjPath = function(uVect, vVect) {
-  var projection = d3.geo.satellite()
-    .distance(1.1)
-    .scale(6500)
-    .rotate([76.00, -34.50, 32.12])
-    .center([3 * uVect, 3 * vVect])
-    .tilt(25)
-    .clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
-    .precision(.1);
-
-  return d3.geo.path()
-    .projection(projection);
-}
-
-var makeProjPath2 = function(projParams) {
+var makeProjPath = function(projParams) {
   var projection = d3.geo.satellite()
     .distance(projParams.distance)
     .scale(projParams.scale)
@@ -85,10 +75,12 @@ var makeProjPath2 = function(projParams) {
     .tilt(projParams.tilt)
     .clipAngle(projParams.clipAngle)
     .precision(projParams.precision);
-
   return d3.geo.path()
     .projection(projection);
-}
+};
+
+
+var path = makeProjPath(projectionParams);
 
 var tiltProjPath = function() {
     var projection = d3.geo.satellite()
@@ -106,19 +98,19 @@ var tiltProjPath = function() {
 
 var graticule = d3.geo.graticule()
     .extent([[-93, 27], [-47 + 1e-6, 57 + 1e-6]])
-    .step([1, 1]);
+    .step([0.5, 0.5]);
 
-var path = d3.geo.path()
-    .projection(projection);
+// var path = d3.geo.path()
+//     .projection(projection);
 
-var path2 = d3.geo.path()
-    .projection(projection2);
+// var path2 = d3.geo.path()
+//     .projection(projection2);
 
-var path3 = d3.geo.path()
-    .projection(projection3);
+// var path3 = d3.geo.path()
+//     .projection(projection3);
 
-var path4 = d3.geo.path()
-    .projection(projection4);
+// var path4 = d3.geo.path()
+//     .projection(projection4);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -129,144 +121,145 @@ svg.append("path")
     .attr("class", "graticule")
     .attr("d", path);
 
+
 //get oflow data
 //u, v typically [-1.5, 1.5]
 // make a new projection with updated center
 //transition
 
 
+var collectedData = {
+    flowU: 0,
+    flowV: 0
+};
+
+
+var resetCollectionBins = function () {
+  for (var key in collectedData) {
+    collectedData[key] = 0;
+  }
+};
+
+var shiftCenter = function(collectedData) {
+    var xShift, yShift;
+    // console.log(collectedData);
+    if (collectedData.flowU >= 0 ) {
+        xShift = Math.min(collectedData.flowU, 2);
+    } else {
+        xShift = Math.max(collectedData.flowU, -2);
+    }
+
+    if (collectedData.flowV >= 0 ) {
+        yShift = Math.min(collectedData.flowV, 3);
+    } else {
+        yShift = Math.max(collectedData.flowV, -3);
+    }
+
+    xShift *= 0.1;
+    yShift *= 0.1;
+    console.log('shifts',xShift,yShift);
+
+
+    var nextX = projectionParams.center[0] + xShift;
+    if((nextX >= xMin) && (nextX <= xMax)) {
+        projectionParams.center[0] = nextX;
+    }
+    // projectionParams.center[1] += ;
+
+    var nextY = projectionParams.center[1] + (yShift + yOffset);
+    if(nextY >= yMin && nextY <= yMax) {
+      projectionParams.center[1] = nextY;
+    }
+} ;
 
 var nextMove = function () {
-
-    // var uSim = (Math.random() - 0.5) * 5;
-    // var vSim = (Math.random() - 0.5) * 5;
     var nextPath;
     var globe = d3.select(this);
-    // console.log(globe.attr("stroke"))
-    // globe.attr("stroke", 'red');
-    // console.log(globe);
-    if(projectionParams.prevTilt !== projectionParams.tilt) {
-      console.log("tilting!", projectionParams.tilt);
-      projectionParams.prevTilt = projectionParams.tilt;
-      nextPath = makeProjPath2(projectionParams);
-      globe
-        .transition()
-        .duration(2000)
-        // .attr("opacity", 0.2)
-        // .transition()
-        // .duration(10)
-        .attr("d", nextPath)
-        .attr("class", projectionParams.colorClass)
-        // .transition()
-        // .duration(2000)
-        // .attr("opacity", 0.9)
-        // .transition()
-        // .duration(1000)
-        // .attr("opacity", 0.3)
-        .each("end", nextMove)
+    if (centerShifting) {
+        shiftCenter(collectedData);        
+    }
+    resetCollectionBins();
+    if (blobWobble) {
+      blobCoords = randomCenterAdjustment(blobCoords, wobbleFactor);
+    }
 
-    } else {
-      // console.log(projectionParams.center, 'center');
-      nextPath = makeProjPath2(projectionParams);
+    projectionParams.center[0] = zFilter(blobCoords[0], projectionParams.center[0]);
+    projectionParams.center[1] = zFilter(blobCoords[1], projectionParams.center[1]);
+
+    nextPath = makeProjPath(projectionParams);
+
+
+
+    if (tilting) {
+      tilting = false;
       globe
         .transition()
         .duration(1500)
         .attr("d", nextPath)
-        .each("end", nextMove)
+        .each("end", nextMove);
+    } else {
+      globe
+        .transition()
+        .duration(200)
+        .attr("d", nextPath)
+        .style("stroke", function(d,i){return "hsl(" + ((projectionParams.freq/1000)*360) + ",100%,50%)";})
+        .each("end", nextMove);
     }
+    // }
 
+};
 
-
-    // globe
-    // .transition()
-    // .duration(3000)
-    // .attr("d", nextPath)
-    // .each("end", nextMove)
-
-    // this
-    // console.log(node);
-    // debugger;
-}
 d3.select("path")
-    .transition()
-    .duration(1000)
     .attr("d", path) //move center
-    // .transition()
-    // .duration(500)
-    // .attr("opacity", 0.5) //fade out
-
-    ////////
-    // .transition()
-    // .duration(1000)
-    // // .attr("class", "na")
-    // .attr("d", path3) //tilt
-    // // .transition()
-    // // .duration(500)
-    // // .attr("opacity", 1) //fade in
-    
-    // .transition()
-    // .duration(500)
-    // // .attr("opacity", 0.3) //fade out
-    // // .transition()
-    // // .duration(10)
-    // // .attr("class", "na")
-    // .attr("d", path4) //tilt
-    // .transition()
-    // .duration(500)
-    // .attr("opacity", 1) //fade in
-
-   ////////
+    .transition()
     .each("end", nextMove);
 
 
 
-
-    // .transition()
-    // .duration(1000)
-    // .attr("opacity", 0.2)
-    // .transition()
-    // .duration(1000)
-    // .attr("opacity", 1)
-    // .attr("d", path4);
-    // .attr("class", "graticule")
-
-
-
-var throttledUpdate = _.throttle(function(optiFlowData) {
-      // console.log('u,v',optiFlowData.u, optiFlowData.v)
-    // var path = makeProjPath(optiFlowData.u, optiFlowData.v);
-    // d3.select("path")
-    // .transition()
-    // .duration(300)
-    // .attr("d", path)
-    if (!optiFlowData) {
-        // console.log("no data!!!!");
-    } else {
-        // console.log(optiFlowData.u, optiFlowData.v, "data in")
-    };
-    var threshold = 0.005;
-    if( Math.random() < threshold ) {
-        var tiltScale = (Math.random() - 0.5) * 25;
-        projectionParams.tilt = tiltScale;
-        projectionParams.colorClass = 'rpath';
-    } 
-    else {
-        // console.log("centershift");
-        if ((Math.abs(optiFlowData.u) > 0.5 ||  Math.abs(optiFlowData.v) > 0.5 )){
-            var scaledU = optiFlowData.u * 2;
-            var scaledV  = optiFlowData.v * 2;
-            projectionParams.center[0] += scaledU;
-            projectionParams.center[1] += scaledV;
-        } else {
-            // projectionParams.center = [Math.random() * 5, Math.random() * 5]
-            // projectionParams.center[0] += 0.05;
-            // projectionParams.center[1] += 0.05;
-        }
+var collectOptiFlowData = function (optiFlowData) {
+    if (Math.abs(optiFlowData.u) > 0.5){
+        collectedData.flowU += flowDataScalingFactor * optiFlowData.u; 
     }
-    // nextMove();
+    if (Math.abs(optiFlowData.v) > 0.5){
+        collectedData.flowV += flowDataScalingFactor * optiFlowData.v; 
+    }
+};
 
-}, 100);
+var scaleToScreenCoords = function (coorArr) {
+    var x = coordArr[0] / camWidth;
+    var y = coordArr[1] / camHeight;
+    // x and y should now be in range (0, 1);
+    x = x * 4 - 2; //sets x to be in range (-2, 2)
+    y = y * 6;
+    return [x, y];
 
+};
+var getBlobCoords = function (blobData) {
+  var x, y;
+  if(blobData[2][0] === '/cur') {
+      x = blobData[2][2];
+      y = blobData[2][3]; 
+      blobCoords = scaleToScreenCoords(x, y);     
+  }
+};
+var getFreq = function ( audioData ) {
+    var freq = audioData.hz;
+    projectionParams.freq = zFilter(freq, projectionParams.freq, 0.97);
+};
 
-server.on('optiFlowData', throttledUpdate);
+//// blob data format: [ '#bundle', 2.3283064365386963e-10, [ '/cur', 73, 320, 240 ] ]
+
+server.on('optiFlowData', collectOptiFlowData);
+server.on('blob', getBlobCoords);
+server.on('audio', getFreq);
 d3.select(self.frameElement).style("height", height + "px");
+
+
+
+
+/////
+
+
+
+
+

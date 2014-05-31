@@ -129,7 +129,8 @@ webcamio.sockets.on('connection', function (socket) {
       socket.emit("message", msg);
       flock.emit("blob", msg);
       particles.emit("blob", msg);
-      console.log('Sent blob to flock and particles!');
+      satellite.emit("blob", msg)
+      console.log('Sent blob to flock, satellite, and particles!');
     });
   });
   socket.on("message", function (obj) {
@@ -279,6 +280,7 @@ audio.on('connection', function (audio) {
       clients.emit('audio', data);
     }
     fireworks.emit('audio', data);
+    satellite.emit('audio', data);
   });
 });
 
