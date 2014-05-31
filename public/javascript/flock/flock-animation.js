@@ -50,10 +50,10 @@ Boid.prototype.moveHead = function() {
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
-  var separation = this.separate(boids).multiplyScalar(1);
-  var alignment = this.align(boids).multiplyScalar(5);
-  var cohesion = this.cohesion(boids).multiplyScalar(4);
-  var borders = this.borders().multiplyScalar(1);
+  var separation = this.separate(boids).multiplyScalar(10);
+  var alignment = this.align(boids).multiplyScalar(50);
+  var cohesion = this.cohesion(boids).multiplyScalar(40);
+  var borders = this.borders().multiplyScalar(2.5);
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
 };
 
@@ -133,7 +133,7 @@ Boid.prototype.steer = function(target, slowdown) {
 };
 
 Boid.prototype.separate = function(boids) {
-  var desiredSeperation = 100*100;
+  var desiredSeperation = Math.pow(100, 2);
   var steer = new PIXI.Vector(0, 0);
   var count = 0;
   // For every boid in the system, check if it's too close
@@ -167,7 +167,7 @@ Boid.prototype.separate = function(boids) {
 // For every nearby boid in the system, calculate the average velocity
 Boid.prototype.align = function(boids) {
   // Using square of distance to ease calculations
-  var neighborDist = 25*25;
+  var neighborDist = Math.pow(250, 2);
   var steer = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
@@ -198,7 +198,7 @@ Boid.prototype.align = function(boids) {
 // calculate steering vector towards that location
 Boid.prototype.cohesion = function(boids) {
   // Using square of distance to ease calculations
-  var neighborDist = 600 * 600;
+  var neighborDist = Math.pow(600, 2);
   var sum = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
@@ -225,7 +225,7 @@ Boid.prototype.cohesion = function(boids) {
       y: window.innerHeight
     };
     // create an new instance of a pixi _stage - and set it to be interactive
-    var _stage = new PIXI.Stage(0x000000);
+    var _stage = new PIXI.Stage(0xd9e2cc);
     _stage.setInteractive(true);
 
     // create a _renderer instance
@@ -250,7 +250,7 @@ Boid.prototype.cohesion = function(boids) {
     var outputSprite = new PIXI.Sprite(currentTexture);
     var count = 0;
 
-    _target.addChild(outputSprite);
+    _stage.addChild(outputSprite);
 
     // add render view to DOM
     // document.getElementById("canvas-holder").appendChild(_renderer.view);
@@ -327,10 +327,10 @@ Boid.prototype.cohesion = function(boids) {
         for (var i = 0; i < 250; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           // var position = new PIXI.Point(size.x/2 + Math.random(), size.y/2 + Math.random());
-          var boid = new Boid(position, 2, 3);
+          var boid = new Boid(position, 4, 30);
           var boidContainer = new PIXI.DisplayObjectContainer();
           var boidGraphic = new PIXI.Graphics();
-          boidGraphic.beginFill(0xff00ff);
+          boidGraphic.beginFill(0x002244);
           boidGraphic.drawCircle(0, 0, 4);
           boidGraphic.endFill();
 
@@ -344,7 +344,7 @@ Boid.prototype.cohesion = function(boids) {
           boids.push(boid);
           
           _target.addChild(boidContainer);
-          // _stage.addChild(boidContainer);
+          _stage.addChild(boidContainer);
         }
     }
 
@@ -390,21 +390,23 @@ Boid.prototype.cohesion = function(boids) {
         // stats.innerHTML = '';
         requestAnimFrame(animate);
 
-        // var temp = renderTexture;
+        var temp = renderTexture;
         // renderTexture = renderTexture2;
         // renderTexture2 = temp;
         // _target.worldAlpha = .5;
         count += .01;
         // outputSprite.alpha *= Math.sin(count);
         // _target.rotation -= 0.01;
-        // renderTexture.render(_stage, true);
-        // outputSprite.setTexture(renderTexture);
-        // outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * 0.2;
+        renderTexture.render(_stage, true);
+        outputSprite.setTexture(renderTexture);
+        outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * .2;
         // renderTexture2.render(_stage, false);
-        // outputSprite.tint = 0xff0000;
-        // _renderer.render(_stage);
+        outputSprite.alpha = .5;
+        // outputSprite.scale = new PIXI.Point(.5,.5);
+        _renderer.render(_stage);
 
-        // renderTexture.render(outputSprite);
+        temp.render(outputSprite);
+        outputSprite.setTexture(temp);
         _renderer.render(_stage);
 
         for (var i = 0, l = boids.length; i < l; i++) {
@@ -420,11 +422,11 @@ Boid.prototype.cohesion = function(boids) {
           boid.vector.normalize();
 
           boid.count += (1 + boid.flap);
-          boid.container.alpha = .5;
+          boid.container.alpha = 1.1 - ( 1 / (boid.vector.lengthSq() + 1) ) ;
           boid.container.rotation = boid.vector.rad() + .7707;
 
           var flapFactor = boid.count * boid.vector.lengthSq() * .3;
-          boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .5, 1.5);
+          boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .85, .6);
 
           boid.run(boids);
           // msg = stats.innerHTML;
@@ -453,6 +455,7 @@ var heartPath = [];
 for (var i = 0; i < 200; i++) {
   heartPath.push(new PIXI.Point(i*4, i*4));
 }
+console.log(heartPath);
 
 // function onFrame(event) {
   // for (var i = 0, l = boids.length; i < l; i++) {
