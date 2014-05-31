@@ -50,9 +50,9 @@ Boid.prototype.moveHead = function() {
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
-  var separation = this.separate(boids).multiplyScalar(40);
-  var alignment = this.align(boids).multiplyScalar(50);
-  var cohesion = this.cohesion(boids).multiplyScalar(40);
+  var separation = this.separate(boids).multiplyScalar(2);
+  var alignment = this.align(boids).multiplyScalar(5);
+  var cohesion = this.cohesion(boids).multiplyScalar(4);
   var borders = this.borders().multiplyScalar(2.5);
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
 };
@@ -65,7 +65,6 @@ Boid.prototype.update = function() {
   this.position.add(this.vector);
   // Reset acceleration to 0 each cycle
   // this.acceleration = new PIXI.Vector(0,0);
-  this.acceleration.multiplyScalar(.5);
 };
 
 Boid.prototype.seek = function(target) {
@@ -325,7 +324,7 @@ Boid.prototype.cohesion = function(boids) {
         // }
 
         // Add the boids:
-        for (var i = 0; i < 200; i++) {
+        for (var i = 0; i < 300; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           // var position = new PIXI.Point(size.x/2 + Math.random(), size.y/2 + Math.random());
           var boid = new Boid(position, 4, 2);
@@ -414,14 +413,14 @@ Boid.prototype.cohesion = function(boids) {
           var boid = boids[i];
 
           if (groupTogether) {
-            // boid.arrive(new PIXI.Vector(view.size.width/2, view.size.height/2))
-            for (var i = 0, l = boids.length; i < l; i++) {
-              var length = ((i + (count * 100)) / 30) % l * heartPath.length;
-              var vector = heartPath[length];
-              if (vector) {
-                boid.arrive(vector);
-              }
-            }
+            boid.arrive(new PIXI.Vector(view.size.width/2, view.size.height/2))
+            // for (var i = 0, l = boids.length; i < l; i++) {
+            //   var length = ((i + (count * 100)) / 30) % l * heartPath.length;
+            //   var vector = heartPath[length];
+            //   if (vector) {
+            //     boid.arrive(vector);
+            //   }
+            // }
           }
           boid.container.position = boid.position;
           boid.vector.normalize();
