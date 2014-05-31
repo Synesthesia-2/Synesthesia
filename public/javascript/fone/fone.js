@@ -1,5 +1,5 @@
 var server = io.connect('/fone');
-var $h1 = $('h1');
+var $h3 = $('h3');
 var currentOrientation = {};
 
 server.on('sessionId', function(data){
@@ -10,7 +10,7 @@ server.on('welcome', function(data) {
   if (data.tracking) {
     startTrack();
   } else {
-    $h1.text('Connected. Motion tracking off.');
+    $h3.text('Connected. Motion tracking off.');
   }
 });
 
@@ -27,12 +27,12 @@ server.on('toggleMotion', function(data) {
 });
 
 var startTrack = function() {
-  $h1.text('Now tracking motion.');
+  $h3.text('Now tracking motion.');
   initMotionListener();
 };
 
 var stopTrack = function() {
-  $h1.text('Motion tracking off.');
+  $h3.text('Motion tracking off.');
   removeMotionListener();
 };
 
