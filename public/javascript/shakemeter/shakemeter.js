@@ -51,7 +51,7 @@ var foneVisualize = function(acceleration){
   var nextHeight = Math.floor(zFilter(acceleration,prevHeight));
   
   // set text to be displayed
-  var displayText = (nextHeight >= HEIGHT) ? "MAX SHAKES!!!1" : nextHeight + " shakes";
+  var displayText = (nextHeight >= HEIGHT) ? "MAX SHAKES!!!!" : nextHeight + " shakes";
   hiScore = (nextHeight > hiScore) ? nextHeight : hiScore;
 
   // This is for selecting the 'smacktalk' to be displayed
