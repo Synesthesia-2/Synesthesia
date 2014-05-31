@@ -4,7 +4,7 @@ ClientSpace.Client = Backbone.Model.extend({
     this.set('strobe', false);
     this.set('currentColor', '#000000');
     this.set('audioColor', false);
-    this.set('currentShow', 'Synesthesia');
+    this.set('currentShow', 'Synesthesia v. 2');
     this.setCast();
     this.setEvents();
   },
@@ -23,6 +23,10 @@ ClientSpace.Client = Backbone.Model.extend({
 
   startShow: function() {
     this.trigger('startShow', this);
+  },
+
+  shakeShow: function() {
+    this.trigger('shakeShow', this);
   },
 
   loadIndex: function() {

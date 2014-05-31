@@ -13,6 +13,7 @@ ClientSpace.ClientApp = Backbone.View.extend({
     this.model.on('castList', this.showCastList, this);
     this.model.on('about', this.showAbout, this);
     this.model.on('startShow', this.startShow, this);
+    this.model.on('shakeShow', this.shakeShow, this);
     this.model.on('loadIndex', this.loadIndex, this);
     this.model.on('sendMessage', this.showAlert, this);
   },
@@ -29,6 +30,10 @@ ClientSpace.ClientApp = Backbone.View.extend({
 
   startShow: function() {
     this.router.navigate("/show", {trigger: true} );
+  },
+
+  shakeShow: function() {
+    this.router.navigate("/shake", {trigger: true} );
   },
 
   loadIndex: function() {
