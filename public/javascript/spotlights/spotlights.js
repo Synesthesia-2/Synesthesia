@@ -39,7 +39,7 @@ var showSpotlights = function(inputData){
     .attr("r", 100)
     .attr("cx", function(d){return (xOrigin + d.value.beta * xScaleFactor  );})
     .attr("cy", function(d){return (yOrigin - d.value.gamma * yScaleFactor);})
-    .style("fill", "white")
+    // .style("fill", "white")
     .style("fill", function(d){return "hsl(" + Math.random()*360 + ",100%,50%)";})
     .style("stroke-opacity", 0.7);
 
