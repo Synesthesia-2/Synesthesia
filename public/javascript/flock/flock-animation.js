@@ -49,9 +49,10 @@ Boid.prototype.moveHead = function() {
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
-  var separation = this.separate(boids).multiplyScalar(.03);
-  var alignment = this.align(boids).multiplyScalar(.5);
-  var cohesion = this.cohesion(boids).multiplyScalar(.8);
+
+  var separation = this.separate(boids).multiplyScalar(1);
+  var alignment = this.align(boids).multiplyScalar(5);
+  var cohesion = this.cohesion(boids).multiplyScalar(4);
   var borders = this.borders().multiplyScalar(1);
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
 };
@@ -132,7 +133,7 @@ Boid.prototype.steer = function(target, slowdown) {
 };
 
 Boid.prototype.separate = function(boids) {
-  var desiredSeperation = 30;
+  var desiredSeperation = 100*100;
   var steer = new PIXI.Vector(0, 0);
   var count = 0;
   // For every boid in the system, check if it's too close
@@ -197,7 +198,7 @@ Boid.prototype.align = function(boids) {
 // calculate steering vector towards that location
 Boid.prototype.cohesion = function(boids) {
   // Using square of distance to ease calculations
-  var neighborDist = 60 * 60;
+  var neighborDist = 600 * 600;
   var sum = new PIXI.Vector(0, 0);
   var count = 0;
   for (var i = 0, l = boids.length; i < l; i++) {
@@ -323,10 +324,10 @@ Boid.prototype.cohesion = function(boids) {
         // }
 
         // Add the boids:
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 250; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           // var position = new PIXI.Point(size.x/2 + Math.random(), size.y/2 + Math.random());
-          var boid = new Boid(position, 6, .5);
+          var boid = new Boid(position, 2, 3);
           var boidContainer = new PIXI.DisplayObjectContainer();
           var boidGraphic = new PIXI.Graphics();
           boidGraphic.beginFill(0xff00ff);
@@ -342,8 +343,8 @@ Boid.prototype.cohesion = function(boids) {
 
           boids.push(boid);
           
-          // _target.addChild(boidContainer);
-          _stage.addChild(boidContainer);
+          _target.addChild(boidContainer);
+          // _stage.addChild(boidContainer);
         }
     }
 
@@ -405,8 +406,8 @@ Boid.prototype.cohesion = function(boids) {
     }
 
     function animate() {
-        var stats = document.getElementById('stats');
-        stats.innerHTML = '';
+        // var stats = document.getElementById('stats');
+        // stats.innerHTML = '';
         requestAnimFrame(animate);
 
         // var temp = renderTexture;
