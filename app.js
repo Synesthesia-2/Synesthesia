@@ -58,9 +58,6 @@ var shakemeter = io.of('/shakemeter');
 var shakebattle = io.of('/shakebattle');
 var spotlights = io.of('/spotlights');
 var grassfield = io.of('/grassfield');
-var particles = io.of('/particles');
-var satellite = io.of('/satellite');
-
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -100,11 +97,9 @@ app.get('/fone', routes.renderFone);
 app.get('/shakemeter', routes.renderFoneMotion);
 app.get('/shakebattle', routes.renderShakeBattle);
 app.get('/spotlights', routes.renderSpotlights);
-app.get('/satellite', routes.renderSatellite);
 app.get('/dancer', routes.renderDancer);
 app.get('/flock', routes.renderFlock);
 app.get('/update', routes.renderUpdate);
-app.get('/particles', routes.renderParticles);
 app.get('*', routes.render404);
 app.use(function(err, req, res, next){
   if(err) {
@@ -129,8 +124,7 @@ webcamio.sockets.on('connection', function (socket) {
       socket.emit("message", msg);
       flock.emit("blob", msg);
       particles.emit("blob", msg);
-      satellite.emit("blob", msg);
-      console.log('Sent blob to flock, satellite, and particles!');
+      console.log('Sent blob to flock and particles!', msg);
     });
   });
   socket.on("message", function (obj) {
@@ -149,18 +143,6 @@ fireworks.on('connection', function (firework) {
 
 flock.on('connection', function (flock) {
   flock.emit("welcome", "Flock visualizer connected.");
-});
-
-particles.on('connection', function (particles) {
-  particles.emit("welcome", "Particle visualizer connected.");
-});
-
-satellite.on('connection', function(satellite) {
-  satellite.emit('hello','hi');
-  var d = [["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]],["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",238,54,410.5]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]],["#bundle",2.3283064365386963e-10,["/cur",239,44,394]]];
-  for (var i = 0; i < d.length; i++) {
-      satellite.emit('blob', d[i]);
-  }
 });
 
 //////////////////////////////////////////
@@ -193,6 +175,7 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     state.currentColor = data.color;
     clients.emit('changeColor', data);
+    flock.emit('changeColor', data);
   });
 
   conductor.on('randomColor', function (data){
@@ -250,13 +233,6 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     clients.emit('newFadeTime', data);
   });
-
-  conductor.on('tiltGrid', function (data){
-    console.log('app hears tilt');
-    var satellite = io.of('/satellite');
-    state.currentColor = '#000000';    // Set current to black in the case of random
-   satellite.emit('tiltGrid', data);
-  });
 });
 
 //////////////////////////////////////////
@@ -295,7 +271,6 @@ audio.on('connection', function (audio) {
       clients.emit('audio', data);
     }
     fireworks.emit('audio', data);
-    satellite.emit('audio', data);
   });
 });
 
@@ -310,11 +285,10 @@ optiflow.on('connection', function (optiflow) {
     tracking: state.optiFlowTrack
   });
   optiflow.on('optiFlowData', function (optiFlowData) {
-    // console.log(optiFlowData); 
+    console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
     flock.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);
-    satellite.emit('optiFlowData', optiFlowData);
   });
 });
 
@@ -328,10 +302,16 @@ fone.on('connection', function (fone) {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
   });
+  // fone.on('orientationData', function (data) {
+  //   shakemeter.emit('orientationData', data);
+  //   shakebattle.emit('orientationData', data);
+  //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
+  // });
   fone.on('motionData', function (data) {
     shakemeter.emit('motionData', data);
     shakebattle.emit('motionData', data);
     spotlights.emit('motionData', data);
+    satellite.emit('motionData', data);
   });
   fone.on('disconnect', function(){
     console.log(fone.id + " disconnected.");

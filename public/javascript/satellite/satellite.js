@@ -22,8 +22,22 @@ var xMax = 2,
 var blobCoords = [0, 3];
 var blobWobble = false;
 var wobbleFactor = 0.3;
+var shakeData = 0;
+var shake = 0;
 
-
+var setShake = function (shakeData) {
+  // console.log(shakeData, 'sdata');
+  shake = zFilter(shakeData, shake);
+  // console.log(shake, 'shake');
+  var scaled = shake / 50;
+  if (scaled < 8) {
+    projectionParams.shake  = scaled + 1;
+  } else {
+    tiltChange();
+    projectionParams.shake = 1;
+    shake = 0;
+  }
+};
 //////////////////////////
 //  Projection Data Ranges
 /////////
@@ -43,7 +57,8 @@ var projectionParams = {
   clipAngle: (Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6),
   precision: 0.1,
   colorClass: 'graticule',
-  freq: 440
+  freq: 440,
+  shake: 1
 };
 
 
@@ -202,6 +217,7 @@ var nextMove = function () {
         .transition()
         .duration(200)
         .attr("d", nextPath)
+        .style("stroke-width", projectionParams.shake)
         .style("stroke", function(d,i){return "hsl(" + ((projectionParams.freq/1000)*360) + ",100%,50%)";})
         .each("end", nextMove);
     }
@@ -250,15 +266,26 @@ var getFreq = function ( audioData ) {
     projectionParams.freq = zFilter(freq, projectionParams.freq, 0.97);
 };
 
+var handleShakes = function(data){
+  // console.log('data',data);
+
+  shakeData += data.totalAcc;
+  // console.log(shakeData, 'sdata');
+};
+
 //// blob data format: [ '#bundle', 2.3283064365386963e-10, [ '/cur', 73, 320, 240 ] ]
 
 server.on('optiFlowData', collectOptiFlowData);
 server.on('blob', getBlobCoords);
 server.on('audio', getFreq);
-server.on('tiltGrid', tiltChange);
 d3.select(self.frameElement).style("height", height + "px");
+server.on('motionData', handleShakes);
 
 
+setInterval(function(){
+  setShake(shakeData);
+  shakeData = 0;
+}, 100);
 
 
 /////
