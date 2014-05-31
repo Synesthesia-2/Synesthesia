@@ -36,6 +36,10 @@ ClientSpace.ShakeView = Backbone.View.extend({
     }, 500);
   },
 
+  startGyroData: function() {
+    
+  },
+
   exitShow: function(event) {
     this.model.loadIndex();
   }
