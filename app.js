@@ -100,6 +100,8 @@ app.get('/spotlights', routes.renderSpotlights);
 app.get('/dancer', routes.renderDancer);
 app.get('/flock', routes.renderFlock);
 app.get('/update', routes.renderUpdate);
+app.get('/satellite', routes.renderSatellite);
+app.get('/particles', routes.renderParticles);
 app.get('*', routes.render404);
 app.use(function(err, req, res, next){
   if(err) {
@@ -285,7 +287,7 @@ optiflow.on('connection', function (optiflow) {
     tracking: state.optiFlowTrack
   });
   optiflow.on('optiFlowData', function (optiFlowData) {
-    console.log(optiFlowData);
+    // console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
     flock.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);

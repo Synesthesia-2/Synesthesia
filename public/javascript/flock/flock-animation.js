@@ -10,6 +10,8 @@ var view = {
 
 var boids = [];
 var groupTogether = false;
+var oflowVBox = new PIXI.DisplayObjectContainer();
+var oflowV = new PIXI.Graphics();
 
 
 var Boid = function(position, maxSpeed, maxForce) {
@@ -28,11 +30,11 @@ var Boid = function(position, maxSpeed, maxForce) {
 
 Boid.prototype.run = function(boids) {
   this.lastLoc = this.position.clone();
-  if (!groupTogether) {
+  // if (!groupTogether) {
     this.flock(boids);
-  } else {
-    this.align(boids);
-  }
+  // } else {
+  //   this.align(boids);
+  // }
   // this.borders();
   this.update();
   // this.moveHead();
@@ -50,16 +52,10 @@ Boid.prototype.moveHead = function() {
 
 // We accumulate a new acceleration each time based on three rules
 Boid.prototype.flock = function(boids) {
-<<<<<<< HEAD
-  var separation = this.separate(boids).multiplyScalar(2);
-  var alignment = this.align(boids).multiplyScalar(5);
-  var cohesion = this.cohesion(boids).multiplyScalar(4);
-=======
-  var separation = this.separate(boids).multiplyScalar(10);
+  var separation = this.separate(boids).multiplyScalar(40);
   var alignment = this.align(boids).multiplyScalar(30);
-  var cohesion = this.cohesion(boids).multiplyScalar(20);
->>>>>>> flock
-  var borders = this.borders().multiplyScalar(2.5);
+  var cohesion = this.cohesion(boids).multiplyScalar(10);
+  var borders = this.borders().multiplyScalar(25);
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
 };
 
@@ -70,11 +66,7 @@ Boid.prototype.update = function() {
   this.vector.setLength( Math.min(this.maxSpeed, this.vector.length()) );
   this.position.add(this.vector);
   // Reset acceleration to 0 each cycle
-<<<<<<< HEAD
-  // this.acceleration = new PIXI.Vector(0,0);
-=======
-  this.acceleration.multiplyScalar(.985);
->>>>>>> flock
+  this.acceleration.multiplyScalar(.995);
 };
 
 Boid.prototype.seek = function(target) {
@@ -334,10 +326,18 @@ Boid.prototype.cohesion = function(boids) {
         // }
 
         // Add the boids:
-        for (var i = 0; i < 300; i++) {
+        // test vector: 
+        oflowV.lineStyle(BOX_PADDING, 0xff0000, 1);
+        oflowV.beginFill(BOX_COLOUR);
+        oflowV.drawRect(-LINE_SIZE/2, -HALF_BOX_SIZE - BOX_PADDING, LINE_SIZE, BOX_SIZE + BOX_PADDING);
+        oflowV.endFill();
+        oflowVBox.addChild(oflowV);
+        _stage.addChild(oflowVBox);
+
+        for (var i = 0; i < 200; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           // var position = new PIXI.Point(size.x/2 + Math.random(), size.y/2 + Math.random());
-          var boid = new Boid(position, 4, 1);
+          var boid = new Boid(position, 2, 10);
           var boidContainer = new PIXI.DisplayObjectContainer();
           var boidGraphic = new PIXI.Graphics();
           boidGraphic.beginFill(0x002244);
@@ -419,25 +419,26 @@ Boid.prototype.cohesion = function(boids) {
         // outputSprite.setTexture(temp);
         _renderer.render(_stage);
 
+        window.oflowVector = window.oflowVector || new PIXI.Vector(0, 0);
+        if (window.boidData && (boidData.x !== 0 || boidData.y !== 0)) {
+          var oflow = new PIXI.Vector(window.boidData.u, window.boidData.v).multiplyScalar(2000);
+          window.oflowVector.add(oflow);
+        }
+        window.oflowVector.multiplyScalar(.9);
+        // oflowVBox.rotation = (new PIXI.Vector(oflowVector.x, oflowVector.y)).rad();
         for (var i = 0, l = boids.length; i < l; i++) {
           var boid = boids[i];
 
+          boid.acceleration.add(window.oflowVector);
+
           if (groupTogether) {
-<<<<<<< HEAD
-            boid.arrive(new PIXI.Vector(view.size.width/2, view.size.height/2))
-            // for (var i = 0, l = boids.length; i < l; i++) {
-            //   var length = ((i + (count * 100)) / 30) % l * heartPath.length;
-            //   var vector = heartPath[length];
-            //   if (vector) {
-            //     boid.arrive(vector);
-=======
-            boid.seek(new PIXI.Vector(400,400));
+// console.log(window.oflowVector);
+            // boid.seek(new PIXI.Vector(400,400));
             // for (var i = 0, l = boids.length; i < l; i++) {
             //   var length = ((i + count * 100) / 30) % l * heartPath.length;
             //   var point = heartPath[length];
             //   if (point) {
             //     boid.arrive(point);
->>>>>>> flock
             //   }
             // }
           }
