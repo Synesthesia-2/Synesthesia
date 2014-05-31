@@ -26,7 +26,8 @@ html
     br
     p Have fun playing with them and experiencing the synthesis of tech and art!
     h3 Connecting...
-    button#exitShow Quit
+    a(href="/")
+        button Quit
 
 
 
@@ -35,3 +36,7 @@ html
       $(document).on('touchmove', function(e) {
         e.preventDefault();
       });
+    script.
+      $(document).on('ready',function(){
+        startTrack();
+        });

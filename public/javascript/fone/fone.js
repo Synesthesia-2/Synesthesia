@@ -73,6 +73,6 @@ var sendDummyAccelData = function(){
 var boundDeviceMotion = onDeviceMotion.bind(this);
 var boundDeviceOrientation = onDeviceOrientation.bind(this);
 
-// startTrack(); // for testing
+$(startTrack); // for testing
 
 // setInterval(sendDummyAccelData, 10);
