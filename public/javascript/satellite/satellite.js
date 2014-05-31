@@ -255,6 +255,7 @@ var getFreq = function ( audioData ) {
 server.on('optiFlowData', collectOptiFlowData);
 server.on('blob', getBlobCoords);
 server.on('audio', getFreq);
+server.on('tiltGrid', tiltChange);
 d3.select(self.frameElement).style("height", height + "px");
 
 

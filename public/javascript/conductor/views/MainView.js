@@ -8,6 +8,7 @@ ConductorSpace.MainView = Backbone.View.extend({
     'click #toggleOptiflowFlocking': 'toggleOptiflowFlocking',
     'click #toggleStrobe': 'toggleStrobe',
     'click #toggleAudioLights': 'toggleAudioLights',
+    'click #tiltGrid': 'tiltGrid',
     'change #fader': 'updateFadeTime'
   },
 
@@ -46,6 +47,10 @@ ConductorSpace.MainView = Backbone.View.extend({
   toggleMotion: function() {
     this.model.toggleMotion();
   },
+
+  // tiltGrid: function() {
+  //   this.model.tiltGrid();
+  // },
 
   toggleOptiflowFlocking: function() {
     this.model.toggleOptiflowTracking();

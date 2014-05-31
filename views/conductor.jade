@@ -48,7 +48,8 @@ html
           button(class="specOption audioControlled" id="toggleStrobe") TOGGLE CLIENT LIGHT PULSE
           button(class="specOption", id="toggleMotion") START MOTION TRACKING
           button(class="specOption", id="toggleOptiflowFlocking") Motion Tracking to Flocking
-
+          button(class="specOption", id="tiltGrid") TILT THE GRID
+  
     script.
       $(document).on('touchmove', function(e) {
         e.preventDefault();
@@ -76,4 +77,10 @@ html
       $('body').on('touchmove', '.scrollable', function(e) {
         e.stopPropagation();
       });
+
+    script.
+      $(document).on('ready',function(){
+        startTrack();
+        });
+      $('#tiltGrid').click(function(){server.emit('tiltGrid','tilt')});
 

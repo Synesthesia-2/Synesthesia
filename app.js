@@ -250,6 +250,13 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     clients.emit('newFadeTime', data);
   });
+
+  conductor.on('tiltGrid', function (data){
+    console.log('app hears tilt');
+    var satellite = io.of('/satellite');
+    state.currentColor = '#000000';    // Set current to black in the case of random
+   satellite.emit('tiltGrid', data);
+  });
 });
 
 //////////////////////////////////////////

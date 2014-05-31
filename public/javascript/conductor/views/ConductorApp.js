@@ -55,6 +55,10 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.server.emit('changeColor', data);
   },
 
+  tiltGrid: function(data) {
+    this.server.emit('tiltGrid', data);
+  },
+
   randomColor: function(data) {
     this.server.emit('randomColor', data);
   },
