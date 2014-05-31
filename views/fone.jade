@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Dancer Motion Tracker 
+    title  Gyroscope Visualizations
     meta(http-equiv="content-type", content="text/html; charset=utf-8")
     meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
@@ -28,7 +28,7 @@ html
     br
     p Shake Battle: Shaking your phone right-side-up will lower the bar, and shaking it upside-down will raise it. Play with your friends and see who can shakedown the hardest!
     br
-    p Spotlights: Point your phones up, and tilt it to move the searchlights. Now you're playing with power!
+    p Spotlights: Point your phones display upwards, and tilt it to move the searchlights. Now you're playing with power!
     br
     p Have fun playing with them and experiencing the synthesis of tech and art!
     h3 Connecting...
@@ -40,8 +40,8 @@ html
 
     script(src="javascript/fone/fone.js")
     script.
-      $(document).on('touchmove', function(e) {
-        e.preventDefault();
+      $('body').on('touchmove', '.scrollable', function(e) {
+        e.stopPropagation();
       });
     script.
       $(document).on('ready',function(){
