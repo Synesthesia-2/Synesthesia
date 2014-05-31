@@ -4,7 +4,7 @@ ClientSpace.Client = Backbone.Model.extend({
     this.set('strobe', false);
     this.set('currentColor', '#000000');
     this.set('audioColor', false);
-    this.set('currentShow', 'Synesthesia');
+    this.set('currentShow', 'Synesthesia v. 2');
     this.setCast();
     this.setEvents();
   },
