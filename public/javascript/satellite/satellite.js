@@ -29,8 +29,8 @@ var setShake = function (shakeData) {
   // console.log(shakeData, 'sdata');
   shake = zFilter(shakeData, shake);
   // console.log(shake, 'shake');
-  var scaled = shake / 50;
-  if (scaled < 8) {
+  var scaled = shake / 30;
+  if (scaled < 4) {
     projectionParams.shake  = scaled + 1;
   } else {
     tiltChange();
