@@ -12,7 +12,7 @@ var boids = [];
 var groupTogether = false;
 var oflowVBox = new PIXI.DisplayObjectContainer();
 var oflowV = new PIXI.Graphics();
-
+window.speedFactor = 1;
 
 var Boid = function(position, maxSpeed, maxForce) {
     var strength = Math.random()*2 + 2;
@@ -63,7 +63,7 @@ Boid.prototype.update = function() {
   // Update velocity
   this.vector.add(this.acceleration);
   // Limit speed (vector#limit?)
-  this.vector.setLength( Math.min(this.maxSpeed, this.vector.length()) );
+  this.vector.setLength( Math.min(this.maxSpeed, this.vector.length()) * (window.speedFactor / 2000 + .5) );
   this.position.add(this.vector);
   // Reset acceleration to 0 each cycle
   this.acceleration.multiplyScalar(.995);

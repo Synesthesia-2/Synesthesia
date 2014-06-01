@@ -22,4 +22,9 @@ $(document).ready(function() {
     optiFlowTracking = data.flocking;
   });
 
+  server.on('newFadeTime', function(data) {
+    console.log('received speed control of ', data);
+    window.speedFactor = data.fadeTime;
+  });
+
 });

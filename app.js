@@ -234,6 +234,7 @@ conductor.on('connection', function (conductor) {
   conductor.on('newFadeTime', function (data){
     var clients = io.of('/client');
     clients.emit('newFadeTime', data);
+    flock.emit('newFadeTime', data);
   });
 });
 
