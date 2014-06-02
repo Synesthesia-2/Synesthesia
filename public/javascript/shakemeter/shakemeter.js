@@ -34,7 +34,7 @@ var foneVisualize = function(score){
   var text = d3.select("#maintext");
   var scoretext = d3.select("#score");
 
-  var DIFFICULTY = 1; // Increase this to make shakes count for less
+  var DIFFICULTY = 0.3; // Increase this to make shakes count for less
   score = score / DIFFICULTY;
 
   // Insert your favorite shake-messages here. The key corresponds to 

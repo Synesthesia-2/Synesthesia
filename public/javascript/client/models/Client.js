@@ -5,6 +5,26 @@ ClientSpace.Client = Backbone.Model.extend({
     this.set('currentColor', '#000000');
     this.set('audioColor', false);
     this.set('currentShow', 'Synesthesia v. 2');
+    this.set('currentOrientation', {});
+    this.set('isTracking', false);
+    this.fone = io.connect('http://' + window.location.host + "/fone");
+    this.fone.on('sessionId', function(data){this.get('currentOrientation').set({id: data});});
+    this.fone.on('welcome', function(data){
+      if (data.tracking) {
+        this.startTrack();
+      } else {
+      $h3.text('Connected. Motion tracking off.'); // change $h3
+    }
+    });
+    this.fone.on('reset', function(){ this.stopTrack(); });
+    this.fone.on('toggleMotion', function(data){
+      if (data.motion) {
+        this.startTrack();
+      } else {
+        this.stopTrack();
+      }
+    });
+    this.set();
     this.setCast();
     this.setEvents();
   },
@@ -19,14 +39,6 @@ ClientSpace.Client = Backbone.Model.extend({
 
   getAbout: function() {
     this.trigger('about', this);
-  },
-
-  startShow: function() {
-    this.trigger('startShow', this);
-  },
-
-  shakeShow: function() {
-    this.trigger('shakeShow', this);
   },
 
   loadIndex: function() {
@@ -146,6 +158,61 @@ ClientSpace.Client = Backbone.Model.extend({
         'when': 'TDB - Check our website regularly for updates!',
       }
     });
-  }
+  },
 
+  // Shake methods below
+  startShow: function() {
+    this.trigger('startShow', this);
+  },
+
+  shakeShow: function() {
+    this.trigger('shakeShow', this);
+  },
+
+  toggleTracking: function(){
+    this.set('isTracking', !isTracking);
+    if (this.get('isTracking')) {
+      this.startTrack();
+    } else {
+      this.stopTrack();
+    }
+  },
+
+  startTrack: function() {
+    $h3.text('Connected. Now tracking motion.');
+    this.initMotionListener();
+  },
+
+  stopTrack: function() {
+    $h3.text('Motion tracking off.');
+    this.removeMotionListener();
+  },
+
+  initMotionListener: function() {
+    window.addEventListener('devicemotion', boundDeviceMotion);
+    window.addEventListener('deviceorientation', boundDeviceOrientation);
+  },
+
+  removeMotionListener: function() {
+    window.removeEventListener('devicemotion', boundDeviceMotion);
+    window.removeEventListener('deviceorientation', boundDeviceOrientation);
+  },
+
+  onDeviceOrientation: function(event) {
+    this.get('currentOrientation').set({
+      alpha: Math.floor(event.alpha),
+      beta: Math.floor(event.beta),
+      gamma: Math.floor(event.gamma)
+    });
+  },
+
+  onDeviceMotion: function(event) {
+    var accel = event.acceleration;
+    var totalAcc = Math.floor(Math.abs(accel.x) + Math.abs(accel.y) + Math.abs(accel.z));
+    this.get('currentOrientation').set({
+      accel: accel,
+      totalAcc: totalAcc
+    });
+    this.fone.emit('motionData', this.get('currentOrientation'));
+  },
 });
