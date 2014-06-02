@@ -9,7 +9,7 @@ var width = Math.max(320, innerWidth),
 var camWidth = 640,
     camHeight = 480;
 
-var centerShifting = false;
+var centerShifting = true;
 var tilting = false;
 
 var yOffset = 3;
@@ -158,33 +158,37 @@ var resetCollectionBins = function () {
 var shiftCenter = function(collectedData) {
     var xShift, yShift;
     // console.log(collectedData);
-    if (collectedData.flowU >= 0 ) {
-        xShift = Math.min(collectedData.flowU, 2);
-    } else {
-        xShift = Math.max(collectedData.flowU, -2);
-    }
+    // if (collectedData.flowU >= 0 ) {
+    //     xShift = Math.min(collectedData.flowU, 2);
+    // } else {
+    //     xShift = Math.max(collectedData.flowU, -2);
+    // }
 
-    if (collectedData.flowV >= 0 ) {
-        yShift = Math.min(collectedData.flowV, 3);
-    } else {
-        yShift = Math.max(collectedData.flowV, -3);
-    }
+    // if (collectedData.flowV >= 0 ) {
+    //     yShift = Math.min(collectedData.flowV, 3);
+    // } else {
+    //     yShift = Math.max(collectedData.flowV, -3);
+    // }
 
-    xShift *= 0.1;
-    yShift *= 0.1;
-    console.log('shifts',xShift,yShift);
+    // xShift *= 0.1;
+    // yShift *= 0.1;
+    // console.log('shifts',xShift,yShift);
 
+    xShift = collectedData.flowU / 10;
+    yShift = collectedData.flowV / 10;
+    // var nextX = projectionParams.center[0] + xShift;
+    // if((nextX >= xMin) && (nextX <= xMax)) {
+    //     projectionParams.center[0] = nextX;
+    // }
+    // // projectionParams.center[1] += ;
 
-    var nextX = projectionParams.center[0] + xShift;
-    if((nextX >= xMin) && (nextX <= xMax)) {
-        projectionParams.center[0] = nextX;
-    }
-    // projectionParams.center[1] += ;
+    // var nextY = projectionParams.center[1] + (yShift + yOffset);
+    // if(nextY >= yMin && nextY <= yMax) {
+    //   projectionParams.center[1] = nextY;
+    // }
 
-    var nextY = projectionParams.center[1] + (yShift + yOffset);
-    if(nextY >= yMin && nextY <= yMax) {
-      projectionParams.center[1] = nextY;
-    }
+    blobCoords[0] += xShift;
+    blobCoords[1] += yShift;
 } ;
 
 var nextMove = function () {
@@ -198,8 +202,8 @@ var nextMove = function () {
       blobCoords = randomCenterAdjustment(blobCoords, wobbleFactor);
     }
 
-    projectionParams.center[0] = zFilter(blobCoords[0], projectionParams.center[0]);
-    projectionParams.center[1] = zFilter(blobCoords[1], projectionParams.center[1]);
+    projectionParams.center[0] = zFilter(blobCoords[0], projectionParams.center[0], 0.3);
+    projectionParams.center[1] = zFilter(blobCoords[1], projectionParams.center[1], 0.3);
 
     nextPath = makeProjPath(projectionParams);
 
@@ -262,7 +266,7 @@ var getBlobCoords = function (blobData) {
   }
 };
 var getFreq = function ( audioData ) {
-   console.log(audioData);
+   // console.log(audioData);
     var freq = audioData.hz;
     projectionParams.freq = zFilter(freq, projectionParams.freq, 0.96);
 };
