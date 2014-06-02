@@ -285,7 +285,7 @@ optiflow.on('connection', function (optiflow) {
     tracking: state.optiFlowTrack
   });
   optiflow.on('optiFlowData', function (optiFlowData) {
-    // console.log(optiFlowData);
+    console.log(optiFlowData);
     linedance.emit('optiFlowData', optiFlowData);
     flock.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);

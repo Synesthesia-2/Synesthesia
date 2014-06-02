@@ -10,7 +10,7 @@ var view = {
 
 var boids = [];
 var groupTogether = false;
-
+var optiflowVector = new PIXI.Vector(0, 0);
 
 var Boid = function(position, maxSpeed, maxForce) {
     var strength = Math.random()*2 + 2;
@@ -54,6 +54,21 @@ Boid.prototype.flock = function(boids) {
   var alignment = this.align(boids).multiplyScalar(30);
   var cohesion = this.cohesion(boids).multiplyScalar(20);
   var borders = this.borders().multiplyScalar(2.5);
+
+  if (window.boidData && window.boidData.u) {
+      // exponentially map u and v components of optiflow data vector
+      // origin values are between 0 and 1.5
+      // mapped values are between 0 and 16
+      var u = window.boidData.u;
+      var v = window.boidData.v;
+      //- u = Math.pow(2, u);
+      //- v = Math.pow(2, v);
+      optiflowVector.x -= u;
+      optiflowVector.y += v;
+  }
+  optiflowVector.length *= .99;
+
+
   this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
 };
 
@@ -430,7 +445,7 @@ Boid.prototype.cohesion = function(boids) {
           boid.container.rotation = boid.vector.rad() + .7707;
 
           var flapFactor = boid.count * boid.vector.lengthSq() * .3;
-          boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .85, .6);
+          boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .15, .6);
 
           boid.run(boids);
           // msg = stats.innerHTML;
