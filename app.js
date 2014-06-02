@@ -277,6 +277,7 @@ audio.on('connection', function (audio) {
       clients.emit('audio', data);
     }
     fireworks.emit('audio', data);
+    satellite.emit('audio', data);
   });
 });
 

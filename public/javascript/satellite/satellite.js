@@ -262,8 +262,9 @@ var getBlobCoords = function (blobData) {
   }
 };
 var getFreq = function ( audioData ) {
+   console.log(audioData);
     var freq = audioData.hz;
-    projectionParams.freq = zFilter(freq, projectionParams.freq, 0.97);
+    projectionParams.freq = zFilter(freq, projectionParams.freq, 0.96);
 };
 
 var handleShakes = function(data){
