@@ -24,13 +24,15 @@ var blobWobble = false;
 var wobbleFactor = 0.3;
 var shakeData = 0;
 var shake = 0;
+var shakeScalingFactor = 20;
+var flowCutOff = 0.7;
 
 var setShake = function (shakeData) {
   // console.log(shakeData, 'sdata');
   shake = zFilter(shakeData, shake);
   // console.log(shake, 'shake');
-  var scaled = shake / 30;
-  if (scaled < 8) {
+  var scaled = shake / shakeScalingFactor;
+  if (scaled < 6) {
     projectionParams.shake  = scaled + 1;
   } else {
     tiltChange();
@@ -174,8 +176,8 @@ var shiftCenter = function(collectedData) {
     // yShift *= 0.1;
     // console.log('shifts',xShift,yShift);
 
-    xShift = collectedData.flowU / 10;
-    yShift = collectedData.flowV / 10;
+    xShift = collectedData.flowU / 12;
+    yShift = collectedData.flowV / 12;
     // var nextX = projectionParams.center[0] + xShift;
     // if((nextX >= xMin) && (nextX <= xMax)) {
     //     projectionParams.center[0] = nextX;
@@ -202,8 +204,8 @@ var nextMove = function () {
       blobCoords = randomCenterAdjustment(blobCoords, wobbleFactor);
     }
 
-    projectionParams.center[0] = zFilter(blobCoords[0], projectionParams.center[0], 0.3);
-    projectionParams.center[1] = zFilter(blobCoords[1], projectionParams.center[1], 0.3);
+    projectionParams.center[0] = zFilter(blobCoords[0], projectionParams.center[0], 0.4);
+    projectionParams.center[1] = zFilter(blobCoords[1], projectionParams.center[1], 0.4);
 
     nextPath = makeProjPath(projectionParams);
 
@@ -237,16 +239,16 @@ d3.select("path")
 
 
 var collectOptiFlowData = function (optiFlowData) {
-    if (Math.abs(optiFlowData.u) > 0.5){
+    if (Math.abs(optiFlowData.u) > flowCutOff){
         collectedData.flowU += flowDataScalingFactor * optiFlowData.u; 
     }
-    if (Math.abs(optiFlowData.v) > 0.5){
+    if (Math.abs(optiFlowData.v) > flowCutOff){
         collectedData.flowV += flowDataScalingFactor * optiFlowData.v; 
     }
 };
 
 var scaleToScreenCoords = function (coordArr) {
-    console.log("scale to screen")
+    console.log("scale to screen");
     var x = coordArr[0] / camWidth;
     var y = coordArr[1] / camHeight;
     // x and y should now be in range (0, 1);
