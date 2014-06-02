@@ -295,6 +295,7 @@ optiflow.on('connection', function (optiflow) {
     linedance.emit('optiFlowData', optiFlowData);
     flock.emit('optiFlowData', optiFlowData);
     grassfield.emit('optiFlowData', optiFlowData);
+    satellite.emit('optiFlowData', optiFlowData);
   });
 });
 
