@@ -3,30 +3,39 @@ server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
 
-var WIDTH = Math.max(960, innerWidth); //640
-var HEIGHT = Math.max(500, innerHeight); //480
+// Set window parameters
+var WIDTH = innerWidth;
+var HEIGHT = innerHeight;
 
+// This will hold the sum of all incoming acceleration data
 var shakeData = 0;
+// This will hold the current 'score', which is just a snapshot of shakeData
+var currentScore = 0;
+// This tracks the highest 'score' so far
 var hiScore = 0;
 
 var svg = d3.select("body").append("svg")
     .style("background-color", "black")
     .attr("width", WIDTH)
     .attr("height", HEIGHT);
+  svg.append("rect");
+  svg.append("text").attr("id", "maintext");
+  svg.append("text").attr("id", "score");
 
-svg.append("rect");
-svg.append("text").attr("id", "maintext");
-svg.append("text").attr("id", "score");
+// This function smoothes out the jitteriness of transitioning between very 
+// different scores. Set 'z' higher for more smoothing, and lower for less effect
+var zFilter = function(inputData, previousValue){
+  var z = 0.9; // set this between 0 and 1
+  return (z*previousValue + (1-z)*inputData);
+};
 
-var foneVisualize = function(acceleration){
+var foneVisualize = function(score){
   var bars = d3.select("rect");
   var text = d3.select("#maintext");
   var scoretext = d3.select("#score");
 
-  var zFilter = function(inputData, previousValue){
-    var z = 0.9; // set this between 0 and 1
-    return (z*previousValue + (1-z)*inputData);
-  };
+  var DIFFICULTY = 1; // Increase this to make shakes count for less
+  score = score / DIFFICULTY;
 
   // Insert your favorite shake-messages here. The key corresponds to 
   // how much of the shakometer is filled.
@@ -44,18 +53,11 @@ var foneVisualize = function(acceleration){
     10: "SHAKE OVERLOAD!SHAKE OVERLOAD!SHAKE OVERLOAD!"
   };
 
-  var DIFFICULTY = 1; // Increase this to make shakes count for less
-
-  var prevHeight = bars.attr("height");
-  acceleration = acceleration / DIFFICULTY;
-  var nextHeight = Math.floor(zFilter(acceleration,prevHeight));
-  
   // set text to be displayed
-  var displayText = (nextHeight >= HEIGHT) ? "MAX SHAKES!!!!" : nextHeight + " shakes";
-  hiScore = (nextHeight > hiScore) ? nextHeight : hiScore;
+  var displayText = (score >= HEIGHT) ? "MAX SHAKES!!!!" : score + " shakes";
 
   // This is for selecting the 'smacktalk' to be displayed
-  var percent = Math.floor(10 * nextHeight/HEIGHT);
+  var percent = Math.floor(10 * score/HEIGHT);
   var maxlabel = Math.max(Object.keys(labels));
   var subText;
   if (percent > maxlabel){
@@ -68,10 +70,10 @@ var foneVisualize = function(acceleration){
     .transition()
     .duration(100)
     .attr("x", 0)
-    .attr("y", HEIGHT - nextHeight)
-    .attr("height", nextHeight)
+    .attr("y", HEIGHT - score)
+    .attr("height", score)
     .attr("width", WIDTH)
-    .style("fill", function(d,i){return "hsl(" + (nextHeight/HEIGHT*360) + ",100%,50%)";});
+    .style("fill", function(d,i){return "hsl(" + (score/HEIGHT*360) + ",100%,50%)";});
 
   text
     .transition()
@@ -101,6 +103,9 @@ server.on('motionData', function(data){
 });
 
 setInterval(function(){
-  foneVisualize(shakeData);
+  currentScore = Math.floor(zFilter(shakeData, currentScore)); 
+  hiScore = (currentScore > hiScore) ? currentScore : hiScore;
+  foneVisualize(currentScore);
+  // Reset shakeData to 0, otherwise meter will keep growing
   shakeData = 0;
 }, 100);
