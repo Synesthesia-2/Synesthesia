@@ -128,7 +128,7 @@ webcamio.sockets.on('connection', function (socket) {
       socket.emit("message", msg);
       flock.emit("blob", msg);
       particles.emit("blob", msg);
-      console.log('Sent blob to flock and particles!', msg);
+      // console.log('Sent blob to flock and particles!', msg);
     });
   });
   socket.on("message", function (obj) {
@@ -212,7 +212,7 @@ conductor.on('connection', function (conductor) {
       state.optiflowFlocking = false;
     }
     flock.emit('toggleOptiflowFlocking', data);
-    console.log('toggleOptiflowFlocking: ', data.flocking);
+    // console.log('toggleOptiflowFlocking: ', data.flocking);
   });
 
   conductor.on('toggleStrobe', function (data){
@@ -271,7 +271,7 @@ clients.on('connection', function (client) {
 audio.on('connection', function (audio) {
   audio.emit('welcome', {audio: state.audio});
   audio.on('audio', function (data){
-    console.log(data);  // Leave in for test logging until Monday
+    // console.log(data);  // Leave in for test logging until Monday
     var clients = io.of('/client');
     if (state.audioLights) {
       clients.emit('audio', data);
@@ -314,7 +314,7 @@ fone.on('connection', function (fone) {
   //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
   // });
   fone.on('motionData', function (data) {
-    console.log(data);
+    // console.log(data);
     shakemeter.emit('motionData', data);
     shakebattle.emit('motionData', data);
     spotlights.emit('motionData', data);
