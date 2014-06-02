@@ -160,6 +160,7 @@ dancer.on('connection', function (dancer) {
   });
   dancer.on('motionData', function (data) {
     fireworks.emit('motionData', data);
+    // satellite.emit('motionData', data);
   });
 });
 
@@ -313,6 +314,7 @@ fone.on('connection', function (fone) {
   //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
   // });
   fone.on('motionData', function (data) {
+    console.log(data);
     shakemeter.emit('motionData', data);
     shakebattle.emit('motionData', data);
     spotlights.emit('motionData', data);
