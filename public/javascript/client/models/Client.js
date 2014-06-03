@@ -2,6 +2,7 @@ ClientSpace.Client = Backbone.Model.extend({
 
   initialize: function() {
     _.bindAll(this, 
+      'shakeInitialize',
       'setSessionId', 
       'handleWelcome', 
       'handleReset', 
@@ -18,6 +19,11 @@ ClientSpace.Client = Backbone.Model.extend({
     this.set('currentColor', '#000000');
     this.set('audioColor', false);
     this.set('currentShow', 'Synesthesia v. 2');
+    this.setCast();
+    this.setEvents();
+  },
+
+  shakeInitialize: function(){
     this.set('currentOrientation', {});
     this.set('isTracking', false);
     this.fone = io.connect('http://' + window.location.host + "/fone");
@@ -26,10 +32,7 @@ ClientSpace.Client = Backbone.Model.extend({
     this.fone.on('reset', this.handleReset);
     this.fone.on('toggleMotion', this.handleToggleMotion);
     this.fone.on('toggleTracking', this.toggleTracking);
-    this.setCast();
-    this.setEvents();
-    $('h3').text('heheheh');
-    // this.startTrack(); //for testing
+    console.log("Shake setup complete.");
   },
 
   setSessionId: function(data) {
@@ -37,6 +40,7 @@ ClientSpace.Client = Backbone.Model.extend({
   },
 
   handleWelcome: function(data) {
+    $('h3').text('Connected.');
     if (data.tracking) {
       this.startTrack();
     } else {
@@ -207,14 +211,13 @@ ClientSpace.Client = Backbone.Model.extend({
     }
   },
 
-
   startTrack: function() {
     $('h3').text('Connected. Now tracking motion.');
     this.initMotionListener();
   },
 
   stopTrack: function() {
-    $('h3').text('Motion tracking off.');
+    $('h3').text('Connected. Motion tracking off.');
     this.removeMotionListener();
   },
 
@@ -240,7 +243,6 @@ ClientSpace.Client = Backbone.Model.extend({
   },
 
   onDeviceMotion: function(event) {
-    console.log('listening!');
     var accel = event.acceleration;
     var totalAcc = Math.floor(Math.abs(accel.x) + Math.abs(accel.y) + Math.abs(accel.z));
     var co = this.get('currentOrientation');
