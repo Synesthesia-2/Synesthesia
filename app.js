@@ -89,23 +89,23 @@ middleware.setSettings(app, express);
 
 // render routes
 app.get('/', routes.renderClient);
-app.get('/conductor', routes.renderView);
-app.get('/fireworks', routes.renderView);
-app.get('/audio', routes.renderView);
-app.get('/optiflow', routes.renderView);
-app.get('/linedance', routes.renderView);
-app.get('/grassfield', routes.renderView);
-app.get('/fone', routes.renderView);
-app.get('/shakemeter', routes.renderView);
-app.get('/shakebattle', routes.renderView);
-app.get('/spotlights', routes.renderView);
-app.get('/dancer', routes.renderView);
-app.get('/flock', routes.renderView);
-app.get('/update', routes.renderView);
-app.get('/satellite', routes.renderView);
-app.get('/particles', routes.renderView);
+// app.get('/conductor', routes.renderView);
+// app.get('/fireworks', routes.renderView);
+// app.get('/audio', routes.renderView);
+// app.get('/optiflow', routes.renderView);
+// app.get('/linedance', routes.renderView);
+// app.get('/grassfield', routes.renderView);
+// app.get('/fone', routes.renderView);
+// app.get('/shakemeter', routes.renderView);
+// app.get('/shakebattle', routes.renderView);
+// app.get('/spotlights', routes.renderView);
+// app.get('/dancer', routes.renderView);
+// app.get('/flock', routes.renderView);
+// app.get('/update', routes.renderView);
+// app.get('/satellite', routes.renderView);
+// app.get('/particles', routes.renderView);
 // app.get('/DNE', routes.render404);
-app.get('*', routes.render404);
+app.get('*', routes.renderView);
 app.use(function(err, req, res, next){
   if(err) {
     console.log(err);
