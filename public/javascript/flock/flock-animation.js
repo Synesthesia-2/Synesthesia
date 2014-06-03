@@ -1,11 +1,29 @@
 (function() {
-  // Setting some sweet global variables (note: Refactor to globalize, except for optiflowVector)
-  var view = {
-    size: {
-      width: window.innerWidth,
-      height: window.innerHeight
-    }
+  var size = {
+    width: window.innerWidth,
+    height: window.innerHeight
   };
+  // create an new instance of a pixi _stage - and set it to be interactive
+  var _stage = new PIXI.Stage(0xd9e2cc);
+  _stage.setInteractive(true);
+
+  // create a _renderer instance
+  var _renderer = PIXI.autoDetectRenderer(size.width, size.height);
+
+  _renderer.view.style.width = size.width + "px";
+  _renderer.view.style.height = size.height + "px";
+
+  _renderer.view.style.display = "block";
+
+  requestAnimFrame(animate);
+  var renderTexture = new PIXI.RenderTexture(size.width, size.height);
+
+  var _target = new PIXI.DisplayObjectContainer();
+  _stage.addChild(_target);
+  var count = 0;
+
+  // add render view to DOM
+  document.body.appendChild(_renderer.view);
 
   var boids = [];
   var groupTogether = false;
@@ -14,14 +32,15 @@
   var path = []; 
   
   // Create a path. This is for testing. Ideally we should detect an outline with an IR camera and using that data for the path.
-  var steps = 30;
+  var steps = 90;
   for (var i = 0; i < steps; i++) {
     path.push(new PIXI.Vector(
-      (view.size.width / 2) + 300 * Math.cos(2 * Math.PI * i / steps),
-      (view.size.height / 2) + 300 * Math.sin(2 * Math.PI * i / steps)
+      (size.width / 2) + 300 * Math.cos(2 * Math.PI * i / steps),
+      (size.height / 2) + 300 * Math.sin(2 * Math.PI * i / steps)
      ));
+    console.log(path);
   }
-
+console.log(path);
   var Boid = function(position, maxSpeed, maxForce) {
     var strength = Math.random()*2 + 1;
     this.acceleration = new PIXI.Vector();
@@ -32,7 +51,7 @@
     this.maxForce = maxForce + strength;
     this.amount = strength * 10 + 10;
     this.count = 0;
-    this.flap = Math.random() * .5 + .5;
+    this.flap = Math.random() * 0.5 + 0.5;
   };
 
   Boid.prototype.run = function(boids) {
@@ -48,7 +67,7 @@
   Boid.prototype.flock = function(boids) {
     var separation = this.separate(boids).multiplyScalar(1);
     var alignment = this.align(boids).multiplyScalar(20);
-    var cohesion = this.cohesion(boids).multiplyScalar(.5);
+    var cohesion = this.cohesion(boids).multiplyScalar(0.5);
     var borders = this.borders().multiplyScalar(2);
     this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
   };
@@ -72,7 +91,7 @@
     // Reset acceleration to 0 each cycle
     // The closer to 0 this is, the more insect like the behavior
     // with sudden changes in direction
-    this.acceleration.multiplyScalar(.95);
+    this.acceleration.multiplyScalar(0.95);
   };
 
   Boid.prototype.seek = function(target) {
@@ -95,11 +114,11 @@
     if (position.y < -radius){
       vector.y = borderFactor * (-radius - position.y);
     }
-    if (position.x > size.x + radius){
-      vector.x = -borderFactor * (position.x - size.x - radius);
+    if (position.x > size.width + radius){
+      vector.x = -borderFactor * (position.x - size.width - radius);
     }
-    if (position.y > size.y + radius) {
-      vector.y = -borderFactor * (position.y - size.y - radius);
+    if (position.y > size.height + radius) {
+      vector.y = -borderFactor * (position.y - size.height - radius);
     }
 
     return vector;
@@ -207,48 +226,20 @@
     return sum;
   };
 
-  var size = {
-    x: window.innerWidth,
-    y: window.innerHeight
-  };
-  // create an new instance of a pixi _stage - and set it to be interactive
-  var _stage = new PIXI.Stage(0xd9e2cc);
-  _stage.setInteractive(true);
-
-  // create a _renderer instance
-  var _renderer = PIXI.autoDetectRenderer(size.x, size.y);
-
-  _renderer.view.style.width = size.x + "px";
-  _renderer.view.style.height = size.y + "px";
-
-  _renderer.view.style.display = "block";
-
-  requestAnimFrame(animate);
-  var renderTexture = new PIXI.RenderTexture(size.x, size.y);
-
-  var _target = new PIXI.DisplayObjectContainer();
-  _stage.addChild(_target);
-  var count = 0;
-
-  // add render view to DOM
-  document.body.appendChild(_renderer.view);
-
   //Main loop -
   init();
-  _stage.setInteractive(true);
-  _stage.mousedown = _stage.touchstart = onMouseDown;
 
   function init() {
     var boidContainers = [];
 
     // Add the boids:
     for (var i = 0; i < 200; i++) {
-      var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
-      var boid = new Boid(position, .1, 20);
+      var position = new PIXI.Point(Math.random() * size.width, Math.random() * size.height);
+      var boid = new Boid(position, 1, 20);
       var boidContainer = new PIXI.DisplayObjectContainer();
       var boidGraphic = new PIXI.Graphics();
       boidGraphic.beginFill(0x002244);
-      boidGraphic.drawCircle(0, 0, 4);
+      boidGraphic.drawCircle(0, 0, 5);
       boidGraphic.endFill();
 
 
@@ -263,6 +254,8 @@
       _target.addChild(boidContainer);
       _stage.addChild(boidContainer);
     }
+  _stage.setInteractive(true);
+  _stage.mousedown = _stage.touchstart = onMouseDown;
   }
 
   function onMouseDown() {
@@ -290,8 +283,8 @@
       boid.container.alpha = 1.1 - (1 / (boid.vector.lengthSq() + 1)) ;
       boid.container.rotation = -boid.vector.rad();
 
-      var flapFactor = boid.count * boid.vector.lengthSq() * .2;
-      boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .45, .6);
+      var flapFactor = boid.count * boid.vector.lengthSq() * 0.2;
+      boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + 0.45, 0.6);
 
       boid.run(boids);
     }
