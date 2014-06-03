@@ -13,10 +13,11 @@ ClientSpace.Client = Backbone.Model.extend({
     this.fone.on('welcome', this.handleWelcome.bind(this));
     this.fone.on('reset', this.handleReset.bind(this));
     this.fone.on('toggleMotion', this.handleToggleMotion.bind(this));
+    this.fone.on('toggleTracking', this.toggleTracking.bind(this));
     this.setCast();
     this.setEvents();
     $('h3').text('heheheh');
-    this.startTrack(); //for testing
+    // this.startTrack(); //for testing
   },
 
   setSessionId: function(data) {
@@ -183,14 +184,17 @@ ClientSpace.Client = Backbone.Model.extend({
     this.trigger('shakeShow', this);
   },
 
-  // toggleTracking: function(){
-  //   this.set('isTracking', !isTracking);
-  //   if (this.get('isTracking')) {
-  //     this.startTrack();
-  //   } else {
-  //     this.stopTrack();
-  //   }
-  // },
+  toggleTracking: function(){
+    console.log(2);
+    var isTracking = this.get('isTracking');
+    isTracking = !isTracking;
+    this.set('isTracking', isTracking);
+    if (this.get('isTracking')) {
+      this.startTrack();
+    } else {
+      this.stopTrack();
+    }
+  },
 
 
   startTrack: function() {
