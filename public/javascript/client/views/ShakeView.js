@@ -25,7 +25,6 @@ ClientSpace.ShakeView = Backbone.View.extend({
   },
 
   toggleTracking: function() {
-    console.log(1);
     this.model.toggleTracking();
   },
 

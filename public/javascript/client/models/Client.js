@@ -1,7 +1,19 @@
 ClientSpace.Client = Backbone.Model.extend({
 
   initialize: function() {
-    var self = this;
+    _.bindAll(this, 
+      'setSessionId', 
+      'handleWelcome', 
+      'handleReset', 
+      'handleToggleMotion',
+      'toggleTracking',
+      'startTrack',
+      'stopTrack',
+      'initMotionListener',
+      'removeMotionListener',
+      'onDeviceOrientation',
+      'onDeviceMotion'
+    );
     this.set('strobe', false);
     this.set('currentColor', '#000000');
     this.set('audioColor', false);
@@ -9,11 +21,11 @@ ClientSpace.Client = Backbone.Model.extend({
     this.set('currentOrientation', {});
     this.set('isTracking', false);
     this.fone = io.connect('http://' + window.location.host + "/fone");
-    this.fone.on('sessionId', this.setSessionId.bind(this));
-    this.fone.on('welcome', this.handleWelcome.bind(this));
-    this.fone.on('reset', this.handleReset.bind(this));
-    this.fone.on('toggleMotion', this.handleToggleMotion.bind(this));
-    this.fone.on('toggleTracking', this.toggleTracking.bind(this));
+    this.fone.on('sessionId', this.setSessionId);
+    this.fone.on('welcome', this.handleWelcome);
+    this.fone.on('reset', this.handleReset);
+    this.fone.on('toggleMotion', this.handleToggleMotion);
+    this.fone.on('toggleTracking', this.toggleTracking);
     this.setCast();
     this.setEvents();
     $('h3').text('heheheh');
@@ -185,7 +197,6 @@ ClientSpace.Client = Backbone.Model.extend({
   },
 
   toggleTracking: function(){
-    console.log(2);
     var isTracking = this.get('isTracking');
     isTracking = !isTracking;
     this.set('isTracking', isTracking);
@@ -199,22 +210,22 @@ ClientSpace.Client = Backbone.Model.extend({
 
   startTrack: function() {
     $('h3').text('Connected. Now tracking motion.');
-    this.initMotionListener.bind(this)();
+    this.initMotionListener();
   },
 
   stopTrack: function() {
     $('h3').text('Motion tracking off.');
-    this.removeMotionListener.bind(this);
+    this.removeMotionListener();
   },
 
   initMotionListener: function() {
-    window.addEventListener('devicemotion', this.onDeviceMotion.bind(this));
-    window.addEventListener('deviceorientation', this.onDeviceOrientation.bind(this));
+    window.addEventListener('devicemotion', this.onDeviceMotion);
+    window.addEventListener('deviceorientation', this.onDeviceOrientation);
   },
 
   removeMotionListener: function() {
-    window.removeEventListener('devicemotion', this.onDeviceMotion.bind(this));
-    window.removeEventListener('deviceorientation', this.onDeviceOrientation.bind(this));
+    window.removeEventListener('devicemotion', this.onDeviceMotion);
+    window.removeEventListener('deviceorientation', this.onDeviceOrientation);
   },
 
   onDeviceOrientation: function(event) {
@@ -229,7 +240,7 @@ ClientSpace.Client = Backbone.Model.extend({
   },
 
   onDeviceMotion: function(event) {
-    console.log('accel');
+    console.log('listening!');
     var accel = event.acceleration;
     var totalAcc = Math.floor(Math.abs(accel.x) + Math.abs(accel.y) + Math.abs(accel.z));
     var co = this.get('currentOrientation');
