@@ -247,8 +247,9 @@ conductor.on('connection', function (conductor) {
 
 clients.on('connection', function (client) {
   state.connections += 1;
+  console.log('connection!!!!',client);
 
-  client.emit("welcome", {
+  clients.emit("welcome", {
     id: client.id,
     message: "welcome!",
     mode: {
@@ -258,7 +259,7 @@ clients.on('connection', function (client) {
     }
   });
 
-  client.on('disconnect', function (){
+  clients.on('disconnect', function (){
     state.connections -= 1;
   });
 
