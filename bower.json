@@ -21,6 +21,9 @@
     "tweenlite": "~1.11.5",
     "tweenjs": "*",
     "two": "~0.3.0",
-    "threejs": "*"
+    "threejs": "*",
+    "sinon": "~1.10.2",
+    "mocha": "~1.20.0",
+    "phantom": "~1.9.7"
   }
 }
