@@ -24,7 +24,8 @@ ClientSpace.IndexView = Backbone.View.extend({
   },
 
   shakeShow: function() {
-    location.href="/fone";
+    // location.href="/fone";
+    this.model.shakeShow();
   },
 
   showCastList: function(e) {
