@@ -7,6 +7,10 @@ server.on('welcome', function (data) {
 var WIDTH = innerWidth;
 var HEIGHT = innerHeight;
 
+// Increase this to make shakes count for less. Default is 1.
+var DIFFICULTY = 0.2; 
+
+
 // This will hold the sum of all incoming acceleration data
 var shakeData = 0;
 // This will hold the current 'score', which is just a snapshot of shakeData
@@ -33,9 +37,6 @@ var foneVisualize = function(score){
   var bars = d3.select("rect");
   var text = d3.select("#maintext");
   var scoretext = d3.select("#score");
-
-  var DIFFICULTY = 0.3; // Increase this to make shakes count for less
-  score = score / DIFFICULTY;
 
   // Insert your favorite shake-messages here. The key corresponds to 
   // how much of the shakometer is filled.
@@ -103,6 +104,7 @@ server.on('motionData', function(data){
 });
 
 setInterval(function(){
+  shakeData = Math.floor(shakeData/ DIFFICULTY);
   currentScore = Math.floor(zFilter(shakeData, currentScore)); 
   hiScore = (currentScore > hiScore) ? currentScore : hiScore;
   foneVisualize(currentScore);
