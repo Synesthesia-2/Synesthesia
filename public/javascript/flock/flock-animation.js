@@ -38,11 +38,10 @@
       (size.width / 2) + 300 * Math.cos(2 * Math.PI * i / steps),
       (size.height / 2) + 300 * Math.sin(2 * Math.PI * i / steps)
      ));
-    console.log(path);
   }
-console.log(path);
+
   var Boid = function(position, maxSpeed, maxForce) {
-    var strength = Math.random()*2 + 1;
+    var strength = Math.random() + 1.5;
     this.acceleration = new PIXI.Vector();
     this.vector = new PIXI.Vector(Math.random(), Math.random()).multiplyScalar(50).add(new PIXI.Vector(10,10));
     this.position = position.clone();
@@ -80,7 +79,7 @@ console.log(path);
       optiflowVector.y += v;
     }
     return vector;
-  }
+  };
 
   Boid.prototype.update = function() {
     // Update velocity
@@ -233,13 +232,14 @@ console.log(path);
     var boidContainers = [];
 
     // Add the boids:
-    for (var i = 0; i < 200; i++) {
+    for (var i = 0; i < 100; i++) {
       var position = new PIXI.Point(Math.random() * size.width, Math.random() * size.height);
-      var boid = new Boid(position, 1, 20);
+      var boid = new Boid(position, 2, 1);
       var boidContainer = new PIXI.DisplayObjectContainer();
       var boidGraphic = new PIXI.Graphics();
       boidGraphic.beginFill(0x002244);
       boidGraphic.drawCircle(0, 0, 5);
+      boidGraphic.lineTo(3.5,0);
       boidGraphic.endFill();
 
 
@@ -280,11 +280,11 @@ console.log(path);
       boid.vector.normalize();
 
       boid.count += (1 + boid.flap);
-      boid.container.alpha = 1.1 - (1 / (boid.vector.lengthSq() + 1)) ;
+      boid.container.alpha = 1.1 - (1 / (boid.vector.lengthSq() + .5)) ;
       boid.container.rotation = -boid.vector.rad();
 
       var flapFactor = boid.count * boid.vector.lengthSq() * 0.2;
-      boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + 0.45, 0.6);
+      boid.container.scale = new PIXI.Point(Math.sin(flapFactor)*.25 + 0.85, 0.6);
 
       boid.run(boids);
     }
