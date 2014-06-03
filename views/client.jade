@@ -39,10 +39,18 @@ html
       button#exitShow Quit
 
     script#shake(type="text/x-handlebars-template")
-      h2 Welcome to the show! 
-      h3 These interactive visualizations use your phones gyroscope and accelerometer to influence what you see.
-      h3 Have fun playing with them and experiencing the synthesis of tech and art!
-      button#toggleTracking Toggle motion tracking
+      h1 Welcome to the show! 
+      h2 These interactive visualizations use your phone's gyroscope and accelerometer to influence what you see.
+      br
+      //- h2 Shake-o-Meter: The more people that participate, the more fun it is! Beat the high score!
+      //- br
+      //- h2 Shake Battle: Shaking your phone right-side-up will lower the bar, and shaking it upside-down will raise it. Play with your friends and see who can shakedown the hardest!
+      //- br
+      //- h2 Spotlights: Point your phones display upwards, and tilt it to move the searchlights. Now you're playing with power!
+      //- br
+      //- h2 Have fun playing with them and experiencing the synthesis of tech and art!
+      h3 Connecting...
+      button#toggleTracking Toggle tracking on/off
       button#exitShow Quit
 
     script#castList(type="text/x-handlebars-template")
@@ -94,7 +102,7 @@ html
 
     script.
       var ClientSpace = {};
-      $(document).on('touchmove', function(e) {
+      $(document).on('touchmove', '.scrollable', function(e) {
         e.preventDefault();
       });
 

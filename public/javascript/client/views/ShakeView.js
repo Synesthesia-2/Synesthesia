@@ -11,6 +11,7 @@ ClientSpace.ShakeView = Backbone.View.extend({
     this.template = this.model.get('templates')['shake'];
     this.server = params.server;
     this.ip = this.server.get('ip');
+    this.model.shakeInitialize();
   },
 
   render: function() {
