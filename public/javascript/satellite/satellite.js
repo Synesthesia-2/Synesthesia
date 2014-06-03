@@ -3,57 +3,77 @@ server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
 
-//note: expect camera resolution to be 640 x 480
-var width = Math.max(320, innerWidth),
-    height = Math.max(240, innerHeight);
-var camWidth = 640,
-    camHeight = 480;
+// camera and optical flow constants
+// ** expect osc input camera resolution to be 640 x 480
+var CAMERAWIDTH = 640,
+    CAMERAHEIGHT = 480,
+    OFLOWSCALE = 1,
+    OFLOWCUTOFF = 0.7,
+    
+// satellite projection constants and defaults
+    PROJ_DISTANCE = 1.1,
+    PROJ_SCALE = 8500,
+    PROJ_ROTATION = [76.00, -34.50, 32.12],
+    DEFAULT_PROJ_CENTER = [0, 3],
+    DEFAULT_PROJ_TILT = 25,
 
-var centerShifting = true;
-var tilting = false;
+//  grid visualizer constants and defaults
+    DEFAULT_VISUALIZER_WIDTH = 320,
+    DEFAULT_VISUALIZER_HEIGHT = 420,
+    DEFAULT_WOBBLE_FACTOR = 0.3,
+    SHAKE_SCALING_FACTOR = 20,
+    MAX_SCALED_SHAKE = 6,
+    INIT_WOBBLE_STATUS = false,
+    INIT_CENTER_SHIFT_STATUS = true,
+    INIT_TILT_STATUS = false;
 
-var yOffset = 3;
-var flowDataScalingFactor = 1;
-var xMax = 2,
-    xMin = -2,
-    yMin = 0,
-    yMax = 5;
 
-var blobCoords = [0, 3];
-var blobWobble = false;
-var wobbleFactor = 0.3;
-var shakeData = 0;
-var shake = 0;
-var shakeScalingFactor = 20;
-var flowCutOff = 0.7;
+var visualizer = {};
 
-var setShake = function (shakeData) {
-  // console.log(shakeData, 'sdata');
-  shake = zFilter(shakeData, shake);
-  // console.log(shake, 'shake');
-  var scaled = shake / shakeScalingFactor;
-  if (scaled < 6) {
-    projectionParams.shake  = scaled + 1;
+visualizer.accelerationAccumulator = 0;
+visualizer.shake = 0;
+
+visualizer.settings = {};
+visualizer.settings.width = Math.max(DEFAULT_VISUALIZER_WIDTH, innerWidth);
+visualizer.settings.height = Math.max(DEFAULT_VISUALIZER_HEIGHT, innerHeight);
+visualizer.settings.camWidth = CAMERAWIDTH;
+visualizer.settings.camHeight = CAMERAHEIGHT;
+visualizer.settings.flowDataScalingFactor = OFLOWSCALE;
+visualizer.settings.centerCoords = DEFAULT_PROJ_CENTER;
+visualizer.settings.wobbleFactor = DEFAULT_WOBBLE_FACTOR;
+visualizer.settings.wobble = INIT_WOBBLE_STATUS;
+visualizer.settings.centerShifting = INIT_CENTER_SHIFT_STATUS;
+visualizer.settings.tilting = INIT_TILT_STATUS;
+
+
+
+
+visualizer.setShake = function (accelerationAccumulator) {
+  this.shake = zFilter(accelerationAccumulator, this.shake);
+  var scaled = this.shake / SHAKE_SCALING_FACTOR;
+  if (scaled < MAX_SCALED_SHAKE) {
+    this.projectionParams.shake  = scaled + 1;
   } else {
-    tiltChange();
-    projectionParams.shake = 1;
-    shake = 0;
+    this.tiltChange();
+    this.projectionParams.shake = 1;
+    this.shake = 0;
   }
 };
-//////////////////////////
-//  Projection Data Ranges
-/////////
-//  center x (-2,2)
-//  center y (0, 6)
-//  tilt (-20 20)
-//////////////////////////
+
+///////////////////////////////
+//  Projection Data Ranges   //
+///////////////////////////////
+//  center x (-2,2)          //
+//  center y (0, 6)          //
+//  tilt (-20 20)            //
+///////////////////////////////
 
 
-var projectionParams = {
-  distance: 1.1,
-  scale: 8500,
-  rotate: [76.00, -34.50, 32.12],
-  center: [0, 3],
+visualizer.projectionParams = {
+  distance: PROJ_DISTANCE,
+  scale: PROJ_SCALE,
+  rotate: PROJ_ROTATION,
+  center: DEFAULT_PROJ_CENTER,
   tilt: 25,
   prevTilt:0,
   clipAngle: (Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6),
@@ -63,6 +83,11 @@ var projectionParams = {
   shake: 1
 };
 
+visualizer.settings.tiltChange = function () {
+    var tilt = Math.random() * 45 - 20; //tilt will be between -20 and +25
+    visualizer.projectionParams.tilt = tilt;
+    this.tilting = true;
+};
 
 
 var zFilter = function(inputData, previousValue, zVal){
@@ -70,17 +95,13 @@ var zFilter = function(inputData, previousValue, zVal){
     return (z*previousValue + (1-z)*inputData);
 };
 
-var randomCenterAdjustment = function(blobCoords, scalingFactor) {
-    blobCoords[0] += (Math.random() - 0.5) * scalingFactor;
-    blobCoords[1] += (Math.random() - 0.5) * scalingFactor;
-    return blobCoords;
+var randomCenterAdjustment = function(oldCoords, scalingFactor) {
+    var updatedCoords = [];
+    updatedCoords[0] += (Math.random() - 0.5) * scalingFactor;
+    updatedCoords[1] += (Math.random() - 0.5) * scalingFactor;
+    return updatedCoords;
 };
 
-var tiltChange = function () {
-    var tilt = Math.random() * 45 - 20; //tilt will be between -20 and +25
-    projectionParams.tilt = tilt;
-    tilting = true;
-};
 
 
 var makeProjPath = function(projParams) {
@@ -97,52 +118,22 @@ var makeProjPath = function(projParams) {
 };
 
 
-var path = makeProjPath(projectionParams);
+var path = makeProjPath(visualizer.projectionParams);
 
-var tiltProjPath = function() {
-    var projection = d3.geo.satellite()
-    .distance(1.1)
-    .scale(6500)
-    .rotate([76.00, -34.50, 32.12])
-    .center([3 * uVect, 3 * vVect])
-    .tilt(25)
-    .clipAngle(Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6)
-    .precision(.1);
-
-  return d3.geo.path()
-    .projection(projection);
-};
 
 var graticule = d3.geo.graticule()
     .extent([[-93, 27], [-47 + 1e-6, 57 + 1e-6]])
     .step([0.5, 0.5]);
 
-// var path = d3.geo.path()
-//     .projection(projection);
-
-// var path2 = d3.geo.path()
-//     .projection(projection2);
-
-// var path3 = d3.geo.path()
-//     .projection(projection3);
-
-// var path4 = d3.geo.path()
-//     .projection(projection4);
 
 var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", visualizer.settings.width)
+    .attr("height", visualizer.settings.height);
 
 svg.append("path")
     .datum(graticule)
     .attr("class", "graticule")
     .attr("d", path);
-
-
-//get oflow data
-//u, v typically [-1.5, 1.5]
-// make a new projection with updated center
-//transition
 
 
 var collectedData = {
@@ -159,60 +150,32 @@ var resetCollectionBins = function () {
 
 var shiftCenter = function(collectedData) {
     var xShift, yShift;
-    // console.log(collectedData);
-    // if (collectedData.flowU >= 0 ) {
-    //     xShift = Math.min(collectedData.flowU, 2);
-    // } else {
-    //     xShift = Math.max(collectedData.flowU, -2);
-    // }
-
-    // if (collectedData.flowV >= 0 ) {
-    //     yShift = Math.min(collectedData.flowV, 3);
-    // } else {
-    //     yShift = Math.max(collectedData.flowV, -3);
-    // }
-
-    // xShift *= 0.1;
-    // yShift *= 0.1;
-    // console.log('shifts',xShift,yShift);
-
     xShift = collectedData.flowU / 12;
     yShift = collectedData.flowV / 12;
-    // var nextX = projectionParams.center[0] + xShift;
-    // if((nextX >= xMin) && (nextX <= xMax)) {
-    //     projectionParams.center[0] = nextX;
-    // }
-    // // projectionParams.center[1] += ;
-
-    // var nextY = projectionParams.center[1] + (yShift + yOffset);
-    // if(nextY >= yMin && nextY <= yMax) {
-    //   projectionParams.center[1] = nextY;
-    // }
-
-    blobCoords[0] += xShift;
-    blobCoords[1] += yShift;
+    visualizer.settings.centerCoords[0] += xShift;
+    visualizer.settings.centerCoords[1] += yShift;
 } ;
 
 var nextMove = function () {
     var nextPath;
     var globe = d3.select(this);
-    if (centerShifting) {
+    if (visualizer.settings.centerShifting) {
         shiftCenter(collectedData);        
     }
     resetCollectionBins();
-    if (blobWobble) {
-      blobCoords = randomCenterAdjustment(blobCoords, wobbleFactor);
+    if (visualizer.settings.wobble) {
+      visualizer.settings.centerCoords = randomCenterAdjustment(visualizer.settings.centerCoords, visualizer.settings.wobbleFactor);
     }
 
-    projectionParams.center[0] = zFilter(blobCoords[0], projectionParams.center[0], 0.4);
-    projectionParams.center[1] = zFilter(blobCoords[1], projectionParams.center[1], 0.4);
+    visualizer.projectionParams.center[0] = zFilter(visualizer.settings.centerCoords[0], visualizer.projectionParams.center[0], 0.4);
+    visualizer.projectionParams.center[1] = zFilter(visualizer.settings.centerCoords[1], visualizer.projectionParams.center[1], 0.4);
 
-    nextPath = makeProjPath(projectionParams);
+    nextPath = makeProjPath(visualizer.projectionParams);
 
 
 
-    if (tilting) {
-      tilting = false;
+    if (visualizer.settings.tilting) {
+      visualizer.settings.tilting = false;
       globe
         .transition()
         .duration(1500)
@@ -223,12 +186,10 @@ var nextMove = function () {
         .transition()
         .duration(200)
         .attr("d", nextPath)
-        .style("stroke-width", projectionParams.shake)
-        .style("stroke", function(d,i){return "hsl(" + ((projectionParams.freq/1000)*360) + ",100%,50%)";})
+        .style("stroke-width", visualizer.projectionParams.shake)
+        .style("stroke", function(d,i){return "hsl(" + ((visualizer.projectionParams.freq/1000)*360) + ",100%,50%)";})
         .each("end", nextMove);
     }
-    // }
-
 };
 
 d3.select("path")
@@ -240,17 +201,17 @@ d3.select("path")
 
 var collectOptiFlowData = function (optiFlowData) {
     if (Math.abs(optiFlowData.u) > flowCutOff){
-        collectedData.flowU += flowDataScalingFactor * optiFlowData.u; 
+        collectedData.flowU += visualizer.settings.flowDataScalingFactor * optiFlowData.u; 
     }
     if (Math.abs(optiFlowData.v) > flowCutOff){
-        collectedData.flowV += flowDataScalingFactor * optiFlowData.v; 
+        collectedData.flowV += visualizer.settings.flowDataScalingFactor * optiFlowData.v; 
     }
 };
 
 var scaleToScreenCoords = function (coordArr) {
     console.log("scale to screen");
-    var x = coordArr[0] / camWidth;
-    var y = coordArr[1] / camHeight;
+    var x = coordArr[0] / visualizer.settings.camWidth;
+    var y = coordArr[1] / visualizer.settings.camHeight;
     // x and y should now be in range (0, 1);
     x = x * 4 - 2; //sets x to be in range (-2, 2)
     y = y * 6;
@@ -264,40 +225,30 @@ var getBlobCoords = function (blobData) {
   if(blobData[2][0] === '/cur') {
       x = blobData[2][2];
       y = blobData[2][3]; 
-      blobCoords = scaleToScreenCoords([x, y]);     
+      visualizer.settings.centerCoords = scaleToScreenCoords([x, y]);     
   }
 };
 var getFreq = function ( audioData ) {
-   // console.log(audioData);
+   console.log(audioData);
     var freq = audioData.hz;
-    projectionParams.freq = zFilter(freq, projectionParams.freq, 0.96);
+    visualizer.projectionParams.freq = zFilter(freq, visualizer.projectionParams.freq, 0.96);
 };
 
 var handleShakes = function(data){
-  // console.log('data',data);
-
-  shakeData += data.totalAcc;
-  // console.log(shakeData, 'sdata');
+  visualizer.accelerationAccumulator += data.totalAcc;
 };
 
-//// blob data format: [ '#bundle', 2.3283064365386963e-10, [ '/cur', 73, 320, 240 ] ]
+
+//// sample blob data: [ '#bundle', 2.3283064365386963e-10, [ '/cur', 73, 320, 240 ] ]
 
 server.on('optiFlowData', collectOptiFlowData);
 server.on('blob', getBlobCoords);
 server.on('audio', getFreq);
-d3.select(self.frameElement).style("height", height + "px");
+d3.select(self.frameElement).style("height", visualizer.settings.height + "px");
 server.on('motionData', handleShakes);
 
 
 setInterval(function(){
-  setShake(shakeData);
-  shakeData = 0;
+  visualizer.setShake(visualizer.accelerationAccumulator);
+  visualizer.accelerationAccumulator = 0;
 }, 100);
-
-
-/////
-
-
-
-
-
