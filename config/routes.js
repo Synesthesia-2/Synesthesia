@@ -1,11 +1,41 @@
+var validViews = {
+  'conductor': true,
+  'fireworks': true,
+  'audio': true,
+  'optiflow': true,
+  'linedance': true,
+  'grassfield': true,
+  'fone': true,
+  'shakebattle': true,
+  'spotlights': true,
+  'dancer': true,
+  'flock': true,
+  'update': true,
+  'satellite': true,
+  'particles': true
+};
+
 exports.renderView = function (req, res) {
-  var view = req.route.path.slice(1);
-  res.render(view);
+  var view = req.url.slice(1);
+  // console.log(req);
+  if (validViews[view]) {
+    res.render(view);    
+  } else {
+    render404(req, res);
+  }
 };
 
 exports.renderClient = function(req, res){
   res.render('client');
 };
+
+var render404 = function(req, res){
+  res.writeHead(404);
+  res.end("That page doesn't exist. Go to a page that exists.");
+};
+
+exports.render404 = render404;
+
 
 // exports.renderConductor = function(req, res){
 //   res.render('conductor');
@@ -68,7 +98,3 @@ exports.renderClient = function(req, res){
 //   res.render('satellite');
 // };
 
-exports.render404 = function(req, res){
-  res.writeHead(404);
-  res.end("That page doesn't exist. Go to a page that exists.");
-};
