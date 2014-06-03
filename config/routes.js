@@ -1,66 +1,72 @@
+exports.renderView = function (req, res) {
+  var view = req.route.path.slice(1);
+  res.render(view);
+};
+
 exports.renderClient = function(req, res){
   res.render('client');
 };
 
-exports.renderConductor = function(req, res){
-  res.render('conductor');
-};
+// exports.renderConductor = function(req, res){
+//   res.render('conductor');
+// };
 
-exports.renderFireworks = function(req, res){
-  res.render('fireworks');
-};
+// exports.renderFireworks = function(req, res){
+//   res.render('fireworks');
+// };
 
-exports.renderAudio = function(req, res){
-  res.render('audio');
-};
+// exports.renderAudio = function(req, res){
+//     // console.log(req.route.path.slice(1));
+//   res.render('audio');
+// };
 
-exports.renderDancer = function(req, res){
-  res.render('dancer');
-};
+// exports.renderDancer = function(req, res){
+//   res.render('dancer');
+// };
 
-exports.renderFlock = function(req, res){
-  res.render('flock');
-};
+// exports.renderFlock = function(req, res){
+//   res.render('flock');
+// };
 
-exports.renderUpdate = function(req, res){
-  res.render('update');
-};
+// exports.renderUpdate = function(req, res){
+//   res.render('update');
+// };
 
-exports.renderOptiFlow = function(req, res) {
-  res.render('optiflow');
-};
+// exports.renderOptiFlow = function(req, res) {
+//   res.render('optiflow');
+// };
 
-exports.renderLineDance = function(req, res) {
-  res.render('linedance');
-};
+// exports.renderLineDance = function(req, res) {
+//   res.render('linedance');
+// };
 
-exports.renderGrassField = function(req, res) {
-  res.render('grassfield');
-};
+// exports.renderGrassField = function(req, res) {
+//   res.render('grassfield');
+// };
 
-exports.renderFone = function(req, res) {
-  res.render('fone');
-};
+// exports.renderFone = function(req, res) {
+//   res.render('fone');
+// };
 
-exports.renderFoneMotion= function(req, res) {
-  res.render('shakemeter');
-};
+// exports.renderFoneMotion= function(req, res) {
+//   res.render('shakemeter');
+// };
 
-exports.renderShakeBattle= function(req, res) {
-  res.render('shakebattle');
-};
+// exports.renderShakeBattle= function(req, res) {
+//   res.render('shakebattle');
+// };
 
-exports.renderSpotlights= function(req, res) {
-  res.render('spotlights');
-};
+// exports.renderSpotlights= function(req, res) {
+//   res.render('spotlights');
+// };
 
-exports.renderParticles= function(req, res) {
-  res.render('particles');
-};
+// exports.renderParticles= function(req, res) {
+//   res.render('particles');
+// };
 
-exports.renderSatellite = function(req, res){
-  res.render('satellite');
-};
+// exports.renderSatellite = function(req, res){
+//   res.render('satellite');
+// };
 
 exports.render404 = function(req, res){
   res.writeHead(404);

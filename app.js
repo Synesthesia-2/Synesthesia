@@ -89,21 +89,22 @@ middleware.setSettings(app, express);
 
 // render routes
 app.get('/', routes.renderClient);
-app.get('/conductor', routes.renderConductor);
-app.get('/fireworks', routes.renderFireworks);
-app.get('/audio', routes.renderAudio);
-app.get('/optiflow', routes.renderOptiFlow);
-app.get('/linedance', routes.renderLineDance);
-app.get('/grassfield', routes.renderGrassField);
-app.get('/fone', routes.renderFone);
-app.get('/shakemeter', routes.renderFoneMotion);
-app.get('/shakebattle', routes.renderShakeBattle);
-app.get('/spotlights', routes.renderSpotlights);
-app.get('/dancer', routes.renderDancer);
-app.get('/flock', routes.renderFlock);
-app.get('/update', routes.renderUpdate);
-app.get('/satellite', routes.renderSatellite);
-app.get('/particles', routes.renderParticles);
+app.get('/conductor', routes.renderView);
+app.get('/fireworks', routes.renderView);
+app.get('/audio', routes.renderView);
+app.get('/optiflow', routes.renderView);
+app.get('/linedance', routes.renderView);
+app.get('/grassfield', routes.renderView);
+app.get('/fone', routes.renderView);
+app.get('/shakemeter', routes.renderView);
+app.get('/shakebattle', routes.renderView);
+app.get('/spotlights', routes.renderView);
+app.get('/dancer', routes.renderView);
+app.get('/flock', routes.renderView);
+app.get('/update', routes.renderView);
+app.get('/satellite', routes.renderView);
+app.get('/particles', routes.renderView);
+// app.get('/DNE', routes.render404);
 app.get('*', routes.render404);
 app.use(function(err, req, res, next){
   if(err) {
@@ -245,7 +246,7 @@ conductor.on('connection', function (conductor) {
 /// Client events
 //////////////////////////////////////////
 
-clients.on('connection', function (client) {
+clients.on('connect', function (client) {
   state.connections += 1;
   console.log('connection!!!!',client);
 
