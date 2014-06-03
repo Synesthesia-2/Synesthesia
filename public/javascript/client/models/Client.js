@@ -1,6 +1,7 @@
 ClientSpace.Client = Backbone.Model.extend({
 
   initialize: function() {
+    var self = this;
     this.set('strobe', false);
     this.set('currentColor', '#000000');
     this.set('audioColor', false);
@@ -8,25 +9,38 @@ ClientSpace.Client = Backbone.Model.extend({
     this.set('currentOrientation', {});
     this.set('isTracking', false);
     this.fone = io.connect('http://' + window.location.host + "/fone");
-    this.fone.on('sessionId', function(data){this.get('currentOrientation').set({id: data});});
-    this.fone.on('welcome', function(data){
-      if (data.tracking) {
-        this.startTrack();
-      } else {
-      $h3.text('Connected. Motion tracking off.'); // change $h3
-    }
-    });
-    this.fone.on('reset', function(){ this.stopTrack(); });
-    this.fone.on('toggleMotion', function(data){
-      if (data.motion) {
-        this.startTrack();
-      } else {
-        this.stopTrack();
-      }
-    });
-    this.set();
+    this.fone.on('sessionId', this.setSessionId.bind(this));
+    this.fone.on('welcome', this.handleWelcome.bind(this));
+    this.fone.on('reset', this.handleReset.bind(this));
+    this.fone.on('toggleMotion', this.handleToggleMotion.bind(this));
     this.setCast();
     this.setEvents();
+    $('h3').text('heheheh');
+    this.startTrack(); //for testing
+  },
+
+  setSessionId: function(data) {
+    this.get('currentOrientation').id = data;
+  },
+
+  handleWelcome: function(data) {
+    if (data.tracking) {
+      this.startTrack();
+    } else {
+      $('h3').text('Connected. Motion tracking off.');
+    }
+  },
+
+  handleReset: function() {
+    this.stopTrack();
+  },
+ 
+  handleToggleMotion: function(data) {
+    if (data.motion) {
+      this.startTrack();
+    } else {
+      this.stopTrack();
+    }
   },
 
   getCastList: function() {
@@ -169,50 +183,57 @@ ClientSpace.Client = Backbone.Model.extend({
     this.trigger('shakeShow', this);
   },
 
-  toggleTracking: function(){
-    this.set('isTracking', !isTracking);
-    if (this.get('isTracking')) {
-      this.startTrack();
-    } else {
-      this.stopTrack();
-    }
-  },
+  // toggleTracking: function(){
+  //   this.set('isTracking', !isTracking);
+  //   if (this.get('isTracking')) {
+  //     this.startTrack();
+  //   } else {
+  //     this.stopTrack();
+  //   }
+  // },
+
 
   startTrack: function() {
-    $h3.text('Connected. Now tracking motion.');
-    this.initMotionListener();
+    $('h3').text('Connected. Now tracking motion.');
+    this.initMotionListener.bind(this)();
   },
 
   stopTrack: function() {
-    $h3.text('Motion tracking off.');
-    this.removeMotionListener();
+    $('h3').text('Motion tracking off.');
+    this.removeMotionListener.bind(this);
   },
 
   initMotionListener: function() {
-    window.addEventListener('devicemotion', boundDeviceMotion);
-    window.addEventListener('deviceorientation', boundDeviceOrientation);
+    window.addEventListener('devicemotion', this.onDeviceMotion.bind(this));
+    window.addEventListener('deviceorientation', this.onDeviceOrientation.bind(this));
   },
 
   removeMotionListener: function() {
-    window.removeEventListener('devicemotion', boundDeviceMotion);
-    window.removeEventListener('deviceorientation', boundDeviceOrientation);
+    window.removeEventListener('devicemotion', this.onDeviceMotion.bind(this));
+    window.removeEventListener('deviceorientation', this.onDeviceOrientation.bind(this));
   },
 
   onDeviceOrientation: function(event) {
-    this.get('currentOrientation').set({
-      alpha: Math.floor(event.alpha),
-      beta: Math.floor(event.beta),
-      gamma: Math.floor(event.gamma)
-    });
+    var co = this.get('currentOrientation');
+    _.extend(co, 
+      {
+        alpha: Math.floor(event.alpha),
+        beta: Math.floor(event.beta),
+        gamma: Math.floor(event.gamma)
+      });
+    this.set('currentOrientation', co);
   },
 
   onDeviceMotion: function(event) {
+    console.log('accel');
     var accel = event.acceleration;
     var totalAcc = Math.floor(Math.abs(accel.x) + Math.abs(accel.y) + Math.abs(accel.z));
-    this.get('currentOrientation').set({
-      accel: accel,
-      totalAcc: totalAcc
-    });
+    var co = this.get('currentOrientation');
+    _.extend(co, 
+      {
+        accel: accel,
+        totalAcc: totalAcc
+      });
     this.fone.emit('motionData', this.get('currentOrientation'));
   },
 });

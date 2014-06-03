@@ -3,9 +3,7 @@ var $h3 = $('h3');
 var currentOrientation = {};
 var isTracking = false;
 
-server.on('sessionId', function(data){
-  currentOrientation.id = data;
-});
+server.on('sessionId', function(data){currentOrientation.id = data; });
 
 server.on('welcome', function(data) {
   if (data.tracking) {
@@ -47,8 +45,8 @@ var stopTrack = function() {
 };
 
 var initMotionListener = function() {
-  window.addEventListener('devicemotion', boundDeviceMotion);
-  window.addEventListener('deviceorientation', boundDeviceOrientation);
+  window.addEventListener('devicemotion', onDeviceMotion);
+  window.addEventListener('deviceorientation', onDeviceOrientation);
 };
 
 var removeMotionListener = function() {
