@@ -1,5 +1,3 @@
-
-
 (function() {
   // Setting some sweet global variables (note: Refactor to globalize, except for optiflowVector)
   var view = {
@@ -13,12 +11,12 @@
   var groupTogether = false;
   var optiflowVector = new PIXI.Vector(0, 0);
   var borderFactor = 10;
-  var heartPath = [];
+  var heartPath = []; 
   
   // Create a path. This is for testing. Ideally we should detect an outline with an IR camera and using that data for the path.
   var steps = 30;
   for (var i = 0; i < steps; i++) {
-    heartPath.push(new PIXI.Point(
+    heartPath.push(new PIXI.Vector(
       (view.size.width / 2) + 300 * Math.cos(2 * Math.PI * i / steps),
       (view.size.height / 2) + 300 * Math.sin(2 * Math.PI * i / steps)
     ));
@@ -48,10 +46,10 @@
 
   // We accumulate a new acceleration each time based on several rules
   Boid.prototype.flock = function(boids) {
-    var separation = this.separate(boids).multiplyScalar(10);
-    var alignment = this.align(boids).multiplyScalar(30);
-    var cohesion = this.cohesion(boids).multiplyScalar(20);
-    var borders = this.borders().multiplyScalar(2.5);
+    var separation = this.separate(boids).multiplyScalar(1);
+    var alignment = this.align(boids).multiplyScalar(20);
+    var cohesion = this.cohesion(boids).multiplyScalar(.5);
+    var borders = this.borders().multiplyScalar(2);
     this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
   };
 
@@ -74,7 +72,7 @@
     // Reset acceleration to 0 each cycle
     // The closer to 0 this is, the more insect like the behavior
     // with sudden changes in direction
-    this.acceleration.multiplyScalar(.985);
+    this.acceleration.multiplyScalar(0);
   };
 
   Boid.prototype.seek = function(target) {
@@ -244,7 +242,7 @@
       var boidContainers = [];
 
         // Add the boids:
-        for (var i = 0; i < 1200; i++) {
+        for (var i = 0; i < 200; i++) {
           var position = new PIXI.Point(Math.random() * size.x, Math.random() * size.y);
           var boid = new Boid(position, 4, 1);
           var boidContainer = new PIXI.DisplayObjectContainer();
@@ -274,31 +272,32 @@
     function animate() {
         requestAnimFrame(animate);
 
-        count += .01;
+        count += 1;
         _renderer.render(_stage);
 
         for (var i = 0, l = boids.length; i < l; i++) {
           var boid = boids[i];
 
           if (groupTogether) {
-            boid.seek(new PIXI.Vector(400,400));
-            // for (var i = 0, l = boids.length; i < l; i++) {
-            //   var length = ((i + count * 100) / 30) % l * heartPath.length;
-            //   var point = heartPath[length];
-            //   if (point) {
-            //     boid.arrive(point);
-            //   }
-            // }
+            // boid.seek(new PIXI.Vector(400,400));
+            for (var i = 0, l = boids.length; i < l; i++) {
+              var index = parseInt( (i + parseInt(i) / 30 % l ) / l * heartPath.length );
+              var point = heartPath[index];
+              console.log(point);
+              if (point) {
+                boid.arrive(point);
+              }
+            }
           }
           boid.container.position = boid.position;
           boid.vector.normalize();
 
-          boid.count += (1 + boid.flap);
-          boid.container.alpha = 1.1 - ( 1 / (boid.vector.lengthSq() + 1) ) ;
-          boid.container.rotation = boid.vector.rad() + .7707;
+          boid.count += 1;
+          // boid.container.alpha = 1.1 - ( 1 / (boid.vector.lengthSq() + 1) ) ;
+          // boid.container.rotation = boid.vector.rad() + .7707;
 
-          var flapFactor = boid.count * boid.vector.lengthSq() * .3;
-          boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .15, .6);
+          // var flapFactor = boid.count * boid.vector.lengthSq() * .3;
+          // boid.container.scale = new PIXI.Point(Math.sin(flapFactor) + .15, .6);
 
           boid.run(boids);
         }
