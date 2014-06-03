@@ -308,6 +308,7 @@ optiflow.on('connection', function (optiflow) {
 
 fone.on('connection', function (fone) {
   fone.emit('sessionId', fone.id);
+  console.log(fone.id + " connected.");
   fone.emit('welcome', {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
@@ -318,7 +319,7 @@ fone.on('connection', function (fone) {
   //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
   // });
   fone.on('motionData', function (data) {
-    // console.log(data);
+    console.log(data);
     shakemeter.emit('motionData', data);
     shakebattle.emit('motionData', data);
     spotlights.emit('motionData', data);
