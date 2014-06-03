@@ -8,24 +8,42 @@ server.on('welcome', function (data) {
 var CAMERAWIDTH = 640,
     CAMERAHEIGHT = 480,
     OFLOWSCALE = 1,
-    OFLOWCUTOFF = 0.7,
+    OFLOWCUTOFF = 0.7;
     
 // satellite projection constants and defaults
-    PROJ_DISTANCE = 1.1,
+var PROJ_DISTANCE = 1.1,
     PROJ_SCALE = 8500,
     PROJ_ROTATION = [76.00, -34.50, 32.12],
+    PROJ_CLIP_ANGLE = (Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6),
+    PROJ_COLOR_CLASS = 'graticule',
     DEFAULT_PROJ_CENTER = [0, 3],
     DEFAULT_PROJ_TILT = 25,
+    DEFAULT_PROJ_PRECISION = 0.1;
+
+/////////////////////////////////////////
+//  Satellite Projection Data Ranges   //
+/////////////////////////////////////////
+//  center[0]  (-2,2)     // x-pos     //
+//  center[1]  (0, 6)     // y-pos     //
+//  tilt       (-20 20)   // slope     //
+/////////////////////////////////////////
+
+
 
 //  grid visualizer constants and defaults
-    DEFAULT_VISUALIZER_WIDTH = 320,
+var DEFAULT_VISUALIZER_WIDTH = 320,
     DEFAULT_VISUALIZER_HEIGHT = 420,
     DEFAULT_WOBBLE_FACTOR = 0.3,
     SHAKE_SCALING_FACTOR = 20,
     MAX_SCALED_SHAKE = 6,
+    INIT_FREQ = 440,
+    INIT_SHAKE_PARAM = 1,
     INIT_WOBBLE_STATUS = false,
     INIT_CENTER_SHIFT_STATUS = true,
-    INIT_TILT_STATUS = false;
+    INIT_TILT_STATUS = false,
+    INNERWIDTH = window.innerWidth,
+    INNERHEIGHT = window.innerHeight;
+
 
 
 var visualizer = {};
@@ -34,8 +52,8 @@ visualizer.accelerationAccumulator = 0;
 visualizer.shake = 0;
 
 visualizer.settings = {};
-visualizer.settings.width = Math.max(DEFAULT_VISUALIZER_WIDTH, innerWidth);
-visualizer.settings.height = Math.max(DEFAULT_VISUALIZER_HEIGHT, innerHeight);
+visualizer.settings.width = Math.max(DEFAULT_VISUALIZER_WIDTH, INNERWIDTH);
+visualizer.settings.height = Math.max(DEFAULT_VISUALIZER_HEIGHT, INNERHEIGHT);
 visualizer.settings.camWidth = CAMERAWIDTH;
 visualizer.settings.camHeight = CAMERAHEIGHT;
 visualizer.settings.flowDataScalingFactor = OFLOWSCALE;
@@ -45,6 +63,20 @@ visualizer.settings.wobble = INIT_WOBBLE_STATUS;
 visualizer.settings.centerShifting = INIT_CENTER_SHIFT_STATUS;
 visualizer.settings.tilting = INIT_TILT_STATUS;
 
+
+
+visualizer.projectionParams = {
+  distance: PROJ_DISTANCE,
+  scale: PROJ_SCALE,
+  rotate: PROJ_ROTATION,
+  center: DEFAULT_PROJ_CENTER,
+  tilt: DEFAULT_PROJ_TILT,
+  clipAngle: PROJ_CLIP_ANGLE,
+  precision: DEFAULT_PROJ_PRECISION,
+  colorClass: PROJ_COLOR_CLASS,
+  freq: INIT_FREQ,
+  shake: INIT_SHAKE_PARAM
+};
 
 
 
@@ -60,28 +92,6 @@ visualizer.setShake = function (accelerationAccumulator) {
   }
 };
 
-///////////////////////////////
-//  Projection Data Ranges   //
-///////////////////////////////
-//  center x (-2,2)          //
-//  center y (0, 6)          //
-//  tilt (-20 20)            //
-///////////////////////////////
-
-
-visualizer.projectionParams = {
-  distance: PROJ_DISTANCE,
-  scale: PROJ_SCALE,
-  rotate: PROJ_ROTATION,
-  center: DEFAULT_PROJ_CENTER,
-  tilt: 25,
-  prevTilt:0,
-  clipAngle: (Math.acos(1 / 1.1) * 180 / Math.PI - 1e-6),
-  precision: 0.1,
-  colorClass: 'graticule',
-  freq: 440,
-  shake: 1
-};
 
 visualizer.settings.tiltChange = function () {
     var tilt = Math.random() * 45 - 20; //tilt will be between -20 and +25
@@ -91,7 +101,7 @@ visualizer.settings.tiltChange = function () {
 
 
 var zFilter = function(inputData, previousValue, zVal){
-    var z = zVal || 0.9; // set this between 0 and 1
+    var z = zVal || 0.9; // set the z param between 0 and 1
     return (z*previousValue + (1-z)*inputData);
 };
 
