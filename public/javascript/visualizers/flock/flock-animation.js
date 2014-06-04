@@ -27,7 +27,7 @@
 
   var boids = [];
   var groupTogether = false;
-  var optiflowVector = new PIXI.Vector(0, 0);
+  var opticalFlowVector = new PIXI.Vector(0, 0);
   var borderFactor = 10;
   var path = []; 
   
@@ -75,8 +75,8 @@
     if (window.boidData && window.boidData.u) {
       var u = window.boidData.u;
       var v = window.boidData.v;
-      optiflowVector.x -= u;
-      optiflowVector.y += v;
+      opticalFlowVector.x -= u;
+      opticalFlowVector.y += v;
     }
     return vector;
   };
