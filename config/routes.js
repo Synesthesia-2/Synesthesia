@@ -2,7 +2,7 @@ var validViews = {
   'conductor': true,
   'fireworks': true,
   'audio': true,
-  'optiflow': true,
+  'opticalFlow': true,
   'linedance': true,
   'grassfield': true,
   'fone': true,
