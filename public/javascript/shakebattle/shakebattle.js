@@ -87,7 +87,7 @@ var shakeBattleVisualize = function(balance){
     .attr("fill", "white");
 };
 
-server.on('motionData', function(data){
+server.on('audienceMotionData', function(data){
   // checks for sign of beta
   var shakeSign = data.totalAcc * ((data.beta > 0) - (data.beta < 0)); 
   shakeBalance += shakeSign;

@@ -48,7 +48,7 @@ var showSpotlights = function(inputData){
     .remove();
 };
 
-server.on('motionData', function(data){
+server.on('audienceMotionData', function(data){
   if (data.id){ spotlightsData[data.id] = data; }
 });
 

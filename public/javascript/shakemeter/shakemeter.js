@@ -99,7 +99,7 @@ var foneVisualize = function(score){
     .attr("fill", "white");
 };
 
-server.on('motionData', function(data){
+server.on('audienceMotionData', function(data){
   shakeData += data.totalAcc;
 });
 

@@ -244,6 +244,6 @@
   server.on('blob', visualizer.getBlobCoords);
   server.on('audio', visualizer.getFreq);
   d3.select(self.frameElement).style("height", visualizer.settings.height + "px");
-  server.on('motionData', visualizer.handleShakes);
+  server.on('audienceMotionData', visualizer.handleShakes);
 
 })();

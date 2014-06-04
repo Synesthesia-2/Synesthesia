@@ -379,12 +379,12 @@ fone.on('connection', function (fone) {
   //   shakebattle.emit('orientationData', data);
   //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
   // });
-  fone.on('motionData', function (data) {
+  fone.on('audienceMotionData', function (data) {
     console.log(data);
-    shakemeter.emit('motionData', data);
-    shakebattle.emit('motionData', data);
-    spotlights.emit('motionData', data);
-    satellite.emit('motionData', data);
+    shakemeter.emit('audienceMotionData', data);
+    shakebattle.emit('audienceMotionData', data);
+    spotlights.emit('audienceMotionData', data);
+    satellite.emit('audienceMotionData', data);
   });
   fone.on('disconnect', function(){
     console.log(fone.id + " disconnected.");

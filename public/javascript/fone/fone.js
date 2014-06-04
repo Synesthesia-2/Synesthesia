@@ -69,13 +69,13 @@ var onDeviceMotion = function(event) {
   var totalAcc = Math.floor(Math.abs(accel.x) + Math.abs(accel.y) + Math.abs(accel.z));
   currentOrientation.accel = accel;
   currentOrientation.totalAcc = totalAcc;
-  server.emit('motionData', currentOrientation);
+  server.emit('audienceMotionData', currentOrientation);
 };
 
 // For testing purposes
 var sendDummyAccelData = function(){
   var data = Math.floor(Math.random() * 140);
-  server.emit('motionData', data);
+  server.emit('audienceMotionData', data);
 };
 
 var boundDeviceMotion = onDeviceMotion.bind(this);
