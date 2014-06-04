@@ -69,12 +69,22 @@ var connectSockets = function ( ) {
   var socketObj = {};
   visualizers.forEach(function(visualizerObj) {
     socketObj[visualizerObj.name] = io.of('/' + visualizerObj.name);
+    socketObj[visualizerObj.name].on('connection', function(event){
+      event.emit("Welcome", "Visualizer conected.");
+    });
   });
   return socketObj;
 };
 
 var visualizerSockets = connectSockets();
 console.log(visualizerSockets);
+
+
+
+
+
+
+
 
 
 // define socket.io spaces
