@@ -7,6 +7,7 @@ var validViews = {
   'grassfield': true,
   'fone': true,
   'shakebattle': true,
+  'shakemeter': true,
   'spotlights': true,
   'dancer': true,
   'flock': true,

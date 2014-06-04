@@ -14,24 +14,26 @@
 ///
 //////////////////////////////////////////
 
-// Instantiate server
 var express = require('express');
-var app = express();
 var http = require('http');
-var server = http.createServer(app);
-var port = process.env.PORT || 8080;
-var oscPort = process.env.OSC_PORT || 3333;
-server.listen(port);
 var io = require('socket.io').listen(server);
 var oscIo = require('node-osc');
-app.set('io', io);
-app.set('oscIo', oscIo);
-// var db = require('./server/database_server');
-// var helpers = require('./server/helpers');
 var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
 var fs = require('fs');
 var _ = require('underscore');
+
+
+// Instantiate server
+var app = express();
+var server = http.createServer(app);
+var port = process.env.PORT || 8080;
+var oscPort = process.env.OSC_PORT || 3333;
+server.listen(port);
+app.set('io', io);
+app.set('oscIo', oscIo);
+// var db = require('./server/database_server');
+// var helpers = require('./server/helpers');
 console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
 
  // --- osc routing 
