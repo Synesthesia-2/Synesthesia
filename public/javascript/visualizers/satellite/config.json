@@ -1,0 +1,9 @@
+{
+  "inputs": [
+    "opticalFlow",
+    "audio",
+    "blob",
+    "audienceMotionData"
+  ],
+  "extraJS": ["THREE-r65.min.js", "ShaderParticles.min.js", "d3.geo.projection.v0.min.js"]
+}
