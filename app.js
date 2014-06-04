@@ -14,9 +14,8 @@
 ///
 //////////////////////////////////////////
 
-var express = require('express');
 var http = require('http');
-var io = require('socket.io').listen(server);
+var express = require('express');
 var oscIo = require('node-osc');
 var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
@@ -30,6 +29,7 @@ var server = http.createServer(app);
 var port = process.env.PORT || 8080;
 var oscPort = process.env.OSC_PORT || 3333;
 server.listen(port);
+var io = require('socket.io').listen(server);
 app.set('io', io);
 app.set('oscIo', oscIo);
 // var db = require('./server/database_server');
