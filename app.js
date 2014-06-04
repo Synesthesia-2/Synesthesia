@@ -47,10 +47,11 @@ var init = function() {
   var parentDir = __dirname + '/public/javascript/visualizers';
   var dirs = fs.readdirSync(parentDir);
   
-  var temp = [];
+  var visualizers = [];
 
   dirs.forEach(function(dirname){
-    var configFile = require(parentDir + '/' + dirname + '/config.json');
+    var configFile = parentDir + '/' + dirname + '/config.json';
+    var configObj = require(configFile);
 
     var defaultConfig = {
       name: dirname,
@@ -60,10 +61,11 @@ var init = function() {
       socket: io.of('/' + dirname)
     };
 
-    temp.push(_.extend(defaultConfig,configFile));
+    temp.push(_.extend(defaultConfig,configObj));
   });
-  return temp;
+  return visualizers;
 };
+
 var visualizers = init();
 
 var connectSockets = function (routeInfoArr ) {
