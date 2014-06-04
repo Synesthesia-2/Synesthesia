@@ -4,7 +4,7 @@
     height: window.innerHeight
   };
   // create an new instance of a pixi _stage - and set it to be interactive
-  var _stage = new PIXI.Stage(0xd9e2cc);
+  var _stage = new PIXI.Stage(0xffffff);
   _stage.setInteractive(true);
 
   // create a _renderer instance
@@ -237,14 +237,14 @@
       var boid = new Boid(position, 2, 1);
       var boidContainer = new PIXI.DisplayObjectContainer();
       var boidGraphic = new PIXI.Graphics();
-      boidGraphic.beginFill(0x002244);
+      boidGraphic.beginFill(0x000000);
       boidGraphic.drawCircle(0, 0, 5);
       boidGraphic.lineTo(3.5,0);
       boidGraphic.endFill();
 
 
       boidContainer.addChild(boidGraphic);
-      boidContainer.alpha = boid.vector.length() / boid.maxSpeed;
+      // boidContainer.alpha = 0.75 + boid.vector.length() / boid.maxSpeed;
 
       boid.container = boidContainer;
       boidContainers.push(boidContainer);
@@ -280,7 +280,7 @@
       boid.vector.normalize();
 
       boid.count += (1 + boid.flap);
-      boid.container.alpha = 1.1 - (1 / (boid.vector.lengthSq() + .5)) ;
+      // boid.container.alpha = 1.1 - (1 / (boid.vector.lengthSq() + .5)) ;
       boid.container.rotation = -boid.vector.rad();
 
       var flapFactor = boid.count * boid.vector.lengthSq() * 0.2;
