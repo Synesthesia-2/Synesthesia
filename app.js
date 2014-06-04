@@ -92,9 +92,15 @@ var connectSockets = function (routeInfoArr ) {
 };
 
 connectSockets(visualizers);
-console.log(inputChannels);
 
+// console.log(inputChannels);
 
+var emitData = function (dataTag, data, inputChannel) {
+  var emitList = inputChannels[inputChannel];
+  emitList.forEach(function(socket) {
+    socket.emit(dataTag, data);
+  });
+};
 
 
 
