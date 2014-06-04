@@ -95,14 +95,12 @@ connectSockets(visualizers);
 
 // console.log(inputChannels);
 
-var emitData = function (dataTag, data, inputChannel) {
-  var emitList = inputChannels[inputChannel];
+var emitData = function (eventName, data) {
+  var emitList = inputChannels[eventName];
   emitList.forEach(function(socket) {
-    socket.emit(dataTag, data);
+    socket.emit(eventName, data);
   });
 };
-
-
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
@@ -222,8 +220,7 @@ dancer.on('connection', function (dancer) {
     tracking: state.motionTrack
   });
   dancer.on('motionData', function (data) {
-    fireworks.emit('motionData', data);
-    // satellite.emit('motionData', data);
+    emitData('motionData', data)
   });
 });
 
@@ -243,7 +240,8 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     state.currentColor = data.color;
     clients.emit('changeColor', data);
-    flock.emit('changeColor', data);
+    // flock.emit('changeColor', data);
+    emitData('changeColor', data);
   });
 
   conductor.on('randomColor', function (data){
@@ -340,8 +338,9 @@ audio.on('connection', function (audio) {
     if (state.audioLights) {
       clients.emit('audio', data);
     }
-    fireworks.emit('audio', data);
-    satellite.emit('audio', data);
+    // fireworks.emit('audio', data);
+    // satellite.emit('audio', data);
+    emitData('audio', data);
   });
 });
 
