@@ -42,24 +42,28 @@ webcamio.set('log level', 1);
 var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
-var visualizers = [];
 
 var init = function() {
   var parentDir = __dirname + '/public/javascript/visualizers';
   var dirs = fs.readdirSync(parentDir);
+  
+  var temp = [];
+
   dirs.forEach(function(dirname){
     var configFile = require(parentDir + '/' + dirname + '/config.json');
-    console.log(configFile);
+
     var defaultConfig = {
       name: dirname,
       inputs: null,
       extraJS: null,
       extraStyl: null 
     };
-    visualizers.push(_.extend(defaultConfig,configFile));
+
+    temp.push(_.extend(defaultConfig,configFile));
   });
+  return temp;
 };
-init();
+var visualizers = init();
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
