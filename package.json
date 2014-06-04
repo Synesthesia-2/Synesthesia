@@ -10,6 +10,7 @@
     "mocha": "*",
     "chai": "*",
     "browserify": "~2.35.2",
-    "node-osc": "~0.2.1"
+    "node-osc": "~0.2.1",
+    "underscore": "~1.6.0"
   }
 }

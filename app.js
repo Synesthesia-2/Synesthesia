@@ -31,6 +31,7 @@ app.set('oscIo', oscIo);
 var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
 var fs = require('fs');
+var _ = require('underscore');
 console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
 
  // --- osc routing 
@@ -41,14 +42,23 @@ webcamio.set('log level', 1);
 var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
+var visualizers = [];
 
 var init = function() {
-  var dirs = fs.readdirSync(__dirname + '/public/javascript/visualizers');
-  var visualizers = [];
-  dirs.forEach(function(){
-    
+  var parentDir = __dirname + '/public/javascript/visualizers';
+  var dirs = fs.readdirSync(parentDir);
+  dirs.forEach(function(dirname){
+    var configFile = require(parentDir + '/' + dirname + '/config.json');
+    console.log(configFile);
+    var defaultConfig = {
+      name: dirname,
+      inputs: null,
+      extraJS: null,
+      extraStyl: null 
+    };
+    visualizers.push(_.extend(defaultConfig,configFile));
   });
-}
+};
 init();
 
 // define socket.io spaces
