@@ -357,10 +357,10 @@ fone.on('connection', function (fone) {
   });
   fone.on('audienceMotionData', function (data) {
     console.log(data);
-    shakemeter.emit('audienceMotionData', data);
-    shakebattle.emit('audienceMotionData', data);
-    spotlights.emit('audienceMotionData', data);
-    satellite.emit('audienceMotionData', data);
+    // shakemeter.emit('audienceMotionData', data);
+    // shakebattle.emit('audienceMotionData', data);
+    // spotlights.emit('audienceMotionData', data);
+    // satellite.emit('audienceMotionData', data);
   });
   fone.on('disconnect', function(){
     console.log(fone.id + " disconnected.");
