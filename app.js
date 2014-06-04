@@ -65,6 +65,18 @@ var init = function() {
 };
 var visualizers = init();
 
+var connectSockets = function ( ) {
+  var socketObj = {};
+  visualizers.forEach(function(visualizerObj) {
+    socketObj[visualizerObj.name] = io.of('/' + visualizerObj.name);
+  });
+  return socketObj;
+};
+
+var visualizerSockets = connectSockets();
+console.log(visualizerSockets);
+
+
 // define socket.io spaces
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
