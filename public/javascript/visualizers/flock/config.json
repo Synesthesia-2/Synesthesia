@@ -1,0 +1,8 @@
+{
+  "inputs": [
+    "opticalFlow",
+    "audio",
+    "blob"
+  ],
+  "extraJS": "./pixi.vector.js"
+}
