@@ -2,7 +2,8 @@
   "inputs": [
     "opticalFlow",
     "audio",
-    "blob"
+    "blob",
+    "newFadeTime"
   ],
   "extraJS": "./pixi.vector.js"
 }
