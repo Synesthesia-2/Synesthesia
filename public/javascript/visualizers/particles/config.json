@@ -1,0 +1,10 @@
+{
+  "inputs": [
+    "opticalFlow",
+    "blob"
+  ],
+  "extraJS": [
+    "THREE-r65.min.js", 
+    "ShaderParticles.min.js"
+  ]
+}
