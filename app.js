@@ -97,7 +97,7 @@ connectSockets(visualizers);
 // console.log(inputChannels);
 
 var emitData = function (eventName, data) {
-  var emitList = inputChannels[eventName];
+  var emitList = inputChannels[eventName] || [];
   emitList.forEach(function(socket) {
     socket.emit(eventName, data);
   });
@@ -324,17 +324,18 @@ audio.on('connection', function (audio) {
 //////////////////////////////////////////
 
 optiflow.on('connection', function (optiflow) {
-  //console.log('optiflow connected'); //temp logging to check socket connection establishment
+  console.log('optiflow connected'); //temp logging to check socket connection establishment
   optiflow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
     tracking: state.opticalFlowTrack
   });
   optiflow.on('opticalFlowData', function (opticalFlowData) {
-    console.log(opticalFlowData);
-    linedance.emit('opticalFlowData', opticalFlowData);
-    flock.emit('opticalFlowData', opticalFlowData);
-    grassfield.emit('opticalFlowData', opticalFlowData);
-    satellite.emit('opticalFlowData', opticalFlowData);
+    // console.log(opticalFlowData);
+    // linedance.emit('opticalFlowData', opticalFlowData);
+    // flock.emit('opticalFlowData', opticalFlowData);
+    // grassfield.emit('opticalFlowData', opticalFlowData);
+    // satellite.emit('opticalFlowData', opticalFlowData);
+    emitData('opticalFlow', opticalFlowData);
   });
 });
 
