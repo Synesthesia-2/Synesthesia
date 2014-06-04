@@ -25,7 +25,7 @@ var requirejs = require('requirejs');
 
 requirejs.config({
   baseUrl: __dirname + 'public/javascript'
-})
+});
 console.log(requirejs); 
 
 // Instantiate server
@@ -205,7 +205,7 @@ dancer.on('connection', function (dancer) {
     tracking: state.motionTrack
   });
   dancer.on('motionData', function (data) {
-    emitData('motionData', data)
+    emitData('motionData', data);
   });
 });
 
