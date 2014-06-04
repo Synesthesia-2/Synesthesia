@@ -74,6 +74,7 @@ var init = function() {
 };
 
 var visualizers = init();
+console.log(visualizers);
 
 var connectSockets = function (routeInfoArr ) {
   routeInfoArr.forEach(function(routeObj) {
@@ -105,9 +106,7 @@ var emitData = function (eventName, data) {
 // define socket.io spaces
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
-var fireworks = io.of('/fireworks');
 var dancer = io.of('/dancer');
-var flock = io.of('/flock');
 var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
 var linedance = io.of('/linedance');
@@ -128,8 +127,8 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
-  optiFlowTrack: true, //init as true for testing
-  optiflowFlocking: false,
+  opticalFlowTrack: true, //init as true for testing
+  opticalFlowFlocking: false,
   currentColor: '#000000',
   resetMC: function() {
     this.strobe = false;
@@ -149,22 +148,7 @@ middleware.setSettings(app, express);
 
 // render routes
 app.get('/', routes.renderClient);
-// app.get('/conductor', routes.renderView);
-// app.get('/fireworks', routes.renderView);
-// app.get('/audio', routes.renderView);
-// app.get('/optiflow', routes.renderView);
-// app.get('/linedance', routes.renderView);
-// app.get('/grassfield', routes.renderView);
-// app.get('/fone', routes.renderView);
-// app.get('/shakemeter', routes.renderView);
-// app.get('/shakebattle', routes.renderView);
-// app.get('/spotlights', routes.renderView);
-// app.get('/dancer', routes.renderView);
-// app.get('/flock', routes.renderView);
-// app.get('/update', routes.renderView);
-// app.get('/satellite', routes.renderView);
-// app.get('/particles', routes.renderView);
-// app.get('/DNE', routes.render404);
+
 app.get('*', routes.renderView);
 app.use(function(err, req, res, next){
   if(err) {
@@ -202,13 +186,6 @@ webcamio.sockets.on('connection', function (socket) {
 /// Visualizer events
 //////////////////////////////////////////
 
-fireworks.on('connection', function (firework) {
-  firework.emit("welcome", "Visualizer connected.");
-});
-
-flock.on('connection', function (flock) {
-  flock.emit("welcome", "Flock visualizer connected.");
-});
 
 //////////////////////////////////////////
 /// Dancer / Motion Tracker events
@@ -265,15 +242,14 @@ conductor.on('connection', function (conductor) {
     dancer.emit('toggleMotion', data);
   });
 
-  conductor.on('toggleOptiflowFlocking', function (data){
+  conductor.on('toggleOpticalFlowFlocking', function (data){
     var flock = io.of('/flock');
     if (data.flocking) {
-      state.optiflowFlocking = true;
+      state.opticalFlowFlocking = true;
     } else {
-      state.optiflowFlocking = false;
+      state.opticalFlowFlocking = false;
     }
-    flock.emit('toggleOptiflowFlocking', data);
-    // console.log('toggleOptiflowFlocking: ', data.flocking);
+    flock.emit('toggleOpticalFlowFlocking', data);
   });
 
   conductor.on('toggleStrobe', function (data){
@@ -352,14 +328,14 @@ optiflow.on('connection', function (optiflow) {
   //console.log('optiflow connected'); //temp logging to check socket connection establishment
   optiflow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
-    tracking: state.optiFlowTrack
+    tracking: state.opticalFlowTrack
   });
-  optiflow.on('optiFlowData', function (optiFlowData) {
-    console.log(optiFlowData);
-    linedance.emit('optiFlowData', optiFlowData);
-    flock.emit('optiFlowData', optiFlowData);
-    grassfield.emit('optiFlowData', optiFlowData);
-    satellite.emit('optiFlowData', optiFlowData);
+  optiflow.on('opticalFlowData', function (opticalFlowData) {
+    console.log(opticalFlowData);
+    linedance.emit('opticalFlowData', opticalFlowData);
+    flock.emit('opticalFlowData', opticalFlowData);
+    grassfield.emit('opticalFlowData', opticalFlowData);
+    satellite.emit('opticalFlowData', opticalFlowData);
   });
 });
 

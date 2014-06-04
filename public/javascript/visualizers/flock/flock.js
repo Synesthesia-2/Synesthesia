@@ -8,7 +8,7 @@ $(document).ready(function() {
     console.log("flock visualizer welcomed", data);
   });
 
-  server.on('optiFlowData', function(data) {
+  server.on('opticalFlowData', function(data) {
     window.boidData = {u: data.u, v: data.v};
   });
 
@@ -17,8 +17,8 @@ $(document).ready(function() {
     window.blobData = data;
   })
 
-  server.on('toggleOptiflowFlocking', function(data) {
-    console.log('toggleOptiflowFlocking', data.flocking);
+  server.on('toggleOpticalFlowFlocking', function(data) {
+    console.log('toggleOpticalFlowFlocking', data.flocking);
     optiFlowTracking = data.flocking;
   });
 

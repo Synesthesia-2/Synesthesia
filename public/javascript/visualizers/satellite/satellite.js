@@ -240,7 +240,7 @@
     visualizer.accelerationAccumulator = 0;
   }, 100);
 
-  server.on('optiFlowData', visualizer.collectOptiFlowData);
+  server.on('opticalFlow', visualizer.collectOptiFlowData);
   server.on('blob', visualizer.getBlobCoords);
   server.on('audio', visualizer.getFreq);
   d3.select(self.frameElement).style("height", visualizer.settings.height + "px");
