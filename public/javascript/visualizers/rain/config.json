@@ -1,0 +1,6 @@
+{
+  "inputs": [
+    "opticalFlow"
+  ],
+  "extraJS": ["THREE-r65.min.js", "ShaderParticles.min.js", "d3.geo.projection.v0.min.js"]
+}

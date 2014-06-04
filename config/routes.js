@@ -13,7 +13,8 @@ var validViews = {
   'flock': true,
   'update': true,
   'satellite': true,
-  'particles': true
+  'particles': true,
+  'rain': true
 };
 
 exports.renderView = function (req, res) {

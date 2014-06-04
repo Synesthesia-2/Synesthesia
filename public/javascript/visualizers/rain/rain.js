@@ -1,4 +1,4 @@
-var server = io.connect('/linedance');
+var server = io.connect('/rain');
 server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
@@ -40,6 +40,6 @@ var circleVisualize = function(optiFlowData) {
     .style("stroke-opacity", 0);
 };
 
-server.on('optiFlowData', function(data){
+server.on('opticalFlow', function(data){
   circleVisualize(data);
 });
