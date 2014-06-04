@@ -43,6 +43,13 @@ var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
 
+
+var inputChannels = {
+  audio: [],
+  opticalFlow: [],
+  blob: []
+};
+
 var init = function() {
   var parentDir = __dirname + '/public/javascript/visualizers';
   var dirs = fs.readdirSync(parentDir);
@@ -61,7 +68,7 @@ var init = function() {
       socket: io.of('/' + dirname)
     };
 
-    temp.push(_.extend(defaultConfig,configObj));
+    visualizers.push(_.extend(defaultConfig,configObj));
   });
   return visualizers;
 };
@@ -74,10 +81,18 @@ var connectSockets = function (routeInfoArr ) {
       console.log('new connection!');
       event.emit("Welcome", "Visualizer conected.");
     });
+    routeObj.inputs.forEach(function (input) {
+      if(inputChannels[input]) {
+        inputChannels[input].push(routeObj.socket);
+      } else {
+        inputChannels[input] = [routeObj.socket];
+      }
+    });
   });
 };
 
 connectSockets(visualizers);
+console.log(inputChannels);
 
 
 
