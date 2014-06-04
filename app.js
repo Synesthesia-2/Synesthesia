@@ -21,7 +21,12 @@ var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
 var fs = require('fs');
 var _ = require('underscore');
+var requirejs = require('requirejs');
 
+requirejs.config({
+  baseUrl: __dirname + 'public/javascript'
+})
+console.log(requirejs); 
 
 // Instantiate server
 var app = express();
@@ -77,7 +82,6 @@ var init = function() {
 };
 
 var visualizers = init();
-console.log(visualizers);
 
 // Sets up socket.io connections for each visualizer collected above
 var connectSockets = function (routeInfoArr ) {
