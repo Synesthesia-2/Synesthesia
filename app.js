@@ -52,6 +52,7 @@ var inputChannels = {
   blob: []
 };
 
+// Gathers names of visualizers and reads config.json files in their respective directories
 var init = function() {
   var parentDir = __dirname + '/public/javascript/visualizers';
   var dirs = fs.readdirSync(parentDir);
@@ -78,12 +79,15 @@ var init = function() {
 var visualizers = init();
 console.log(visualizers);
 
+// Sets up socket.io connections for each visualizer collected above
 var connectSockets = function (routeInfoArr ) {
   routeInfoArr.forEach(function(routeObj) {
     routeObj.socket.on('connection', function(event){
       console.log('new connection!');
       event.emit("Welcome", "Visualizer conected.");
     });
+
+    // Maps inputs to the visualizers that require them in their config.json files
     routeObj.inputs.forEach(function (input) {
       if(inputChannels[input]) {
         inputChannels[input].push(routeObj.socket);
@@ -98,6 +102,7 @@ connectSockets(visualizers);
 
 // console.log(inputChannels);
 
+// Emit data to multiple visualizers, according to 'inputChannels'
 var emitData = function (eventName, data) {
   var emitList = inputChannels[eventName] || [];
   emitList.forEach(function(socket) {
@@ -352,11 +357,6 @@ fone.on('connection', function (fone) {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
   });
-  // fone.on('orientationData', function (data) {
-  //   shakemeter.emit('orientationData', data);
-  //   shakebattle.emit('orientationData', data);
-  //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
-  // });
   fone.on('audienceMotionData', function (data) {
     console.log(data);
     shakemeter.emit('audienceMotionData', data);
