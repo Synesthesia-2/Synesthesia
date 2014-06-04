@@ -9,6 +9,7 @@
         optional js: optionally require js,
         optional styl: optinally require stylesheet
       }
+    handle errors (e.g. incorrect results from config file read)
     generate sockets
     generate express routes
     plug in socket emissions
