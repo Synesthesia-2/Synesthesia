@@ -56,7 +56,8 @@ var init = function() {
       name: dirname,
       inputs: null,
       extraJS: null,
-      extraStyl: null 
+      extraStyl: null,
+      socket: io.of('/' + dirname)
     };
 
     temp.push(_.extend(defaultConfig,configFile));
@@ -65,23 +66,16 @@ var init = function() {
 };
 var visualizers = init();
 
-var connectSockets = function ( ) {
-  var socketObj = {};
-  visualizers.forEach(function(visualizerObj) {
-    socketObj[visualizerObj.name] = io.of('/' + visualizerObj.name);
-    socketObj[visualizerObj.name].on('connection', function(event){
+var connectSockets = function (routeInfoArr ) {
+  routeInfoArr.forEach(function(routeObj) {
+    routeObj.socket.on('connection', function(event){
+      console.log('new connection!');
       event.emit("Welcome", "Visualizer conected.");
     });
   });
-  return socketObj;
 };
 
-var visualizerSockets = connectSockets();
-console.log(visualizerSockets);
-
-
-
-
+connectSockets(visualizers);
 
 
 
