@@ -120,8 +120,6 @@ var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
 osc.send('/oscAddress', 200);
 var fone = io.of('/fone');
-var shakemeter = io.of('/shakemeter');
-var shakebattle = io.of('/shakebattle');
 var spotlights = io.of('/spotlights');
 var grassfield = io.of('/grassfield');
 
