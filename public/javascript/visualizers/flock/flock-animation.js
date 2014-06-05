@@ -10,7 +10,6 @@ jQuery(function($) {
   var boids = [];
   var groupTogether = false;
   var opticalFlowVector = new PIXI.Vector(0, 0);
-  var borderFactor = 10;
   var path = []; 
   var speedFactor = 1;
 
@@ -74,9 +73,8 @@ jQuery(function($) {
   Boid.prototype.flock = function(boids) {
     var separation = this.separate(boids).multiplyScalar(1);
     var alignment = this.align(boids).multiplyScalar(8);
-    var cohesion = this.cohesion(boids).multiplyScalar(0.5);
-    var borders = this.borders().multiplyScalar(2);
-    this.acceleration.add(separation).add(alignment).add(cohesion).add(borders);
+    var cohesion = this.cohesion(boids).multiplyScalar(2);
+    this.acceleration.add(separation).add(alignment).add(cohesion);
   };
 
   Boid.prototype.opticalFlow = function() {
@@ -92,7 +90,6 @@ jQuery(function($) {
   Boid.prototype.update = function() {
     // Update velocity
     this.vector.add(this.acceleration);
-    
     // Limit speed
     if (FlockState.speedFactor) {
       speedFactor = FlockState.speedFactor / 1000;
@@ -102,11 +99,12 @@ jQuery(function($) {
 
     //Move position based on vector of the boid
     this.position.add(this.vector);
+    this.borders();
 
     // Limit the acceleration each cycle.
     // The closer to 0 this is, the more insect like the behavior
     // with sudden changes in direction
-    this.acceleration.multiplyScalar(0.95);
+    this.acceleration.multiplyScalar(0.6);
   };
 
   Boid.prototype.seek = function(target) {
@@ -124,19 +122,23 @@ jQuery(function($) {
     var radius = this.radius;
 
     if (position.x < -radius) {
-      vector.x = borderFactor * (-radius - position.x);
+      // vector.x = borderFactor * (-radius - position.x);
+      vector.x = size.width + this.radius;
     }
     if (position.y < -radius){
-      vector.y = borderFactor * (-radius - position.y);
+      // vector.y = borderFactor * (-radius - position.y);
+      vector.y = size.height + this.radius;
     }
     if (position.x > size.width + radius){
-      vector.x = -borderFactor * (position.x - size.width - radius);
+      // vector.x = -borderFactor * (position.x - size.width - radius);
+      vector.x = -size.width - this.radius;
     }
     if (position.y > size.height + radius) {
-      vector.y = -borderFactor * (position.y - size.height - radius);
+      // vector.y = -borderFactor * (position.y - size.height - radius);
+      vector.y = -size.height - this.radius;
     }
-
-    return vector;
+    this.position.add(vector);
+    // return vector;
   };
 
   // A method that calculates a steering vector towards a target
@@ -248,7 +250,7 @@ jQuery(function($) {
     var boidContainers = [];
 
     // Add the boids:
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 200; i++) {
       var position = new PIXI.Point(Math.random() * size.width, Math.random() * size.height);
       var boid = new Boid(position, 2, 1);
       var boidContainer = new PIXI.DisplayObjectContainer();
@@ -276,6 +278,7 @@ jQuery(function($) {
 
   function onMouseDown() {
     groupTogether = !groupTogether;
+    console.log('mousedown!');
   }
 
   function animate() {
@@ -292,7 +295,7 @@ jQuery(function($) {
       var boid = boids[i];
 
       if (groupTogether) {
-        var index = parseInt( ((i + boid.count / 6) % l) / l * path.length);
+        var index = parseInt( ((i + boid.count / 3) % l) / l * path.length);
         var point = path[index];
         boid.seek(point);
       }
@@ -304,7 +307,7 @@ jQuery(function($) {
       boid.container.rotation = -boid.vector.rad();
 
       var flapFactor = boid.count * boid.vector.lengthSq() * 0.2;
-      boid.container.scale = new PIXI.Point(Math.sin(flapFactor)*.25 + 0.85, 0.6);
+      boid.container.scale = new PIXI.Point(Math.sin(flapFactor)*.25 + 0.85, 0.4);
 
       boid.run(boids);
     }
