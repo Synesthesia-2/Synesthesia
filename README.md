@@ -7,11 +7,9 @@ Additionally, a user-friendly control panel page allows for a conductor to enabl
 The modular, plugin-style architecture of v2.0 enables developers and artists to easily integrate new visualizers or data input nodes into the existing framework. 
 
 ##Instructions:
-
-**Requirements:** [Node.js](http://nodejs.org/), npm (Node.js package manager)
-
 ###Run Synesthesia from the command line on your own network:
-#####Set up:
+**Requirements:** [Node.js](http://nodejs.org/), npm (Node.js package manager)
+#####Set up the environment:
   * Make sure that Node.js is installed (Verify via `node --version` ) 
   * Determine the IP address of the computer that will be running the node server.
     * _Note: This IP address is referred to below as **serverseIPaddress**_
@@ -20,17 +18,23 @@ The modular, plugin-style architecture of v2.0 enables developers and artists to
       * Click Network under Internet & Wireless
       * Look for the ip address under Status
     * In any UNIX environment, use `ifconfig` 
-  * Determine the value of the PORT variable in your shell environment
-    * _Optionally_, set the PORT in your shell environment
+  * _Optionally_, set the PORT variable in your shell environment
     * At runtime, if no PORT is specified in the app's environment, the default PORT is 8080
-  * Clone the repo `git clone https://github.com/strixcuriosus/Synesthesia`
+
+#####Download necessary files:
+  * Clone the repo via `git clone https://github.com/strixcuriosus/Synesthesia`
   * Open the Synesthesia directory: `cd Synesthesia`
   * Install dependencies: `npm install`
   * Install front end packages: `bower install`
 
 #####Start the application:
-  * Run the server: `node app.js`
+  * Run the server: `node app.js` 
+  * Look for a logged message in the terminal:
+   *"Synesthesia server listing on port __[yourPORT]__"
+   * __[yourPORT]__ will be `8080` if the run environment has no specified PORT
+   * In the following sections, you may need to replace `8080` with your actual port value
 
+#####Connect to the control panel page:
 Once the server is running, open a browser on a touch-enabled device and navigate to `serverIPaddress:8080/conductor`.
 
 
