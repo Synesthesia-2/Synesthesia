@@ -2,9 +2,11 @@
 
 Synesthesia 2.0 is an interactive, realtime data visualization suite developed at Kinetech in San Francisco.
 The application collects, processes, and abstracts audio, orientation, movement, and location data from remote computers and mobile devices and dynamically renders live in-browser displays which can be projected onto a wall, floor, or stage. 
-Additionally, a user-friendly control panel page allows for a conductor to enable or disable data transfer from input sources to visualizers and to adjust visualization parameters during a performance while the app is running. 
+Additionally, a user-friendly control panel page allows for a conductor to enable/disable data transfer from input sources to visualizers and to adjust visualization parameters during a performance while the app is running.
 
-The modular, plugin-style architecture of v2.0 enables developers and artists to easily integrate new visualizers or data input nodes into the existing framework. 
+The current version debuted at the Codame Art + Tech Playground / Code + Dance + Hack Day event on May 31, 2014 at CounterPULSE in San Francsico where the developers were able to collaborate and exchange ideas with dancers, artists, and technologists. 
+
+Architecturally, the modular plugin style of v2.0 enables developers and artists to easily integrate new visualizers or data input nodes into the existing framework. 
 
 ##Instructions:
 ###Run Synesthesia from the command line on your own network:
@@ -24,18 +26,21 @@ The modular, plugin-style architecture of v2.0 enables developers and artists to
 #####Download necessary files:
   * Clone the repo via `git clone https://github.com/strixcuriosus/Synesthesia`
   * Open the Synesthesia directory: `cd Synesthesia`
-  * Install dependencies: `npm install`
+  * Install application dependencies: `npm install`
   * Install front end packages: `bower install`
 
 #####Start the application:
   * Run the server: `node app.js` 
   * Look for a logged message in the terminal:
    *"Synesthesia server listing on port __[yourPORT]__"
-   * __[yourPORT]__ will be `8080` if the run environment has no specified PORT
+   * __[yourPORT]__ will be `8080` if the runtime environment has no specified PORT
    * In the following sections, you may need to replace `8080` with your actual port value
 
 #####Connect to the control panel page:
-Once the server is running, open a browser on a touch-enabled device and navigate to `serverIPaddress:8080/conductor`.
+  * Keep the server running
+  * Open a browser on a touch-enabled device 
+    *Note: A touch-emulator such as the one found in Chrome's dev tools panel can be used
+  * Navigate to `serverIPaddress:8080/conductor`.
 
 
 Audience members should connect their smartphones to the `/` endpoint (i.e. `serverIPaddress:8080/` ). 
