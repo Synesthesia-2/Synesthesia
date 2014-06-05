@@ -17,11 +17,19 @@ var validViews = {
   'rain': true
 };
 
-exports.renderView = function (req, res) {
-  var view = req.url.slice(1);
+exports.renderView = function (req, res, views) {
+  var requestedView = req.url.slice(1);
   // console.log(req);
-  if (validViews[view]) {
-    res.render(view);    
+  if (views) {
+    for (var i = 0; i < views.length; i++) {
+      var view = views[i];
+      if (view.name === requestedView){
+        res.render("default", {
+          extraJS: view.extraJS,
+          extraStyl: view.extraStyl
+        });
+      }
+    }
   } else {
     render404(req, res);
   }

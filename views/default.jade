@@ -8,9 +8,13 @@ html
     script(src="/bower_components/jquery/jquery.min.js")
 
   body
+    if extraJS
+        ul 
+          each val in extraJS
+            li= val
 
-    script(src="bower_components/pixi/bin/pixi.js")
-    script(src="bower_components/underscore/underscore-min.js")
-    script(src="javascript/visualizers/flock/pixi.vector.js")
-    script(src="javascript/visualizers/flock/flock.js")
-    script(src="javascript/visualizers/flock/flock-animation.js")
+    //- script(src="bower_components/pixi/bin/pixi.js")
+    //- script(src="bower_components/underscore/underscore-min.js")
+    //- script(src="javascript/visualizers/flock/pixi.vector.js")
+    //- script(src="javascript/visualizers/flock/flock.js")
+    //- script(src="javascript/visualizers/flock/flock-animation.js")
