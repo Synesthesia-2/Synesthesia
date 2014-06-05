@@ -8,10 +8,10 @@ The modular, plugin-style architecture of v2.0 enables developers and artists to
 
 ##Instructions:
 
-Requirements: [Node.js](http://nodejs.org/), npm (Node.js package manager)
+**Requirements:** [Node.js](http://nodejs.org/), npm (Node.js package manager)
 
-To run Synesthesia from the command line on your own network:
-  - Make sure that Node.js is installed (Check via `node --version` ) 
+####To run Synesthesia from the command line on your own network:
+  - Make sure that Node.js is installed (Verify via `node --version` ) 
   - Determine the IP address of the computer that will be running the node server.
     * _Note: This IP address is referred to below as **serverComputerIPaddress**_
     * On Mac OS:
@@ -34,7 +34,7 @@ On the laptop that is running the visualization, connect to `/fireworks` and a p
 
 The conductor endpoint can now control the show. After enabling audio input, the internal or external microphone will calibrate for 5-6 seconds to implement noise cancelling filters and input thresholding, and then begin emitting data for the fireworks visualization to render. Manual light show mode will fade through different screen colors on each audience member's phone, allowing the space to be lit according to the pitch of the vocals or to a manually chosen single color. When motion is enabled, the gyroscope data from the `/dancer` endpoint is streamed to the visualization, allowing the firework to move with the performer in space. 
 
-## How To Add A New Visualizer: 
+
 
 ##Screenshots:
 
@@ -49,6 +49,9 @@ Conductor home screen
 Fireworks visualization
 
 ![Fireworks visualization](/screenshots/fireworks.png "Fireworks display with audio and phone motion")
+
+
+## Screencast Demos:
 
 ##Technology:
 
@@ -80,6 +83,10 @@ Output:
 Unit Testing:
   - Mocha
   - PhantomJS
+
+## How To Add A New Visualizer: 
+
+## Potential Future Directions:
 
 ## 1.0
 This project is based on Synesthesia (v.1.0), an original work by Weidong Yang, George Bonner, David Ryan Hall, Kate Jenkins, and Joey Yang, which was first performed in public on November 17, 2013, at The Garage in San Francisco.
