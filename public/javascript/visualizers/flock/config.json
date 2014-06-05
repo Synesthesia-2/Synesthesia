@@ -5,5 +5,8 @@
     "blob",
     "newFadeTime"
   ],
-  "extraJS": "./pixi.vector.js"
+  "extraJS": [
+    "flock-animation.js",
+    "pixi.vector.js"
+  ]
 }

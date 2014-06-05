@@ -3,6 +3,15 @@
     width: window.innerWidth,
     height: window.innerHeight
   };
+  
+  // Initialize some variables
+  var boids = [];
+  var groupTogether = false;
+  var opticalFlowVector = new PIXI.Vector(0, 0);
+  var borderFactor = 10;
+  var path = []; 
+  var speedFactor = 1;
+
   // create an new instance of a pixi _stage - and set it to be interactive
   var _stage = new PIXI.Stage(0xffffff);
   _stage.setInteractive(true);
@@ -20,16 +29,13 @@
 
   var _target = new PIXI.DisplayObjectContainer();
   _stage.addChild(_target);
-  var count = 0;
+
 
   // add render view to DOM
   document.body.appendChild(_renderer.view);
 
-  var boids = [];
-  var groupTogether = false;
-  var opticalFlowVector = new PIXI.Vector(0, 0);
-  var borderFactor = 10;
-  var path = []; 
+  var count = 0;
+  
   
   // Create a path. This is for testing. Ideally we should detect an outline with an IR camera and using that data for the path.
   var steps = 90;
@@ -84,10 +90,18 @@
   Boid.prototype.update = function() {
     // Update velocity
     this.vector.add(this.acceleration);
-    // Limit speed (vector#limit?)
+    
+    // Limit speed
+    if (window.speedFactor) {
+      speedFactor = window.speedFactor / 1000;
+    }
     this.vector.setLength(Math.min(this.maxSpeed, this.vector.length()));
+    this.vector.multiplyScalar(speedFactor);
+
+    //Move position based on vector of the boid
     this.position.add(this.vector);
-    // Reset acceleration to 0 each cycle
+
+    // Limit the acceleration each cycle.
     // The closer to 0 this is, the more insect like the behavior
     // with sudden changes in direction
     this.acceleration.multiplyScalar(0.95);

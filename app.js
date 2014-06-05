@@ -21,12 +21,6 @@ var routes = require('./config/routes.js');
 var middleware = require('./config/middleware.js');
 var fs = require('fs');
 var _ = require('underscore');
-var requirejs = require('requirejs');
-
-requirejs.config({
-  baseUrl: __dirname + 'public/javascript'
-})
-console.log(requirejs); 
 
 // Instantiate server
 var app = express();
@@ -225,7 +219,6 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     state.currentColor = data.color;
     clients.emit('changeColor', data);
-    // flock.emit('changeColor', data);
     emitData('changeColor', data);
   });
 
@@ -251,13 +244,12 @@ conductor.on('connection', function (conductor) {
   });
 
   conductor.on('toggleOpticalFlowFlocking', function (data){
-    var flock = io.of('/flock');
     if (data.flocking) {
       state.opticalFlowFlocking = true;
     } else {
       state.opticalFlowFlocking = false;
     }
-    flock.emit('toggleOpticalFlowFlocking', data);
+    emitData('toggleOpticalFlowFlocking', data);
   });
 
   conductor.on('toggleStrobe', function (data){
@@ -282,7 +274,8 @@ conductor.on('connection', function (conductor) {
   conductor.on('newFadeTime', function (data){
     var clients = io.of('/client');
     clients.emit('newFadeTime', data);
-    flock.emit('newFadeTime', data);
+    emitData('newFadeTime', data);
+    console.log(data);
   });
 });
 
