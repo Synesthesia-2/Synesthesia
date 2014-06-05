@@ -37,6 +37,8 @@ server.listen(port);
 var io = require('socket.io').listen(server);
 app.set('io', io);
 app.set('oscIo', oscIo);
+app.use(express.static(__dirname + '/public/lib'));
+app.use(express.static(__dirname + '/public'));
 // var db = require('./server/database_server');
 // var helpers = require('./server/helpers');
 console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
