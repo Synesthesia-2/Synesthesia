@@ -14,7 +14,7 @@ Architecturally, the modular plugin style of v2.0 enables developers and artists
 #####Set up the environment:
   * Make sure that Node.js is installed (Verify via `node --version` ) 
   * Determine the IP address of the computer that will be running the node server.
-    * _Note: This IP address is referred to below as **serverseIPaddress**_
+    * _Note:_ This IP address is referred to below as **serverIPaddress**
     * On Mac OS:
       * Open System Preferences
       * Click Network under Internet & Wireless
