@@ -13,7 +13,7 @@ Requirements: [Node.js](http://nodejs.org/), npm (Node.js package manager)
 To run Synesthesia from the command line on your own network:
   - Make sure that Node.js is installed (Check via `node --version` ) 
   - Determine the IP address of the computer that will be running the node server.
-     _Note: This IP address will be referred to as **serverComputerIPaddress** throughout the docs._
+    * _Note: This IP address is referred to below as **serverComputerIPaddress**_
     * On Mac OS:
       * Open System Preferences
       * Click Network under Internet & Wireless
