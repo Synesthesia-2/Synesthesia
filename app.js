@@ -1,18 +1,18 @@
-//////////////////////////////////////////
-///
-/// SYNESTHESIA
-/// A collaboration between Kinetech and Hack Reactor
-///
-/// November 2013
-/// Weidong Yang
-/// David Ryan Hall
-/// George Bonner
-/// Kate Jenkins
-/// Joey Yang
-///
-/// Check out http://kine-tech.org/ for more information.
-///
-//////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+///                                                           ///
+/// SYNESTHESIA v2.0                                          ///
+/// A collaboration between Kinetech and Hack Reactor         ///
+///                                                           ///
+/// May 2014                                                  ///
+/// Weidong Yang                                              ///
+/// Kayvon Ghashghai                                          ///
+/// Ian Henderson                                             ///
+/// Ash Hoover                                                ///
+///                                                           ///
+///                                                           ///
+/// Check out http://kine-tech.org/ for more information.     ///
+///                                                           ///
+/////////////////////////////////////////////////////////////////
 
 // Instantiate server
 var express = require('express');
@@ -89,22 +89,6 @@ middleware.setSettings(app, express);
 
 // render routes
 app.get('/', routes.renderClient);
-// app.get('/conductor', routes.renderView);
-// app.get('/fireworks', routes.renderView);
-// app.get('/audio', routes.renderView);
-// app.get('/optiflow', routes.renderView);
-// app.get('/linedance', routes.renderView);
-// app.get('/grassfield', routes.renderView);
-// app.get('/fone', routes.renderView);
-// app.get('/shakemeter', routes.renderView);
-// app.get('/shakebattle', routes.renderView);
-// app.get('/spotlights', routes.renderView);
-// app.get('/dancer', routes.renderView);
-// app.get('/flock', routes.renderView);
-// app.get('/update', routes.renderView);
-// app.get('/satellite', routes.renderView);
-// app.get('/particles', routes.renderView);
-// app.get('/DNE', routes.render404);
 app.get('*', routes.renderView);
 app.use(function(err, req, res, next){
   if(err) {
