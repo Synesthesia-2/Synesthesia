@@ -45,6 +45,7 @@ var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
 
+console.log(oscServer, oscClient);
 
 var inputChannels = {
   audio: [],
@@ -119,7 +120,7 @@ var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
 var fone = io.of('/fone');
 
-osc.send('/oscAddress', 200);
+osc.send('/oscAddress', 20130);
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -170,7 +171,7 @@ webcamio.sockets.on('connection', function (socket) {
     // oscClient.send('/status', socket.sessionId + ' connected');
 
     oscServer.on('message', function(msg, rinfo) {
-      // console.log(msg, rinfo);
+      console.log(msg, rinfo);
       socket.emit("message", msg);
       flock.emit("blob", msg);
       particles.emit("blob", msg);
