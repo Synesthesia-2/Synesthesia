@@ -11,7 +11,7 @@ The modular, plugin-style architechture of v2.0 enables developers and artists t
 Requirements: Node.js, npm (Node.js package manager)
 
 To run on your own network:
-  - `git clone https://github.com/kinetech/Performance`
+  - `git clone https://github.com/strixcuriosus/Synesthesia`
   - Install node, if necessary, and install dependencies via `npm install` and `bower install`
   - `node app.js`
 
