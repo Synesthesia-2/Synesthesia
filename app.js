@@ -117,11 +117,9 @@ var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
 var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
-osc.send('/oscAddress', 200);
 var fone = io.of('/fone');
-var spotlights = io.of('/spotlights');
-var grassfield = io.of('/grassfield');
 
+osc.send('/oscAddress', 200);
 
 // instantiate state object (keeps track of performance state)
 var state = {
