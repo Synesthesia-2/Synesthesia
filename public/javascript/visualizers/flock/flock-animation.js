@@ -1,4 +1,6 @@
-(function() {
+jQuery(function($) {
+  var FlockState = window.FlockState || {};
+
   var size = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -78,9 +80,9 @@
   };
 
   Boid.prototype.opticalFlow = function() {
-    if (window.boidData && window.boidData.u) {
-      var u = window.boidData.u;
-      var v = window.boidData.v;
+    if (FlockState.boidData && FlockState.boidData.u) {
+      var u = FlockState.boidData.u;
+      var v = FlockState.boidData.v;
       opticalFlowVector.x -= u;
       opticalFlowVector.y += v;
     }
@@ -92,8 +94,8 @@
     this.vector.add(this.acceleration);
     
     // Limit speed
-    if (window.speedFactor) {
-      speedFactor = window.speedFactor / 1000;
+    if (FlockState.speedFactor) {
+      speedFactor = FlockState.speedFactor / 1000;
     }
     this.vector.setLength(Math.min(this.maxSpeed, this.vector.length()));
     this.vector.multiplyScalar(speedFactor);
@@ -277,6 +279,10 @@
   }
 
   function animate() {
+    if (FlockState = {} && window.FlockState !== undefined) {
+      FlockState = window.FlockState;
+    }
+
     requestAnimFrame(animate);
 
     count += 1;
@@ -303,4 +309,4 @@
       boid.run(boids);
     }
   }
-})();
+});
