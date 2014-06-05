@@ -5,16 +5,8 @@ html
     meta(http-equiv="content-type", content="text/html; charset=utf-8")
     link(rel="stylesheet", href="/stylesheets/flock.css")
     script(src="/socket.io/socket.io.js")
-    script(src="/bower_components/jquery/jquery.min.js")
+    if extraJS
+        each val in extraJS
+            script(src="#{val}")
 
   body
-    if extraJS
-        ul 
-          each val in extraJS
-            li= val
-
-    //- script(src="bower_components/pixi/bin/pixi.js")
-    //- script(src="bower_components/underscore/underscore-min.js")
-    //- script(src="javascript/visualizers/flock/pixi.vector.js")
-    //- script(src="javascript/visualizers/flock/flock.js")
-    //- script(src="javascript/visualizers/flock/flock-animation.js")

@@ -4,7 +4,9 @@
     "blob"
   ],
   "extraJS": [
-    "THREE-r65.min.js", 
-    "ShaderParticles.min.js"
+    "/lib/THREE-r65.min.js", 
+    "/lib/ShaderParticles.min.js",
+    "/bower_components/jquery/jquery.min.js",
+    "/javascript/visualizers/particles/particles.js"
   ]
 }

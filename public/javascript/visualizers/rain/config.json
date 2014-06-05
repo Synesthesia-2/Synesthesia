@@ -2,5 +2,10 @@
   "inputs": [
     "opticalFlow"
   ],
-  "extraJS": ["THREE-r65.min.js", "ShaderParticles.min.js", "d3.geo.projection.v0.min.js"]
+  "extraJS": [
+    "/bower_components/jquery/jquery.min.js",
+    "/bower_components/underscore/underscore-min.js",
+    "/bower_components/d3/d3.min.js",
+    "javascript/visualizers/rain/rain.js"
+  ]
 }
