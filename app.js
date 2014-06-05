@@ -31,6 +31,7 @@ server.listen(port);
 var io = require('socket.io').listen(server);
 app.set('io', io);
 app.set('oscIo', oscIo);
+
 // var db = require('./server/database_server');
 // var helpers = require('./server/helpers');
 console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
@@ -199,7 +200,7 @@ dancer.on('connection', function (dancer) {
     tracking: state.motionTrack
   });
   dancer.on('motionData', function (data) {
-    emitData('motionData', data)
+    emitData('motionData', data);
   });
 });
 
@@ -354,6 +355,7 @@ fone.on('connection', function (fone) {
   });
   fone.on('audienceMotionData', function (data) {
     console.log(data);
+    emitData('audienceMotionData', data);
     // shakemeter.emit('audienceMotionData', data);
     // shakebattle.emit('audienceMotionData', data);
     // spotlights.emit('audienceMotionData', data);
