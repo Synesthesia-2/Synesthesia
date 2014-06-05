@@ -10,25 +10,31 @@ The modular, plugin-style architecture of v2.0 enables developers and artists to
 
 **Requirements:** [Node.js](http://nodejs.org/), npm (Node.js package manager)
 
-####To run Synesthesia from the command line on your own network:
-  - Make sure that Node.js is installed (Verify via `node --version` ) 
-  - Determine the IP address of the computer that will be running the node server.
-    * _Note: This IP address is referred to below as **serverComputerIPaddress**_
+###Run Synesthesia from the command line on your own network:
+#####Set up:
+  * Make sure that Node.js is installed (Verify via `node --version` ) 
+  * Determine the IP address of the computer that will be running the node server.
+    * _Note: This IP address is referred to below as **serverseIPaddress**_
     * On Mac OS:
       * Open System Preferences
       * Click Network under Internet & Wireless
       * Look for the ip address under Status
-    * In a UNIX environment, use `ifconfig` 
-  - Clone the repo `git clone https://github.com/strixcuriosus/Synesthesia`
-  - Open the Synesthesia directory: `cd Synesthesia`
-  - Install dependencies: `npm install`
-  - Install front end packages: `bower install`
-  - Start the server: `node app.js`
+    * In any UNIX environment, use `ifconfig` 
+  * Determine the value of the PORT variable in your shell environment
+    * _Optionally_, set the PORT in your shell environment
+    * At runtime, if no PORT is specified in the app's environment, the default PORT is 8080
+  * Clone the repo `git clone https://github.com/strixcuriosus/Synesthesia`
+  * Open the Synesthesia directory: `cd Synesthesia`
+  * Install dependencies: `npm install`
+  * Install front end packages: `bower install`
 
-Once the server is running, open a browser on a touch-enabled device and navigate to `serverComputerIPaddress:8080/conductor`.
+#####Start the application:
+  * Run the server: `node app.js`
+
+Once the server is running, open a browser on a touch-enabled device and navigate to `serverIPaddress:8080/conductor`.
 
 
-Audience members should connect their smartphones to the `/` endpoint (i.e. `serverComputerIPaddress:8080/` ). 
+Audience members should connect their smartphones to the `/` endpoint (i.e. `serverIPaddress:8080/` ). 
 
 On the laptop that is running the visualization, connect to `/fireworks` and a projector. In a separate tab, navigate to `/audio` and allow microphone input through the dialog. The movement performer should carry or wear a phone connected to `/dancer`.
 
