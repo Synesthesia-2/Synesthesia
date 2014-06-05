@@ -361,6 +361,7 @@ fone.on('connection', function (fone) {
   });
   fone.on('audienceMotionData', function (data) {
     console.log(data);
+    emitData('audienceMotionData', data);
     // shakemeter.emit('audienceMotionData', data);
     // shakebattle.emit('audienceMotionData', data);
     // spotlights.emit('audienceMotionData', data);
