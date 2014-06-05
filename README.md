@@ -2,7 +2,7 @@
 
 Synesthesia 2.0 is an interactive, realtime data visualization suite developed at Kinetech in San Francisco.
 The application collects, processes, and abstracts audio, orientation, movement, and location data from remote computers and mobile devices and dynamically renders live in-browser displays which can be projected onto a wall, floor, or stage. 
-Additionally, a control panel page allows for a conductor (user) to enable/disable data input sources and to adjust visualization parameters during a performance while the app is running. 
+Additionally, a user-friendly control panel page allows for a conductor to enable or disable data transfer from input sources to visualizers and to adjust visualization parameters during a performance while the app is running. 
 
 The modular, plugin-style architechture of v2.0 enables developers and artists to easily integrate new visualizers or data input nodes into the existing framework. 
 
@@ -45,14 +45,16 @@ Server:
 Client:
   - Jade / Stylus
   - jQuery
-  - Backbone.js
+  - Backbone.js / Handlebars
   - Browserify
 
 Input:
   - Internal Webcam
+  - HTML5
   - External Infrared-sensitive Camera
-  - Webaudio
-  - Phone gyroscope / accelerometer
+  - Internal Microphone
+  - Web Audio API
+  - Mobile phone gyroscope / accelerometer
 
 Output:
   - D3.js
