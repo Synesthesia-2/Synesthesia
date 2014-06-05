@@ -1,6 +1,6 @@
 #Synesthesia v2.0
 
-Synesthesia 2.0 is an interactive, realtime data visualization suite developed at Kinetech in San Francisco.
+Synesthesia 2.0 is an interactive, realtime data visualization suite developed at [Kinetech](http://kine-tech.org/) in San Francisco.
 The application collects, processes, and abstracts audio, orientation, movement, and location data from remote computers and mobile devices and dynamically renders live in-browser displays which can be projected onto a wall, floor, or stage. 
 Additionally, a user-friendly control panel page allows for a conductor to enable/disable data transfer from input sources to visualizers and to adjust visualization parameters during a performance while the app is running.
 
