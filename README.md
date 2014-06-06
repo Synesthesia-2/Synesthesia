@@ -81,6 +81,15 @@ Fireworks visualization
 
 ![Fireworks visualization](/screenshots/fireworks.png "Fireworks display with audio and phone motion")
 
+Satellite Dance Grid Visualizations
+
+![Calm Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/CalmGrid.png "Dance grid display with thin lines correlating to low acceleration")
+
+![Color Changing Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/ColorChange.png "Dance grid display with color changes corresponding to max frequency of audio input")
+
+![Medium Acceleration Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/RampUpGrid.png "Dance grid display with medium-thick lines correlating to moderate acceleration")
+
+![High Acceleration Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/RampUpGrid2.png "Dance grid display with thick, bold lines correlating to high acceleration")
 
 ## Screencast Demos:
 =======
