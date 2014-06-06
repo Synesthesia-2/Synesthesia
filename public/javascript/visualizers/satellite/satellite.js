@@ -3,6 +3,8 @@
 
 /////////////
 
+$(document).ready(function() {
+  $('body').append('<div id=instructions></div>');
 
 (function(){
 
@@ -247,3 +249,4 @@
   server.on('audienceMotionData', visualizer.handleShakes);
 
 })();
+});
