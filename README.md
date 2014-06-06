@@ -71,7 +71,7 @@ To view your visualizer, open a browser with the URL `localhost:8080/file` (repl
 
 Client home screen
 
-![Client home screen](/screenshots/clientHomeScreen.png "Client home screen")
+![Client home screen](/screenshots/ClientView.png "Client home screen")
 
 Conductor home screen
 
