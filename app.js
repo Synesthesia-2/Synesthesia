@@ -113,7 +113,7 @@ var conductor = io.of('/conductor');
 var clients = io.of('/client');
 var dancer = io.of('/dancer');
 var audio = io.of('/audio');
-var optiflow = io.of('/optiflow');
+var opticalFlow = io.of('/opticalFlow');
 // var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
 var fone = io.of('/fone');
@@ -322,13 +322,13 @@ audio.on('connection', function (audio) {
 /// Optical Flow
 //////////////////////////////////////////
 
-optiflow.on('connection', function (optiflow) {
-  console.log('optiflow connected');
-  optiflow.emit('welcome', { 
+opticalFlow.on('connection', function (opticalFlow) {
+  console.log('opticalFlow connected');
+  opticalFlow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
     tracking: state.opticalFlowTrack
   });
-  optiflow.on('opticalFlowData', function (opticalFlowData) {
+  opticalFlow.on('opticalFlowData', function (opticalFlowData) {
     emitData('opticalFlow', opticalFlowData);
   });
 });

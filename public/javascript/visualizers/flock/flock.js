@@ -3,13 +3,14 @@ window.FlockState = {};
 
 $(document).ready(function() {
   var FlockState = window.FlockState;
-  FlockState.optiFlowTracking = false;
+  FlockState.opticalFlowTracking = false;
 
   server.on('welcome', function(data) {
     console.log("flock visualizer welcomed", data);
   });
 
   server.on('opticalFlowData', function(data) {
+    console.log('flowed!', data);
     FlockState.boidData = {u: data.u, v: data.v};
   });
 
@@ -20,7 +21,7 @@ $(document).ready(function() {
 
   server.on('toggleOpticalFlowFlocking', function(data) {
     console.log('toggleOpticalFlowFlocking', data.flocking);
-    FlockState.optiFlowTracking = data.flocking;
+    FlockState.opticalFlowTracking = data.flocking;
   });
 
   server.on('newFadeTime', function(data) {

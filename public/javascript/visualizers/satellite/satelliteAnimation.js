@@ -149,12 +149,12 @@
       }
   };
 
-  visualizer.collectOptiFlowData = function (optiFlowData) {
-      if (Math.abs(optiFlowData.u) > visualizer.settings.flowThreshold){
-          visualizer.opticalFlowData.flowU += visualizer.settings.flowDataScalingFactor * optiFlowData.u; 
+  visualizer.collectopticalFlowData = function (opticalFlowData) {
+      if (Math.abs(opticalFlowData.u) > visualizer.settings.flowThreshold){
+          visualizer.opticalFlowData.flowU += visualizer.settings.flowDataScalingFactor * opticalFlowData.u; 
       }
-      if (Math.abs(optiFlowData.v) > visualizer.settings.flowThreshold){
-          visualizer.opticalFlowData.flowV += visualizer.settings.flowDataScalingFactor * optiFlowData.v; 
+      if (Math.abs(opticalFlowData.v) > visualizer.settings.flowThreshold){
+          visualizer.opticalFlowData.flowV += visualizer.settings.flowDataScalingFactor * opticalFlowData.v; 
       }
   };
 

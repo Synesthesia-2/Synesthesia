@@ -3,7 +3,7 @@ ConductorSpace.Conductor = Backbone.Model.extend({
   initialize: function() {
     this.set('strobe', false);
     this.set('motion', false);
-    this.set('optiflowFlocking', false);
+    this.set('opticalFlowFlocking', false);
     this.set('sound', false);
     this.set('audioLightControl', false);
   },
@@ -26,7 +26,7 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     this.initialize();
     $('#toggleSound').removeClass('toggled');
     $('#toggleMotion').removeClass('toggled');
-    $('#toggleOptiflowTracking').removeClass('toggled');
+    $('#toggleOpticalFlowTracking').removeClass('toggled');
     $('#toggleStrobe').removeClass('toggled');
   },
 
@@ -48,17 +48,17 @@ ConductorSpace.Conductor = Backbone.Model.extend({
     }
   },
 
-  toggleOptiflowTracking: function() {
-    var optiflowFlocking = this.get('optiflowFlocking');
-    optiflowFlocking = !optiflowFlocking;
-    this.trigger('toggleOptiflowFlocking', { optiflowFlocking: optiflowFlocking });
-    this.set('optiflowFlocking', optiflowFlocking);
-    if (optiflowFlocking) {
-      $('#toggleOptiflowFlocking').addClass('toggled');
-      $('#toggleOptiflowFlocking').text('STOP MOTION TRACKING');
+  toggleOpticalFlowTracking: function() {
+    var opticalFlowFlocking = this.get('opticalFlowFlocking');
+    opticalFlowFlocking = !opticalFlowFlocking;
+    this.trigger('toggleOpticalFlowFlocking', { opticalFlowFlocking: opticalFlowFlocking });
+    this.set('opticalFlowFlocking', opticalFlowFlocking);
+    if (opticalFlowFlocking) {
+      $('#toggleOpticalFlowFlocking').addClass('toggled');
+      $('#toggleOpticalFlowFlocking').text('STOP MOTION TRACKING');
     } else {
-      $('#toggleOptiflowFlocking').removeClass('toggled');
-      $('#toggleOptiflowFlocking').text('START MOTION TRACKING');
+      $('#toggleOpticalFlowFlocking').removeClass('toggled');
+      $('#toggleOpticalFlowFlocking').text('START MOTION TRACKING');
     }
   },
 
