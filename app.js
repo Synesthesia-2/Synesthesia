@@ -45,7 +45,7 @@ var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
 
-console.log(oscServer, oscClient);
+// console.log(oscServer, oscClient);
 
 var inputChannels = {
   audio: [],
