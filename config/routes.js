@@ -1,25 +1,24 @@
-var validViews = {
-  'conductor': true,
-  'fireworks': true,
-  'audio': true,
-  'opticalFlow': true,
-  'linedance': true,
-  'grassfield': true,
-  'fone': true,
-  'shakebattle': true,
-  'shakemeter': true,
-  'spotlights': true,
-  'dancer': true,
-  'flock': true,
-  'update': true,
-  'satellite': true,
-  'particles': true,
-  'rain': true
-};
+// var validViews = {
+//   'conductor': true,
+//   'fireworks': true,
+//   'audio': true,
+//   'opticalFlow': true,
+//   'linedance': true,
+//   'grassfield': true,
+//   'fone': true,
+//   'shakebattle': true,
+//   'shakemeter': true,
+//   'spotlights': true,
+//   'dancer': true,
+//   'flock': true,
+//   'update': true,
+//   'satellite': true,
+//   'particles': true,
+//   'rain': true
+// };
 
 exports.renderView = function (req, res, views) {
   var requestedView = req.url.slice(1);
-  // console.log(req);
   if (views) {
     for (var i = 0; i < views.length; i++) {
       var view = views[i];
@@ -28,23 +27,25 @@ exports.renderView = function (req, res, views) {
           extraJS: view.extraJS,
           extraStyl: view.extraStyl
         });
+        console.log("Served /" + requestedView);
+        return;
       }
     }
-  } else {
-    render404(req, res);
-  }
+  } 
+  exports.render404(req, res);
+  console.log("404: /" + requestedView + " is not a valid route.");
 };
 
 exports.renderClient = function(req, res){
   res.render('client');
 };
 
-var render404 = function(req, res){
+exports.render404 = function(req, res){
   res.writeHead(404);
   res.end("That page doesn't exist. Go to a page that exists.");
 };
 
-exports.render404 = render404;
+// exports.render404 = render404;
 
 
 // exports.renderConductor = function(req, res){
