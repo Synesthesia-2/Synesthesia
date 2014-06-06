@@ -71,11 +71,11 @@ To view your visualizer, open a browser with the URL `localhost:8080/file` (repl
 
 Client home screen
 
-![Client home screen](/screenshots/ClientView.png "Client home screen")
+![Client home screen](/screenshots/ClientView.png "Client Home Screen")
 
 Conductor home screen
 
-![Conductor home screen](/screenshots/conductorScreen2.png "Conductor home screen")
+![Conductor home screen](/screenshots/conductorScreen2.png "Conductor Control Panel Page")
 
 Fireworks visualization
 
