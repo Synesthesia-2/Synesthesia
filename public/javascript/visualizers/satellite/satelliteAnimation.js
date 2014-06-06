@@ -29,7 +29,7 @@
 
     // parameter for weighting accelerometer data
     // may need to be adjusted depending on the number of contributing data sources
-    shakeScale: 1/20,
+    shakeScale: 0.15,
 
     // shake value threshold -- exceeding this value induces a tilt change and resets the visualizer's shake property
     maxShake: 8,
@@ -71,15 +71,17 @@
   };
 
   visualizer.setShake = function (accelerationAccumulator) {
-    this.shake = zFilter(accelerationAccumulator, this.shake);
+    this.shake = zFilter(this.accelerationAccumulator, this.shake);
     var scaled = this.shake * this.settings.shakeScale;
+    // console.log(scaled);
+    // console.log(this.settings.maxShake);
     // console.log('setshakethis',this);
     // debugger;
     if (scaled < this.settings.maxShake) {
-      this.projectionParams.shake  = scaled + this.shakeOffset;
+      this.projectionParams.shake  = scaled + this.settings.shakeOffset;
     } else {
       this.tiltChange();
-      this.projectionParams.shake = 1;
+      // this.projectionParams.shake = 3;
       this.shake = 0;
     }
   };
@@ -135,7 +137,7 @@
         visualizer.settings.tilting = false;
         globe
           .transition()
-          .duration(1500)
+          .duration(200)
           .attr("d", nextPath)
           .each("end", visualizer.nextMove);
       } else {
@@ -198,6 +200,7 @@
   d3.select("path")
         .attr("d", visualizer.path) //move center
         .transition()
+        .style('opacity', 0.8)
         .each("end", visualizer.nextMove);
 
     setInterval(function(){
