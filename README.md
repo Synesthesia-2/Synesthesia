@@ -54,17 +54,19 @@ The conductor endpoint can now control the show. After enabling audio input, the
 
 ## How To Add A New Visualizer: 
 
-Visualizers live in `public/javascript/visualizers`. To add one, create a directory in here with your .js files and a `config.json` file. You can list `inputs`, `extraJS` and `extraStyl` along with any necessary input forms or files as arrays. For example:
+Visualizers live in `public/javascript/visualizers`. To add a new one, create a directory inside of the visualizers directory with your .js files and a `config.json` file. In the config file, you can list `inputs` as an array of required input data type names. If your visualizer requires JS files other than the main file (whose name should match the directory name), list file names and/or urls in the `extraJS` array. If you are including files with the visualizer, make sure they are all contained in your visualizer's named directory (which should be a subdirectory of the  `public/javascript/visualizers` directory). Similarly, if you would like to include any `.styl` stylesheets, put them your visualizer's own directory and list their filenames in `extraStyl`. 
 
-    {
-      "inputs": ["audio", "opticalFlow", "audienceMotionData"],
-      "extraJS": ["helpers.js"],
-      "extraStyl": null
-    };
- 
-On startup of the Node server, the directory names in `public/javascript/visualizers` are read and turned into Express.js routes and Socket.io namespaces with the same names. `config.json` files in each directory will also be read and the input sources specified in the `"inputs"` property will be routed to their respective visualizers. Without a config file, your visualizer will not get any data from the input sources so make sure you include one if it's necessary!
+For example, if your visualizer code is saved in a file named `awesomevisualizer.js`, you need to make a new directory named `awesomevisualizer` inside of `public/javascript/visualizers`. Your `awesomevisualizer` directory should contain your `awesomevisualizer.js` file along with any other necessary files (e.g. `helpers.js`, `awesomeanimation.js`, and `awesomestyle.styl`). If your visualizer is fueled by audio data, optical flow data, and audience phone accelerometer data, your `config.json` file would look something like this:
 
-To view your visualizer, open a browser with the URL `localhost:8080/file` (replacing `file` with the name of your visualizer). Inputs such as audio or optical flow can be run in another browser window on the same computer, or if the visualizer is particularly CPU-intensive they can all be run on separate machines.
+       {
+          "inputs": ["audio", "opticalFlow", "audienceMotionData"],
+          "extraJS": ["helpers.js", "awesomeanimation.js"],
+          "extraStyl": ["awesomestyle.styl"]
+        };
+     
+On startup of the Node server, the directory names in `public/javascript/visualizers` are read and turned into Express.js routes and Socket.io namespaces with the same names. `config.json` files in each directory will also be read the input sources specified in the `"inputs"` property will be routed to their respective visualizers. Without a config file, your visualizer will not get any data from the input sources, so make sure you include one if it's necessary!
+
+To view your visualizer, run the server (see above), and open a browser with the URL `serverIPaddress:PORT/file` (replacing `serverIPaddress` `file` with the name of your visualizer). Inputs such as audio or optical flow can be run in another browser window on the same computer, or if the visualizer is particularly CPU-intensive they can all be run on separate machines.
 
 
 ##Screenshots:
@@ -97,63 +99,55 @@ Shakemeter visualization
 
 ![Shakemeter visualization](/screenshots/shakemeter.png "Shakemeter display from phone motion")
 
-Rain visualization
 
-![Rain visualization](/screenshots/rain.png "Rain display from optical flow data")
+##Technology:
 
-Grassfield visualization
+Server:
+  - Node.js
+  - Express.js
+  - Socket.io
 
-![Grassfield visualization](/screenshots/grassfield.png "Grassfield display from optical flow data")
+Client:
+  - Jade / Stylus
+  - jQuery
+  - Backbone.js / Handlebars
+  - Browserify
 
+Input:
+  - Internal Webcam
+  - HTML5
+  - External Infrared-sensitive Camera
+  - Internal Microphone
+  - Web Audio API
+  - Mobile phone gyroscope / accelerometer
 
-##technology:
+Output:
+  - D3.js
+  - Pixi.JS
+  - WebGL
+  - ShaderParticleEngine
 
-server:
-  - node.js
-  - express.js
-  - socket.io
+Unit Testing:
+  - Mocha
+  - PhantomJS
 
-client:
-  - jade / stylus
-  - jquery
-  - backbone.js / handlebars
-  - browserify
+## How To Add A New Visualizer: 
 
-input:
-  - internal webcam
-  - html5
-  - external infrared-sensitive camera
-  - internal microphone
-  - web audio api
-  - mobile phone gyroscope / accelerometer
-
-output:
-  - d3.js
-  - pixi.js
-  - webgl
-  - shaderparticleengine
-
-unit testing:
-  - mocha
-  - phantomjs
-
-## how to add a new visualizer: 
-
-## potential future directions:
+## Potential Future Directions:
 
 ## 1.0
-this project is based on synesthesia (v.1.0), an original work by weidong yang, george bonner, david ryan hall, kate jenkins, and joey yang, which was first performed in public on november 17, 2013, at the garage in san francisco.
+This project is based on Synesthesia (v.1.0), an original work by Weidong Yang, George Bonner, David Ryan Hall, Kate Jenkins, and Joey Yang, which was first performed in public on November 17, 2013, at The Garage in San Francisco.
 
-##license:
+##License:
 
-the mit license (mit)
+The MIT License (MIT)
 
-copyright (c) 2014 weidong yang, kayvon ghashghai, ian henderson, and ash hoover
+Copyright (c) 2014 Weidong Yang, Kayvon Ghashghai, Ian Henderson, and Ash Hoover
 
-permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "software"), to deal in the software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, and to permit persons to whom the software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-the above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-the software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
