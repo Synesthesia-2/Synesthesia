@@ -114,7 +114,7 @@ var clients = io.of('/client');
 var dancer = io.of('/dancer');
 var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
-var linedance = io.of('/linedance');
+// var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
 var fone = io.of('/fone');
 

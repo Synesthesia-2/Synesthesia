@@ -1,3 +1,6 @@
+var fs = require('fs');
+var viewsDir = fs.readdirSync(__dirname + "/../views");
+
 exports.inputRoutes = [
   'conductor',
   'fireworks',
@@ -15,6 +18,11 @@ exports.renderView = function (req, res, views) {
     for (var i = 0; i < views.length; i++) {
       var view = views[i];
       if (view.name === requestedView){
+        if ( viewsDir.indexOf(requestedView + ".jade") !== -1 ){
+          res.render(requestedView);
+          console.log("Served /" + requestedView);
+          return;
+        }
         res.render("default", {
           extraJS: view.extraJS,
           extraStyl: view.extraStyl
@@ -26,8 +34,6 @@ exports.renderView = function (req, res, views) {
     // ...or, if it matches one of the data inputs
     for (var j = 0; j < exports.inputRoutes.length; j++) {
       var inputView = exports.inputRoutes[j];
-        console.log(exports.inputRoutes);
-        // console.log(requestedView);
       if (inputView === requestedView){
         res.render(requestedView);
         console.log("Served /" + requestedView);
