@@ -14,4 +14,9 @@ $(document).ready(function() {
     initialize(data);
   });
 
+  // $('body').append($("canvas")).attr("id", "webGLCanvas");
+  var canvas = document.createElement("canvas");
+  canvas.id = "webGLCanvas";
+  document.body.appendChild(canvas);
+
 });
