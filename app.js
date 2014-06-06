@@ -187,11 +187,6 @@ webcamio.sockets.on('connection', function (socket) {
 });
 
 //////////////////////////////////////////
-/// Visualizer events
-//////////////////////////////////////////
-
-
-//////////////////////////////////////////
 /// Dancer / Motion Tracker events
 //////////////////////////////////////////
 
@@ -310,9 +305,9 @@ clients.on('connect', function (client) {
 //////////////////////////////////////////
 
 audio.on('connection', function (audio) {
+  console.log('Audio connected');
   audio.emit('welcome', {audio: state.audio});
   audio.on('audio', function (data){
-    // console.log(data);  // Leave in for test logging until Monday
     var clients = io.of('/client');
     if (state.audioLights) {
       clients.emit('audio', data);
@@ -328,17 +323,12 @@ audio.on('connection', function (audio) {
 //////////////////////////////////////////
 
 optiflow.on('connection', function (optiflow) {
-  console.log('optiflow connected'); //temp logging to check socket connection establishment
+  console.log('optiflow connected');
   optiflow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
     tracking: state.opticalFlowTrack
   });
   optiflow.on('opticalFlowData', function (opticalFlowData) {
-    // console.log(opticalFlowData);
-    // linedance.emit('opticalFlowData', opticalFlowData);
-    // flock.emit('opticalFlowData', opticalFlowData);
-    // grassfield.emit('opticalFlowData', opticalFlowData);
-    // satellite.emit('opticalFlowData', opticalFlowData);
     emitData('opticalFlow', opticalFlowData);
   });
 });
@@ -348,6 +338,7 @@ optiflow.on('connection', function (optiflow) {
 //////////////////////////////////////////
 
 fone.on('connection', function (fone) {
+  console.log('fone connected'); //temp logging to check socket connection establishment
   fone.emit('sessionId', fone.id);
   console.log(fone.id + " connected.");
   fone.emit('welcome', {
@@ -357,10 +348,6 @@ fone.on('connection', function (fone) {
   fone.on('audienceMotionData', function (data) {
     console.log(data);
     emitData('audienceMotionData', data);
-    // shakemeter.emit('audienceMotionData', data);
-    // shakebattle.emit('audienceMotionData', data);
-    // spotlights.emit('audienceMotionData', data);
-    // satellite.emit('audienceMotionData', data);
   });
   fone.on('disconnect', function(){
     console.log(fone.id + " disconnected.");
