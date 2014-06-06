@@ -137,7 +137,7 @@
         visualizer.settings.tilting = false;
         globe
           .transition()
-          .duration(800)
+          .duration(200)
           .attr("d", nextPath)
           .each("end", visualizer.nextMove);
       } else {
