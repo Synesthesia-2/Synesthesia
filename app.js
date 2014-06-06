@@ -32,8 +32,6 @@ var io = require('socket.io').listen(server);
 app.set('io', io);
 app.set('oscIo', oscIo);
 
-// var db = require('./server/database_server');
-// var helpers = require('./server/helpers');
 console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
 
  // --- osc routing 
@@ -54,7 +52,7 @@ var inputChannels = {
 };
 
 // Gathers names of visualizers and reads config.json files in their respective directories
-var init = function() {
+var visualizers = (function() {
   var parentDir = __dirname + '/public/javascript/visualizers';
   var dirs = fs.readdirSync(parentDir);
   
@@ -75,9 +73,9 @@ var init = function() {
     visualizers.push(_.extend(defaultConfig,configObj));
   });
   return visualizers;
-};
+}());
 
-var visualizers = init();
+// var visualizers = init();
 
 // Sets up socket.io connections for each visualizer collected above
 var connectSockets = function (routeInfoArr ) {
@@ -366,7 +364,7 @@ fone.on('connection', function (fone) {
   });
   fone.on('disconnect', function(){
     console.log(fone.id + " disconnected.");
-    spotlights.emit("foneDisconnect", fone.id);
+    emitData("foneDisconnect", fone.id);
   });
 });
 
