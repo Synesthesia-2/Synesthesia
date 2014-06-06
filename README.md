@@ -1,40 +1,55 @@
 #Synesthesia v2.0
 
-Synesthesia 2.0 is an interactive, realtime data visualization suite developed at Kinetech in San Francisco.
+Synesthesia 2.0 is an interactive, realtime data visualization suite developed at [Kinetech](http://kine-tech.org/) in San Francisco.
 The application collects, processes, and abstracts audio, orientation, movement, and location data from remote computers and mobile devices and dynamically renders live in-browser displays which can be projected onto a wall, floor, or stage. 
-Additionally, a user-friendly control panel page allows for a conductor to enable or disable data transfer from input sources to visualizers and to adjust visualization parameters during a performance while the app is running. 
+Additionally, a user-friendly control panel page allows for a conductor to enable/disable data transfer from input sources to visualizers and to adjust visualization parameters during a performance while the app is running.
 
-The modular, plugin-style architecture of v2.0 enables developers and artists to easily integrate new visualizers or data input nodes into the existing framework. 
+The current version debuted at the [CODAME Art + Tech Playground](http://www.codame.com/)'s Code + Dance + Hack event on May 31, 2014 at CounterPULSE in San Francsico where the developers were able to collaborate and exchange ideas with dancers, artists, and technologists. 
+
+Architecturally, the modular plugin style of v2.0 enables developers and artists to easily integrate new visualizers or data input nodes into the existing framework. 
 
 ##Instructions:
-
-Requirements: [Node.js](http://nodejs.org/), npm (Node.js package manager)
-
-To run Synesthesia from the command line on your own network:
-  - Make sure that Node.js is installed (Check via `node --version` ) 
-  - Determine the IP address of the computer that will be running the node server.
-    * _Note: This IP address is referred to below as **serverComputerIPaddress**_
+###Run Synesthesia from the command line on your own network:
+**Requirements:** [Node.js](http://nodejs.org/), npm (Node.js package manager)
+#####Set up the environment:
+  * Make sure that Node.js is installed (Verify via `node --version` ) 
+  * Determine the IP address of the computer that will be running the node server.
+    * _Note:_ This IP address is referred to below as **serverIPaddress**
     * On Mac OS:
       * Open System Preferences
       * Click Network under Internet & Wireless
       * Look for the ip address under Status
-    * In a UNIX environment, use `ifconfig` 
-  - Clone the repo `git clone https://github.com/strixcuriosus/Synesthesia`
-  - Open the Synesthesia directory: `cd Synesthesia`
-  - Install dependencies: `npm install`
-  - Install front end packages: `bower install`
-  - Start the server: `node app.js`
+    * In any UNIX environment, use `ifconfig` 
+  * _Optionally_, set the PORT variable in your shell environment
+    * At runtime, if no PORT is specified in the app's environment, the default PORT is 8080
 
-Once the server is running, open a browser on a touch-enabled device and navigate to `serverComputerIPaddress:8080/conductor`.
+#####Download necessary files:
+  * Clone the repo via `git clone https://github.com/strixcuriosus/Synesthesia`
+  * Open the Synesthesia directory: `cd Synesthesia`
+  * Install application dependencies: `npm install`
+  * Install front end packages: `bower install`
+
+#####Start the application:
+  * Run the server: `node app.js` 
+  * Look for a logged message in the terminal:
+   *"Synesthesia server listing on port __[yourPORT]__"
+   * __[yourPORT]__ will be `8080` if the runtime environment has no specified PORT
+   * In the following sections, you may need to replace `8080` with your actual port value
+
+#####Connect to the control panel page:
+  * Keep the server running
+  * Open a browser on a touch-enabled device 
+    *Note: A touch-emulator such as the one found in Chrome's dev tools panel can be used
+  * Navigate to `serverIPaddress:8080/conductor`.
 
 
-Audience members should connect their smartphones to the `/` endpoint (i.e. `serverComputerIPaddress:8080/` ). 
+Audience members should connect their smartphones to the `/` endpoint (i.e. `serverIPaddress:8080/` ). 
 
 On the laptop that is running the visualization, connect to `/fireworks` and a projector. In a separate tab, navigate to `/audio` and allow microphone input through the dialog. The movement performer should carry or wear a phone connected to `/dancer`.
 
 The conductor endpoint can now control the show. After enabling audio input, the internal or external microphone will calibrate for 5-6 seconds to implement noise cancelling filters and input thresholding, and then begin emitting data for the fireworks visualization to render. Manual light show mode will fade through different screen colors on each audience member's phone, allowing the space to be lit according to the pitch of the vocals or to a manually chosen single color. When motion is enabled, the gyroscope data from the `/dancer` endpoint is streamed to the visualization, allowing the firework to move with the performer in space. 
 
-## How To Add A New Visualizer: 
+
 
 ##Screenshots:
 
@@ -49,6 +64,9 @@ Conductor home screen
 Fireworks visualization
 
 ![Fireworks visualization](/screenshots/fireworks.png "Fireworks display with audio and phone motion")
+
+
+## Screencast Demos:
 
 ##Technology:
 
@@ -80,6 +98,10 @@ Output:
 Unit Testing:
   - Mocha
   - PhantomJS
+
+## How To Add A New Visualizer: 
+
+## Potential Future Directions:
 
 ## 1.0
 This project is based on Synesthesia (v.1.0), an original work by Weidong Yang, George Bonner, David Ryan Hall, Kate Jenkins, and Joey Yang, which was first performed in public on November 17, 2013, at The Garage in San Francisco.
