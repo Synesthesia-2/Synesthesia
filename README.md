@@ -101,55 +101,59 @@ Rain visualization
 
 ![Rain visualization](/screenshots/rain.png "Rain display from optical flow data")
 
+Grassfield visualization
 
-##Technology:
+![Grassfield visualization](/screenshots/grassfield.png "Grassfield display from optical flow data")
 
-Server:
-  - Node.js
-  - Express.js
-  - Socket.io
 
-Client:
-  - Jade / Stylus
-  - jQuery
-  - Backbone.js / Handlebars
-  - Browserify
+##technology:
 
-Input:
-  - Internal Webcam
-  - HTML5
-  - External Infrared-sensitive Camera
-  - Internal Microphone
-  - Web Audio API
-  - Mobile phone gyroscope / accelerometer
+server:
+  - node.js
+  - express.js
+  - socket.io
 
-Output:
-  - D3.js
-  - Pixi.JS
-  - WebGL
-  - ShaderParticleEngine
+client:
+  - jade / stylus
+  - jquery
+  - backbone.js / handlebars
+  - browserify
 
-Unit Testing:
-  - Mocha
-  - PhantomJS
+input:
+  - internal webcam
+  - html5
+  - external infrared-sensitive camera
+  - internal microphone
+  - web audio api
+  - mobile phone gyroscope / accelerometer
 
-## How To Add A New Visualizer: 
+output:
+  - d3.js
+  - pixi.js
+  - webgl
+  - shaderparticleengine
 
-## Potential Future Directions:
+unit testing:
+  - mocha
+  - phantomjs
+
+## how to add a new visualizer: 
+
+## potential future directions:
 
 ## 1.0
-This project is based on Synesthesia (v.1.0), an original work by Weidong Yang, George Bonner, David Ryan Hall, Kate Jenkins, and Joey Yang, which was first performed in public on November 17, 2013, at The Garage in San Francisco.
+this project is based on synesthesia (v.1.0), an original work by weidong yang, george bonner, david ryan hall, kate jenkins, and joey yang, which was first performed in public on november 17, 2013, at the garage in san francisco.
 
-##License:
+##license:
 
-The MIT License (MIT)
+the mit license (mit)
 
-Copyright (c) 2014 Weidong Yang, Kayvon Ghashghai, Ian Henderson, and Ash Hoover
+copyright (c) 2014 weidong yang, kayvon ghashghai, ian henderson, and ash hoover
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "software"), to deal in the software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, and to permit persons to whom the software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+the above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+the software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
 
