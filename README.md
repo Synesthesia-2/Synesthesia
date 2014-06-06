@@ -62,7 +62,7 @@ Visualizers live in `public/javascript/visualizers`. To add one, create a direct
       "extraStyl": null
     };
  
-On startup of the Node server, the directory names in `public/javascript/visualizers` are read and turned into Express.js routes and Socket.io namespaces with the same names. `config.json` files in each directory will also be read the input sources specified in the `"inputs"` property will be routed to their respective visualizers. Without a config file, your visualizer will not get any data from the input sources so make sure you include one if it's necessary!
+On startup of the Node server, the directory names in `public/javascript/visualizers` are read and turned into Express.js routes and Socket.io namespaces with the same names. `config.json` files in each directory will also be read and the input sources specified in the `"inputs"` property will be routed to their respective visualizers. Without a config file, your visualizer will not get any data from the input sources so make sure you include one if it's necessary!
 
 To view your visualizer, open a browser with the URL `localhost:8080/file` (replacing `file` with the name of your visualizer). Inputs such as audio or optical flow can be run in another browser window on the same computer, or if the visualizer is particularly CPU-intensive they can all be run on separate machines.
 
