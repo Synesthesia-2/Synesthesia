@@ -1,0 +1,12 @@
+doctype html
+html
+  head
+    title Sound Visualization 
+    meta(http-equiv="content-type", content="text/html; charset=utf-8")
+    link(rel="stylesheet", href="/stylesheets/flock.css")
+    script(src="/socket.io/socket.io.js")
+    if extraJS
+        each val in extraJS
+            script(src="#{val}")
+
+  body

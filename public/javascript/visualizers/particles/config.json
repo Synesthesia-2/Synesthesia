@@ -1,0 +1,12 @@
+{
+  "inputs": [
+    "opticalFlow",
+    "blob"
+  ],
+  "extraJS": [
+    "/lib/THREE-r65.min.js", 
+    "/lib/ShaderParticles.min.js",
+    "/bower_components/jquery/jquery.min.js",
+    "/javascript/visualizers/particles/particles.js"
+  ]
+}

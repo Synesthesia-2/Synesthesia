@@ -1,0 +1,11 @@
+{
+  "inputs": [
+    "opticalFlow"
+  ],
+  "extraJS": [
+    "/bower_components/jquery/jquery.min.js",
+    "/bower_components/underscore/underscore-min.js",
+    "/bower_components/d3/d3.min.js",
+    "javascript/visualizers/grassfield/grassfield.js"
+  ]
+}

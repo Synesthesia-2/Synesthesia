@@ -7,7 +7,7 @@ html
 
     script(src="/socket.io/socket.io.js")
     script(src="/bower_components/jquery/jquery.min.js")
-    script(src="/javascript/pusher.color.min.js")
+    script(src="/lib/pusher.color.min.js")
     script#shader-fs(type="x-shader/x-fragment").
         #ifdef GL_ES
           precision highp float;
@@ -32,5 +32,5 @@ html
     canvas#webGLCanvas
     div#instructions
 
-    script(src="javascript/fireworks/fireworks-animation.js")
-    script(src="javascript/fireworks/fireworks.js")
+    script(src="javascript/visualizers/fireworks/fireworks-animation.js")
+    script(src="javascript/visualizers/fireworks/fireworks.js")

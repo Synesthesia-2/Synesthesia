@@ -251,6 +251,6 @@ ClientSpace.Client = Backbone.Model.extend({
         accel: accel,
         totalAcc: totalAcc
       });
-    this.fone.emit('motionData', this.get('currentOrientation'));
+    this.fone.emit('audienceMotionData', this.get('currentOrientation'));
   },
 });

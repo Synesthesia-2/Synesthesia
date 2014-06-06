@@ -47,8 +47,24 @@ Audience members should connect their smartphones to the `/` endpoint (i.e. `ser
 
 On the laptop that is running the visualization, connect to `/fireworks` and a projector. In a separate tab, navigate to `/audio` and allow microphone input through the dialog. The movement performer should carry or wear a phone connected to `/dancer`.
 
+
 The conductor endpoint can now control the show. After enabling audio input, the internal or external microphone will calibrate for 5-6 seconds to implement noise cancelling filters and input thresholding, and then begin emitting data for the fireworks visualization to render. Manual light show mode will fade through different screen colors on each audience member's phone, allowing the space to be lit according to the pitch of the vocals or to a manually chosen single color. When motion is enabled, the gyroscope data from the `/dancer` endpoint is streamed to the visualization, allowing the firework to move with the performer in space. 
 
+
+
+## How To Add A New Visualizer: 
+
+Visualizers live in `public/javascript/visualizers`. To add one, create a directory in here with your .js files and a `config.json` file. You can list `inputs`, `extraJS` and `extraStyl` along with any necessary input forms or files as arrays. For example:
+
+   {
+      "inputs": ["audio", "opticalFlow", "audienceMotionData"],
+      "extraJS": ["helpers.js"],
+      "extraStyl": null
+    };
+ 
+On startup of the Node server, the directory names in `public/javascript/visualizers` are read and turned into Express.js routes and Socket.io namespaces with the same names. `config.json` files in each directory will also be read the input sources specified in the `"inputs"` property will be routed to their respective visualizers. Without a config file, your visualizer will not get any data from the input sources so make sure you include one if it's necessary!
+
+To view your visualizer, open a browser with the URL `localhost:8080/file` (replacing `file` with the name of your visualizer). Inputs such as audio or optical flow can be run in another browser window on the same computer, or if the visualizer is particularly CPU-intensive they can all be run on separate machines.
 
 
 ##Screenshots:
@@ -67,6 +83,11 @@ Fireworks visualization
 
 
 ## Screencast Demos:
+=======
+Shakemeter visualization
+
+![Shakemeter visualization](/screenshots/shakemeter.png "Shakemeter display from phone motion")
+
 
 ##Technology:
 

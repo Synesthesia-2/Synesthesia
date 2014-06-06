@@ -1,0 +1,16 @@
+{
+  "inputs": [
+    "opticalFlow",
+    "audio",
+    "blob",
+    "newFadeTime"
+  ],
+  "extraJS": [
+    "bower_components/jquery/jquery.min.js",
+    "bower_components/pixi/bin/pixi.js",
+    "bower_components/underscore/underscore-min.js",
+    "javascript/visualizers/flock/pixi.vector.js",
+    "javascript/visualizers/flock/flock.js",
+    "javascript/visualizers/flock/flock-animation.js"
+  ]
+}

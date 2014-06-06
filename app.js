@@ -14,22 +14,23 @@
 ///                                                           ///
 /////////////////////////////////////////////////////////////////
 
-// Instantiate server
-var express = require('express');
-var app = express();
 var http = require('http');
+var express = require('express');
+var oscIo = require('node-osc');
+var routes = require('./config/routes.js');
+var middleware = require('./config/middleware.js');
+var fs = require('fs');
+var _ = require('underscore');
+
+// Instantiate server
+var app = express();
 var server = http.createServer(app);
 var port = process.env.PORT || 8080;
 var oscPort = process.env.OSC_PORT || 3333;
 server.listen(port);
 var io = require('socket.io').listen(server);
-var oscIo = require('node-osc');
 app.set('io', io);
 app.set('oscIo', oscIo);
-// var db = require('./server/database_server');
-// var helpers = require('./server/helpers');
-var routes = require('./config/routes.js');
-var middleware = require('./config/middleware.js');
 
 console.log('Synesthesia server listing on ', port, "\nListening for OSC on port ", oscPort);
 
@@ -42,24 +43,82 @@ var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
 
+// console.log(oscServer, oscClient);
+
+var inputChannels = {
+  audio: [],
+  opticalFlow: [],
+  blob: []
+};
+
+// Gathers names of visualizers and reads config.json files in their respective directories
+var visualizers = (function() {
+  var parentDir = __dirname + '/public/javascript/visualizers';
+  var dirs = fs.readdirSync(parentDir);
+  
+  var visualizers = [];
+
+  dirs.forEach(function(dirname){
+    var configFile = parentDir + '/' + dirname + '/config.json';
+    var configObj = require(configFile);
+
+    var defaultConfig = {
+      name: dirname,
+      inputs: null,
+      extraJS: null,
+      extraStyl: null,
+      socket: io.of('/' + dirname)
+    };
+
+    visualizers.push(_.extend(defaultConfig,configObj));
+  });
+  return visualizers;
+}());
+
+// var visualizers = init();
+
+// Sets up socket.io connections for each visualizer collected above
+var connectSockets = function (routeInfoArr ) {
+  routeInfoArr.forEach(function(routeObj) {
+    routeObj.socket.on('connection', function(event){
+      console.log('new connection!');
+      event.emit("Welcome", "Visualizer conected.");
+    });
+
+    // Maps inputs to the visualizers that require them in their config.json files
+    routeObj.inputs.forEach(function (input) {
+      if(inputChannels[input]) {
+        inputChannels[input].push(routeObj.socket);
+      } else {
+        inputChannels[input] = [routeObj.socket];
+      }
+    });
+  });
+};
+
+connectSockets(visualizers);
+
+// console.log(inputChannels);
+
+// Emit data to multiple visualizers, according to 'inputChannels'
+var emitData = function (eventName, data) {
+  var emitList = inputChannels[eventName] || [];
+  emitList.forEach(function(socket) {
+    socket.emit(eventName, data);
+  });
+};
+
 // define socket.io spaces
 var conductor = io.of('/conductor');
 var clients = io.of('/client');
-var fireworks = io.of('/fireworks');
 var dancer = io.of('/dancer');
-var flock = io.of('/flock');
 var audio = io.of('/audio');
 var optiflow = io.of('/optiflow');
-var linedance = io.of('/linedance');
+// var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
-osc.send('/oscAddress', 200);
 var fone = io.of('/fone');
-var shakemeter = io.of('/shakemeter');
-var shakebattle = io.of('/shakebattle');
-var spotlights = io.of('/spotlights');
-var grassfield = io.of('/grassfield');
-var satellite = io.of('/satellite');
 
+osc.send('/oscAddress', 20130);
 
 // instantiate state object (keeps track of performance state)
 var state = {
@@ -68,8 +127,8 @@ var state = {
   audio: false,
   audioLights: false,
   motionTrack: false,
-  optiFlowTrack: true, //init as true for testing
-  optiflowFlocking: false,
+  opticalFlowTrack: true, //init as true for testing
+  opticalFlowFlocking: false,
   currentColor: '#000000',
   resetMC: function() {
     this.strobe = false;
@@ -90,6 +149,9 @@ middleware.setSettings(app, express);
 // render routes
 app.get('/', routes.renderClient);
 app.get('*', routes.renderView);
+
+// app.get('*', routes.renderView);
+
 app.use(function(err, req, res, next){
   if(err) {
     console.log(err);
@@ -109,7 +171,7 @@ webcamio.sockets.on('connection', function (socket) {
     // oscClient.send('/status', socket.sessionId + ' connected');
 
     oscServer.on('message', function(msg, rinfo) {
-      // console.log(msg, rinfo);
+      console.log(msg, rinfo);
       socket.emit("message", msg);
       flock.emit("blob", msg);
       particles.emit("blob", msg);
@@ -123,18 +185,6 @@ webcamio.sockets.on('connection', function (socket) {
 });
 
 //////////////////////////////////////////
-/// Visualizer events
-//////////////////////////////////////////
-
-fireworks.on('connection', function (firework) {
-  firework.emit("welcome", "Visualizer connected.");
-});
-
-flock.on('connection', function (flock) {
-  flock.emit("welcome", "Flock visualizer connected.");
-});
-
-//////////////////////////////////////////
 /// Dancer / Motion Tracker events
 //////////////////////////////////////////
 
@@ -144,8 +194,7 @@ dancer.on('connection', function (dancer) {
     tracking: state.motionTrack
   });
   dancer.on('motionData', function (data) {
-    fireworks.emit('motionData', data);
-    // satellite.emit('motionData', data);
+    emitData('motionData', data);
   });
 });
 
@@ -165,7 +214,7 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     state.currentColor = data.color;
     clients.emit('changeColor', data);
-    flock.emit('changeColor', data);
+    emitData('changeColor', data);
   });
 
   conductor.on('randomColor', function (data){
@@ -189,15 +238,13 @@ conductor.on('connection', function (conductor) {
     dancer.emit('toggleMotion', data);
   });
 
-  conductor.on('toggleOptiflowFlocking', function (data){
-    var flock = io.of('/flock');
+  conductor.on('toggleOpticalFlowFlocking', function (data){
     if (data.flocking) {
-      state.optiflowFlocking = true;
+      state.opticalFlowFlocking = true;
     } else {
-      state.optiflowFlocking = false;
+      state.opticalFlowFlocking = false;
     }
-    flock.emit('toggleOptiflowFlocking', data);
-    // console.log('toggleOptiflowFlocking: ', data.flocking);
+    emitData('toggleOpticalFlowFlocking', data);
   });
 
   conductor.on('toggleStrobe', function (data){
@@ -222,7 +269,8 @@ conductor.on('connection', function (conductor) {
   conductor.on('newFadeTime', function (data){
     var clients = io.of('/client');
     clients.emit('newFadeTime', data);
-    flock.emit('newFadeTime', data);
+    emitData('newFadeTime', data);
+    console.log(data);
   });
 });
 
@@ -255,15 +303,16 @@ clients.on('connect', function (client) {
 //////////////////////////////////////////
 
 audio.on('connection', function (audio) {
+  console.log('Audio connected');
   audio.emit('welcome', {audio: state.audio});
   audio.on('audio', function (data){
-    // console.log(data);  // Leave in for test logging until Monday
     var clients = io.of('/client');
     if (state.audioLights) {
       clients.emit('audio', data);
     }
-    fireworks.emit('audio', data);
-    satellite.emit('audio', data);
+    // fireworks.emit('audio', data);
+    // satellite.emit('audio', data);
+    emitData('audio', data);
   });
 });
 
@@ -272,17 +321,13 @@ audio.on('connection', function (audio) {
 //////////////////////////////////////////
 
 optiflow.on('connection', function (optiflow) {
-  //console.log('optiflow connected'); //temp logging to check socket connection establishment
+  console.log('optiflow connected');
   optiflow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
-    tracking: state.optiFlowTrack
+    tracking: state.opticalFlowTrack
   });
-  optiflow.on('optiFlowData', function (optiFlowData) {
-    console.log(optiFlowData);
-    linedance.emit('optiFlowData', optiFlowData);
-    flock.emit('optiFlowData', optiFlowData);
-    grassfield.emit('optiFlowData', optiFlowData);
-    satellite.emit('optiFlowData', optiFlowData);
+  optiflow.on('opticalFlowData', function (opticalFlowData) {
+    emitData('opticalFlow', opticalFlowData);
   });
 });
 
@@ -291,27 +336,20 @@ optiflow.on('connection', function (optiflow) {
 //////////////////////////////////////////
 
 fone.on('connection', function (fone) {
+  console.log('fone connected'); //temp logging to check socket connection establishment
   fone.emit('sessionId', fone.id);
   console.log(fone.id + " connected.");
   fone.emit('welcome', {
     message: "Connected for motion tracking.",
     tracking: state.motionTrack
   });
-  // fone.on('orientationData', function (data) {
-  //   shakemeter.emit('orientationData', data);
-  //   shakebattle.emit('orientationData', data);
-  //   // console.log("Orientation Data: " + JSON.stringify(data)); // for testing purposes
-  // });
-  fone.on('motionData', function (data) {
+  fone.on('audienceMotionData', function (data) {
     console.log(data);
-    shakemeter.emit('motionData', data);
-    shakebattle.emit('motionData', data);
-    spotlights.emit('motionData', data);
-    satellite.emit('motionData', data);
+    emitData('audienceMotionData', data);
   });
   fone.on('disconnect', function(){
     console.log(fone.id + " disconnected.");
-    spotlights.emit("foneDisconnect", fone.id);
+    emitData("foneDisconnect", fone.id);
   });
 });
 

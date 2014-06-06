@@ -1,0 +1,19 @@
+{
+  "inputs": [
+    "opticalFlow",
+    "audio",
+    "blob",
+    "audienceMotionData"
+  ],
+  "extraJS": [
+    "/bower_components/jquery/jquery.min.js",
+    "/bower_components/underscore/underscore-min.js",
+    "/bower_components/d3/d3.min.js",
+    "/lib/d3.geo.projection.v0.min.js",
+    "/lib/topojson.v1.min.js",
+    "javascript/visualizers/satellite/satellite.js",
+    "javascript/visualizers/satellite/satelliteHelpers.js",
+    "javascript/visualizers/satellite/satelliteAnimation.js"
+  ]
+}
+
