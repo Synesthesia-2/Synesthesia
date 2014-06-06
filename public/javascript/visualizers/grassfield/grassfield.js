@@ -1,12 +1,12 @@
 jQuery(function($) {
-  var server = io.connect('/linedance');
+  var server = io.connect('/grassfield');
     server.on('welcome', function (data) {
     console.log('welcomed', data);
   });
 
   var oflowData = [];
 
-  server.on('optiFlowData', function(data){
+  server.on('opticalFlow', function(data){
     oflowData = data.zones;
   });
 
