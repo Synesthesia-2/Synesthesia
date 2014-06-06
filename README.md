@@ -56,7 +56,7 @@ The conductor endpoint can now control the show. After enabling audio input, the
 
 Visualizers live in `public/javascript/visualizers`. To add one, create a directory in here with your .js files and a `config.json` file. You can list `inputs`, `extraJS` and `extraStyl` along with any necessary input forms or files as arrays. For example:
 
-   {
+    {
       "inputs": ["audio", "opticalFlow", "audienceMotionData"],
       "extraJS": ["helpers.js"],
       "extraStyl": null
@@ -96,6 +96,10 @@ Satellite Dance Grid Visualizations
 Shakemeter visualization
 
 ![Shakemeter visualization](/screenshots/shakemeter.png "Shakemeter display from phone motion")
+
+Rain visualization
+
+![Rain visualization](/screenshots/rain.png "Rain display from optical flow data")
 
 
 ##Technology:
