@@ -47,6 +47,11 @@ table {
 }
 
 /* LAYOUT STYLES */
+iframe {
+  width: 620px;
+  height: 396px;
+}
+
 body {
   font-size: 1em;
   line-height: 1.5; 
@@ -361,10 +366,6 @@ footer a:hover {
   .inner {
     width: 94%;
     margin: 0 auto;
-  }
-  iframe {
-    width: 620px;
-    height: 396px;
   }
 }
 
