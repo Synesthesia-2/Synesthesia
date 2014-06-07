@@ -1,19 +1,17 @@
-//////////////////////////////////////////
-///
-/// SYNESTHESIA
-/// A collaboration between Kinetech and Hack Reactor
-///
-/// November 2013
-/// Weidong Yang
-/// David Ryan Hall
-/// George Bonner
-/// Kate Jenkins
-/// Joey Yang
-///
-/// Check out http://kine-tech.org/ for more information.
-///
-//////////////////////////////////////////
-
+/////////////////////////////////////////////////////////////////
+/// Synesthesia  2.0                                          ///
+/// A collaboration between Kinetech and Hack Reactor         ///
+///                                                           ///
+///  May 2014                                                 ///
+///  Weidong Yang                                             ///
+///  Kayvon Ghashghai                                         /// 
+///  Ian Henderson                                            ///
+///  Ash Hoover                                               ///
+///                                                           ///
+///  Check out http://kine-tech.org/ for more information.    ///
+///                                                           ///
+/////////////////////////////////////////////////////////////////
+       
 var http = require('http');
 var express = require('express');
 var oscIo = require('node-osc');
