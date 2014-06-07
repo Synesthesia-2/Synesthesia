@@ -20,7 +20,7 @@ $(document).ready(function(){
     //  tilt       (-20 20)   // slope     //
     /////////////////////////////////////////
 
-    server.on('opticalFlow', visualizer.collectOptiFlowData);
+    server.on('opticalFlow', visualizer.collectopticalFlowData);
     server.on('blob', visualizer.getBlobCoords);
     server.on('audio', visualizer.getFreq);
 

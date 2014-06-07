@@ -11,11 +11,11 @@ jQuery(function($) {
       .attr("width", width)
       .attr("height", height);
 
-  var circleVisualize = function(optiFlowData) {
+  var circleVisualize = function(opticalFlowData) {
 
     var hslFactor = 15;
     // Key function ensures data-join updates proper elements.
-    var circles = svg.selectAll('circle').data(optiFlowData.zones, function(d,i){return (d.x + "x" + d.y);});
+    var circles = svg.selectAll('circle').data(opticalFlowData.zones, function(d,i){return (d.x + "x" + d.y);});
 
     circles
       .attr("r", 0)

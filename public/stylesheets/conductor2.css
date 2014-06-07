@@ -18,82 +18,60 @@ header {
   height: 75px;
   margin: 0;
   padding: 0;
-  background-color: #ed2143;
+  display: inline-block;
 }
-header h1 {
+header h3 {
   font-size: 40px;
   color: #fff;
   text-align: center;
   margin: 0;
-  padding-top: 15px;
 }
 div#specController {
-  width: 100%;
-  margin-bottom: 15px;
+  display: block;
+  width: 320px;
+  margin: 15px auto;
+  overflow: hidden;
 }
-div#specController div#optionBuilder {
-  padding: 14px 0 14px 0;
-  width: 700px;
-  margin: 0 auto;
-}
-div#specController div#optionBuilder h2 {
+div#specController h2 {
   padding: 0 20px 0 0;
   font-size: 40px;
   text-align: center;
   margin: 0;
   color: #fff;
 }
-div#specController div#optionBuilder #optionPalette {
-  overflow: hidden;
-}
-div#specController div#optionBuilder button {
-  border: 3px solid #ddd;
-  border-radius: 10px;
-  background-color: #fff;
+div#specController header h3 {
   display: inline-block;
-  height: 120px;
-}
-div#specController div#optionBuilder button.color {
-  width: 120px;
-  margin: 10px 20px 15px 0;
-}
-div#specController div#optionBuilder button.random {
-  width: 700px;
-  font-size: 18px;
-  font-weight: 100;
-  margin: 10px 20px 15px 0;
-}
-div#specController div#optionBuilder p {
-  padding-top: 15px;
-  margin-top: 30px;
-  margin-left: auto;
-  font-size: 25px;
+  margin: 0 auto;
   color: #fff;
-  letter-spacing: 1.5px;
-  text-align: center;
 }
-div#specController div#optionBuilder form {
+div#specController form {
   display: inline-block;
   margin-top: 30px;
   margin-left: 4px;
 }
-div#specController div#optionBuilder form input[type='range'] {
+div#specController form label {
+  color: #fff;
+  display: block;
+  font-size: 10px;
+}
+div#specController form input[type='range'] {
+  color: #fff;
   -webkit-appearance: none;
   border-radius: 10px;
   background-color: #000;
   border: 1px solid #999;
-  width: 610px;
+  width: 240px;
   padding: 0 35px 0 35px;
   height: 40px;
 }
-div#specController div#optionBuilder form input[type='range']::-webkit-slider-thumb {
+div#specController form input[type='range']::-webkit-slider-thumb {
   width: 35px;
   height: 35px;
 }
 div#specOptionList {
   margin: 0 auto;
   border: 3px solid #999;
-  width: 680px;
+  width: 320px;
   height: 120px;
   background-color: #333;
   border-radius: 15px;
@@ -119,5 +97,21 @@ div#specOptionList .toggled {
 @media (orientation: landscape) {
   header {
     display: none;
+  }
+  div#specController {
+    margin-bottom: 15px;
+  }
+  div#specController div#optionBuilder {
+    padding: 14px 0 14px 0;
+    width: 410px;
+    margin: 0 auto;
+  }
+  div#specController div#optionBuilder header h3 {
+    display: inline-block;
+    margin: 0 auto;
+    color: #fff;
+  }
+  div#specController div#optionBuilder form input[type='range'] {
+    width: 420px;
   }
 }

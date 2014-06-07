@@ -35,19 +35,19 @@ ConductorSpace.Conductor = Backbone.Model.extend({
   },
 
   sendNewSeparationFactor: function(newSeparationFactor) {
-    this.trigger('newSeparationFactor', { fadeTime: newSeparationFactor });
+    this.trigger('newSeparationFactor', { separationFactor: newSeparationFactor });
   },
 
   sendNewCohesionFactor: function(newCohesionFactor) {
-    this.trigger('newCohesionFactor', { fadeTime: newCohesionFactor });
+    this.trigger('newCohesionFactor', { cohesionFactor: newCohesionFactor });
   },
 
   sendNewAlignmentFactor: function(newAlignmentFactor) {
-    this.trigger('newAlignmentFactor', { fadeTime: newAlignmentFactor });
+    this.trigger('newAlignmentFactor', { alignmentFactor: newAlignmentFactor });
   },
 
   sendNewSpeedFactor: function(newSpeedFactor) {
-    this.trigger('newSpeedFactor', { fadeTime: newSpeedFactor });
+    this.trigger('newSpeedFactor', { speedFactor: newSpeedFactor });
   },
 
   toggleMotion: function() {

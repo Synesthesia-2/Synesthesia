@@ -1,4 +1,82 @@
 jQuery(function($) {
+    var init = function() {
+      var boidContainers = [];
+
+      // Add the boids:
+      for (var i = 0; i < 150; i++) {
+        var position = new PIXI.Point(Math.random() * size.width, Math.random() * size.height);
+        var boid = new Boid(position, 2, 1);
+        var boidContainer = new PIXI.DisplayObjectContainer();
+        var boidGraphic = new PIXI.Graphics();
+        boidGraphic.beginFill(0x000000);
+        boidGraphic.drawCircle(0, 0, 5);
+        boidGraphic.lineTo(3.5,0);
+        boidGraphic.endFill();
+
+
+        boidContainer.addChild(boidGraphic);
+        // boidContainer.alpha = 0.75 + boid.vector.length() / boid.maxSpeed;
+
+        boid.container = boidContainer;
+        boidContainers.push(boidContainer);
+
+        boids.push(boid);
+        
+        _target.addChild(boidContainer);
+        _stage.addChild(boidContainer);
+      }
+    _stage.setInteractive(true);
+    _stage.mousedown = _stage.touchstart = onMouseDown;
+    
+    window.onresize = onResize;
+  }
+
+  var onMouseDown = function() {
+    groupTogether = !groupTogether;
+  }
+
+  var onResize = function(event) {
+    size = {
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
+    _renderer.view.style.width = window.innerWidth + 'px';
+    _renderer.view.style.height = window.innerHeight + 'px';
+    _renderer.resize(window.innerWidth, window.innerHeight);
+  }
+
+  var animate = function() {
+    if (FlockState = {} && window.FlockState !== undefined) {
+      FlockState = window.FlockState;
+    }
+
+    requestAnimFrame(animate);
+
+    count += 1;
+    _renderer.render(_stage);
+
+    for (var i = 0, l = boids.length; i < l; i++) {
+      var boid = boids[i];
+
+      if (groupTogether) {
+        var index = parseInt( ((i + boid.count / 4.5) % l) / l * path.length);
+        var point = path[index];
+        boid.seek(point);
+      }
+      boid.container.position = boid.position;
+      boid.vector.normalize();
+
+      boid.count += (1 + boid.flap);
+      // boid.container.alpha = 1.1 - (1 / (boid.vector.lengthSq() + .5)) ;
+      boid.container.rotation = -boid.vector.rad();
+
+      var flapFactor = boid.count * boid.vector.lengthSq() * 0.2;
+      boid.container.scale = new PIXI.Point(Math.sin(flapFactor)*.25 + 0.95, 0.35);
+
+      boid.run(boids);
+    }
+  }
+
   var FlockState = window.FlockState || {};
 
   var size = {
@@ -25,19 +103,16 @@ jQuery(function($) {
 
   _renderer.view.style.display = "block";
 
-  requestAnimFrame(animate);
   var renderTexture = new PIXI.RenderTexture(size.width, size.height);
 
   var _target = new PIXI.DisplayObjectContainer();
   _stage.addChild(_target);
 
-
   // add render view to DOM
   document.body.appendChild(_renderer.view);
 
   var count = 0;
-  
-  
+    
   // Create a path. This is for testing. Ideally we should detect an outline with an IR camera and using that data for the path.
   var steps = 90;
   for (var i = 0; i < steps; i++) {
@@ -71,20 +146,11 @@ jQuery(function($) {
 
   // We accumulate a new acceleration each time based on several rules
   Boid.prototype.flock = function(boids) {
-    var separation = this.separate(boids).multiplyScalar(1);
-    var alignment = this.align(boids).multiplyScalar(8);
-    var cohesion = this.cohesion(boids).multiplyScalar(2);
-    this.acceleration.add(separation).add(alignment).add(cohesion);
-  };
-
-  Boid.prototype.opticalFlow = function() {
-    if (FlockState.boidData && FlockState.boidData.u) {
-      var u = FlockState.boidData.u;
-      var v = FlockState.boidData.v;
-      opticalFlowVector.x -= u;
-      opticalFlowVector.y += v;
-    }
-    return vector;
+    var separation = this.separate(boids).multiplyScalar(FlockState.separationFactor);
+    var alignment = this.align(boids).multiplyScalar(FlockState.alignmentFactor);
+    var cohesion = this.cohesion(boids).multiplyScalar(FlockState.cohesionFactor);
+    var vector = (new PIXI.Vector()).add(separation).add(alignment).add(cohesion);
+    this.acceleration.add(vector);
   };
 
   Boid.prototype.update = function() {
@@ -94,6 +160,7 @@ jQuery(function($) {
     if (FlockState.speedFactor) {
       speedFactor = FlockState.speedFactor / 1000;
     }
+ 
     this.vector.setLength(Math.min(this.maxSpeed, this.vector.length()));
     this.vector.multiplyScalar(speedFactor);
 
@@ -104,7 +171,9 @@ jQuery(function($) {
     // Limit the acceleration each cycle.
     // The closer to 0 this is, the more insect like the behavior
     // with sudden changes in direction
-    this.acceleration.multiplyScalar(0.6);
+    // The arbitrary values here assume that speedFactor will be
+    // at most 2000
+    this.acceleration.multiplyScalar(0.499 + FlockState.speedFactor / 4000);
   };
 
   Boid.prototype.seek = function(target) {
@@ -245,71 +314,6 @@ jQuery(function($) {
 
   //Main loop -
   init();
+  requestAnimFrame(animate);
 
-  function init() {
-    var boidContainers = [];
-
-    // Add the boids:
-    for (var i = 0; i < 200; i++) {
-      var position = new PIXI.Point(Math.random() * size.width, Math.random() * size.height);
-      var boid = new Boid(position, 2, 1);
-      var boidContainer = new PIXI.DisplayObjectContainer();
-      var boidGraphic = new PIXI.Graphics();
-      boidGraphic.beginFill(0x000000);
-      boidGraphic.drawCircle(0, 0, 5);
-      boidGraphic.lineTo(3.5,0);
-      boidGraphic.endFill();
-
-
-      boidContainer.addChild(boidGraphic);
-      // boidContainer.alpha = 0.75 + boid.vector.length() / boid.maxSpeed;
-
-      boid.container = boidContainer;
-      boidContainers.push(boidContainer);
-
-      boids.push(boid);
-      
-      _target.addChild(boidContainer);
-      _stage.addChild(boidContainer);
-    }
-  _stage.setInteractive(true);
-  _stage.mousedown = _stage.touchstart = onMouseDown;
-  }
-
-  function onMouseDown() {
-    groupTogether = !groupTogether;
-    console.log('mousedown!');
-  }
-
-  function animate() {
-    if (FlockState = {} && window.FlockState !== undefined) {
-      FlockState = window.FlockState;
-    }
-
-    requestAnimFrame(animate);
-
-    count += 1;
-    _renderer.render(_stage);
-
-    for (var i = 0, l = boids.length; i < l; i++) {
-      var boid = boids[i];
-
-      if (groupTogether) {
-        var index = parseInt( ((i + boid.count / 3) % l) / l * path.length);
-        var point = path[index];
-        boid.seek(point);
-      }
-      boid.container.position = boid.position;
-      boid.vector.normalize();
-
-      boid.count += (1 + boid.flap);
-      // boid.container.alpha = 1.1 - (1 / (boid.vector.lengthSq() + .5)) ;
-      boid.container.rotation = -boid.vector.rad();
-
-      var flapFactor = boid.count * boid.vector.lengthSq() * 0.2;
-      boid.container.scale = new PIXI.Point(Math.sin(flapFactor)*.25 + 0.85, 0.4);
-
-      boid.run(boids);
-    }
-  }
 });

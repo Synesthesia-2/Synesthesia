@@ -11,7 +11,7 @@ conductor.styl
   added a width and height factor variable to squeeze the existing content
 
 flock.js
-  listens for 'toggleOptiflowFlocking' to be emitted by server, and it will check and match the state
+  listens for 'toggleopticalFlowFlocking' to be emitted by server, and it will check and match the state
 
 app.js
 

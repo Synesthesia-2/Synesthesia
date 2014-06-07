@@ -6,8 +6,7 @@ ConductorSpace.Router = Backbone.Router.extend({
   },
 
   routes: {
-    "": "main",
-    "2": "main2"
+    "": "main"
   },
 
   swapView: function(view) {
@@ -15,12 +14,6 @@ ConductorSpace.Router = Backbone.Router.extend({
   },
 
   main: function() {
-    console.log("main route");
-    var mainView = new ConductorSpace.MainView({ model: this.model });
-    this.swapView(mainView);
-  },
-
-  main2: function() {
     console.log("flocking route");
     var mainView = new ConductorSpace.MainView({ model: this.model });
     this.swapView(mainView);

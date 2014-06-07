@@ -50,8 +50,8 @@ var initMotionListener = function() {
 };
 
 var removeMotionListener = function() {
-  window.removeEventListener('devicemotion', boundDeviceMotion);
-  window.removeEventListener('deviceorientation', boundDeviceOrientation);
+  window.removeEventListener('devicemotion', onDeviceMotion);
+  window.removeEventListener('deviceorientation', onDeviceOrientation);
 };
 
 var onDeviceOrientation = function(event) {
@@ -59,6 +59,7 @@ var onDeviceOrientation = function(event) {
   currentOrientation.beta = Math.floor(event.beta);
   currentOrientation.gamma = Math.floor(event.gamma);
 
+  // For testing:
   // $('#alpha').text("Alpha: " + (currentOrientation.alpha));
   // $('#beta').text("Beta: " + (currentOrientation.beta));
   // $('#gamma').text("Gamma: " + (currentOrientation.gamma));
@@ -71,16 +72,3 @@ var onDeviceMotion = function(event) {
   currentOrientation.totalAcc = totalAcc;
   server.emit('audienceMotionData', currentOrientation);
 };
-
-// For testing purposes
-var sendDummyAccelData = function(){
-  var data = Math.floor(Math.random() * 140);
-  server.emit('audienceMotionData', data);
-};
-
-var boundDeviceMotion = onDeviceMotion.bind(this);
-var boundDeviceOrientation = onDeviceOrientation.bind(this);
-
-// $(startTrack); // for testing
-
-// setInterval(sendDummyAccelData, 10);

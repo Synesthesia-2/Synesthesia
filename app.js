@@ -1,18 +1,18 @@
-/////////////////////////////////////////////////////////////////
-///                                                           ///
-/// SYNESTHESIA v2.0                                          ///
-/// A collaboration between Kinetech and Hack Reactor         ///
-///                                                           ///
-/// May 2014                                                  ///
-/// Weidong Yang                                              ///
-/// Kayvon Ghashghai                                          ///
-/// Ian Henderson                                             ///
-/// Ash Hoover                                                ///
-///                                                           ///
-///                                                           ///
-/// Check out http://kine-tech.org/ for more information.     ///
-///                                                           ///
-/////////////////////////////////////////////////////////////////
+//////////////////////////////////////////
+///
+/// SYNESTHESIA
+/// A collaboration between Kinetech and Hack Reactor
+///
+/// November 2013
+/// Weidong Yang
+/// David Ryan Hall
+/// George Bonner
+/// Kate Jenkins
+/// Joey Yang
+///
+/// Check out http://kine-tech.org/ for more information.
+///
+//////////////////////////////////////////
 
 var http = require('http');
 var express = require('express');
@@ -43,7 +43,6 @@ var oscServer, oscClient;
 oscServer = new oscIo.Server(3333, '127.0.0.1');
 oscClient = new oscIo.Client(3334, '127.0.0.1');
 
-// console.log(oscServer, oscClient);
 
 var inputChannels = {
   audio: [],
@@ -81,7 +80,6 @@ var visualizers = (function() {
 var connectSockets = function (routeInfoArr ) {
   routeInfoArr.forEach(function(routeObj) {
     routeObj.socket.on('connection', function(event){
-      console.log('new connection!');
       event.emit("Welcome", "Visualizer conected.");
     });
 
@@ -98,7 +96,6 @@ var connectSockets = function (routeInfoArr ) {
 
 connectSockets(visualizers);
 
-// console.log(inputChannels);
 
 // Emit data to multiple visualizers, according to 'inputChannels'
 var emitData = function (eventName, data) {
@@ -110,10 +107,11 @@ var emitData = function (eventName, data) {
 
 // define socket.io spaces
 var conductor = io.of('/conductor');
+var conductor2 = io.of('/conductor2');
 var clients = io.of('/client');
 var dancer = io.of('/dancer');
 var audio = io.of('/audio');
-var optiflow = io.of('/optiflow');
+var opticalFlow = io.of('/opticalFlow');
 // var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
 var fone = io.of('/fone');
@@ -153,7 +151,6 @@ app.get('/', routes.renderClient);
 app.get('*', function(req,res){
   routes.renderView(req,res,visualizers);
 });
-
 app.use(function(err, req, res, next){
   if(err) {
     console.log(err);
@@ -173,11 +170,9 @@ webcamio.sockets.on('connection', function (socket) {
     // oscClient.send('/status', socket.sessionId + ' connected');
 
     oscServer.on('message', function(msg, rinfo) {
-      console.log(msg, rinfo);
       socket.emit("message", msg);
       flock.emit("blob", msg);
       particles.emit("blob", msg);
-      // console.log('Sent blob to flock and particles!', msg);
     });
   });
   socket.on("message", function (obj) {
@@ -240,15 +235,6 @@ conductor.on('connection', function (conductor) {
     dancer.emit('toggleMotion', data);
   });
 
-  conductor.on('toggleOpticalFlowFlocking', function (data){
-    if (data.flocking) {
-      state.opticalFlowFlocking = true;
-    } else {
-      state.opticalFlowFlocking = false;
-    }
-    emitData('toggleOpticalFlowFlocking', data);
-  });
-
   conductor.on('toggleStrobe', function (data){
     var clients = io.of('/client');
     if (data.strobe) {
@@ -272,7 +258,24 @@ conductor.on('connection', function (conductor) {
     var clients = io.of('/client');
     clients.emit('newFadeTime', data);
     emitData('newFadeTime', data);
-    console.log(data);
+  });
+});
+
+conductor2.on('connection', function(conductor2){
+  conductor2.on('newSeparationFactor', function (data){
+    emitData('newSeparationFactor', data);
+  });
+
+  conductor2.on('newCohesionFactor', function (data){
+    emitData('newCohesionFactor', data);
+  });
+
+  conductor2.on('newAlignmentFactor', function (data){
+    emitData('newAlignmentFactor', data);
+  });
+
+  conductor2.on('newSpeedFactor', function (data){
+    emitData('newSpeedFactor', data);
   });
 });
 
@@ -282,7 +285,6 @@ conductor.on('connection', function (conductor) {
 
 clients.on('connect', function (client) {
   state.connections += 1;
-  console.log('connection!!!!',client);
 
   clients.emit("welcome", {
     id: client.id,
@@ -322,13 +324,13 @@ audio.on('connection', function (audio) {
 /// Optical Flow
 //////////////////////////////////////////
 
-optiflow.on('connection', function (optiflow) {
-  console.log('optiflow connected');
-  optiflow.emit('welcome', { 
+opticalFlow.on('connection', function (opticalFlow) {
+  console.log('opticalFlow connected');
+  opticalFlow.emit('welcome', { 
     message: "Connected for optical flow tracking.",
     tracking: state.opticalFlowTrack
   });
-  optiflow.on('opticalFlowData', function (opticalFlowData) {
+  opticalFlow.on('opticalFlowData', function (opticalFlowData) {
     emitData('opticalFlow', opticalFlowData);
   });
 });
