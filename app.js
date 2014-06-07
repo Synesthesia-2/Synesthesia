@@ -148,9 +148,11 @@ middleware.setSettings(app, express);
 
 // render routes
 app.get('/', routes.renderClient);
-app.get('*', routes.renderView);
-
 // app.get('*', routes.renderView);
+
+app.get('*', function(req,res){
+  routes.renderView(req,res,visualizers);
+});
 
 app.use(function(err, req, res, next){
   if(err) {
