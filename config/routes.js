@@ -2,6 +2,7 @@ var fs = require('fs');
 var viewsDir = fs.readdirSync(__dirname + "/../views");
 
 exports.inputRoutes = [
+  'conductor2',
   'conductor',
   'fireworks',
   'audio',

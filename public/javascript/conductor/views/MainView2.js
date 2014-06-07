@@ -9,10 +9,10 @@ ConductorSpace.MainView = Backbone.View.extend({
     'click #toggleAudioLights': 'toggleAudioLights',
     'click #tiltGrid': 'tiltGrid',
     'change #fader': 'updateFadeTime',
-    'change #separation': 'updateSeparation',
-    'change #cohesion': 'updateCohesion',
-    'change #alignment': 'updateAlignment',
-    'change #speed': 'updateSpeed'
+    'change #updateSeparationFactor': 'updateSeparationFactor',
+    'change #updateCohesionFactor': 'updateCohesionFactor',
+    'change #updateAlignmentFactor': 'updateAlignmentFactor',
+    'change #updateSpeedFactor': 'updateSpeedFactor'
   },
 
   initialize: function() {

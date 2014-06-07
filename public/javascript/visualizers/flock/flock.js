@@ -1,5 +1,10 @@
 var server = io.connect('/flock');
-window.FlockState = {};
+window.FlockState = {
+  speedFactor: 1000,
+  separationFactor: 1,
+  cohesionFactor: .5,
+  alignmentFactor: 8
+};
 
 $(document).ready(function() {
   var FlockState = window.FlockState;
@@ -9,24 +14,20 @@ $(document).ready(function() {
     console.log("flock visualizer welcomed", data);
   });
 
-  server.on('opticalFlowData', function(data) {
-    console.log('flowed!', data);
-    FlockState.boidData = {u: data.u, v: data.v};
+  server.on('newSeparationFactor', function(data) {
+    FlockState.separationFactor = data.separationFactor / 1000;
   });
 
-  server.on('blob', function(data) {
-    console.log('blobbed!');
-    FlockState.blobData = data;
-  })
-
-  server.on('toggleOpticalFlowFlocking', function(data) {
-    console.log('toggleOpticalFlowFlocking', data.flocking);
-    FlockState.opticalFlowTracking = data.flocking;
+  server.on('newCohesionFactor', function(data) {
+    FlockState.cohesionFactor = data.cohesionFactor / 1000;
   });
 
-  server.on('newFadeTime', function(data) {
-    console.log('received speed control of ', data);
-    FlockState.speedFactor = data.fadeTime;
+  server.on('newAlignmentFactor', function(data) {
+    FlockState.alignmentFactor = data.alignmentFactor / 1000;
+  });
+
+  server.on('newSpeedFactor', function(data) {
+    FlockState.speedFactor = data.speedFactor;
   });
 
 });

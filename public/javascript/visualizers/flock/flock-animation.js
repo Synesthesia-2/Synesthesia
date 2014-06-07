@@ -33,7 +33,6 @@ jQuery(function($) {
 
   var onMouseDown = function() {
     groupTogether = !groupTogether;
-    console.log('mousedown!');
   }
 
   var onResize = function(event) {
@@ -147,20 +146,11 @@ jQuery(function($) {
 
   // We accumulate a new acceleration each time based on several rules
   Boid.prototype.flock = function(boids) {
-    var separation = this.separate(boids).multiplyScalar(1);
-    var alignment = this.align(boids).multiplyScalar(8);
-    var cohesion = this.cohesion(boids).multiplyScalar(1);
-    this.acceleration.add(separation).add(alignment).add(cohesion);
-  };
-
-  Boid.prototype.opticalFlow = function() {
-    if (FlockState.boidData && FlockState.boidData.u) {
-      var u = FlockState.boidData.u;
-      var v = FlockState.boidData.v;
-      opticalFlowVector.x -= u;
-      opticalFlowVector.y += v;
-    }
-    return vector;
+    var separation = this.separate(boids).multiplyScalar(FlockState.separationFactor);
+    var alignment = this.align(boids).multiplyScalar(FlockState.alignmentFactor);
+    var cohesion = this.cohesion(boids).multiplyScalar(FlockState.cohesionFactor);
+    var vector = (new PIXI.Vector()).add(separation).add(alignment).add(cohesion);
+    this.acceleration.add(vector);
   };
 
   Boid.prototype.update = function() {
@@ -170,6 +160,7 @@ jQuery(function($) {
     if (FlockState.speedFactor) {
       speedFactor = FlockState.speedFactor / 1000;
     }
+ 
     this.vector.setLength(Math.min(this.maxSpeed, this.vector.length()));
     this.vector.multiplyScalar(speedFactor);
 
@@ -180,7 +171,9 @@ jQuery(function($) {
     // Limit the acceleration each cycle.
     // The closer to 0 this is, the more insect like the behavior
     // with sudden changes in direction
-    this.acceleration.multiplyScalar(0.6);
+    // The arbitrary values here assume that speedFactor will be
+    // at most 2000
+    this.acceleration.multiplyScalar(0.499 + FlockState.speedFactor / 4000);
   };
 
   Boid.prototype.seek = function(target) {

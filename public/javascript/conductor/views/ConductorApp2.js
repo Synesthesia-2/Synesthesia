@@ -19,7 +19,6 @@ ConductorSpace.ConductorApp = Backbone.View.extend({
     this.model.on('newCohesionFactor', this.newCohesionFactor.bind(this));
     this.model.on('newAlignmentFactor', this.newAlignmentFactor.bind(this));
     this.model.on('newSpeedFactor', this.newSpeedFactor.bind(this));
-
     this.server.on('resetSelf', this.resetSelf.bind(this));
   },
 

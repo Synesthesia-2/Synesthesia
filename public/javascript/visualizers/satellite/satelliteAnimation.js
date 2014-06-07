@@ -152,6 +152,7 @@
   };
 
   visualizer.collectopticalFlowData = function (opticalFlowData) {
+    console.log('flowed');
       if (Math.abs(opticalFlowData.u) > visualizer.settings.flowThreshold){
           visualizer.opticalFlowData.flowU += visualizer.settings.flowDataScalingFactor * opticalFlowData.u; 
       }

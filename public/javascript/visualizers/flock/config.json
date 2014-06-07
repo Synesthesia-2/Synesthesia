@@ -1,12 +1,11 @@
 {
   "inputs": [
     "welcome",
-    "opticalFlowData",
-    "audio",
     "blob",
-    "newFadeTime",
-    "toggleOpticalFlowFlocking"
-
+    "newSeparationFactor",
+    "newCohesionFactor",
+    "newAlignmentFactor",
+    "newSpeedFactor"
   ],
   "extraJS": [
     "bower_components/jquery/jquery.min.js",

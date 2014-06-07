@@ -1,0 +1,65 @@
+doctype html
+html
+  head
+    title Kinetech MC
+    meta(name="viewport", content="width=device-width, user-scalable=no, minimum-scale=1, maximum-scale=1.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    meta(name="apple-mobile-web-app-status-bar-style", content="black")
+    link(rel='stylesheet', href='/stylesheets/conductor2.css')
+    script(src="/socket.io/socket.io.js")
+    script(src="bower_components/jquery/jquery.min.js")
+    script(src="bower_components/underscore/underscore-min.js")
+    script(src="bower_components/backbone/backbone-min.js")
+    script(src="bower_components/handlebars/handlebars.js")
+
+  body
+
+    script#conductorApp(type="text/x-handlebars-template")
+      div#container
+
+    script#mainView(type="text/x-handlebars-template")
+      header
+        h3 Flocking Controller
+      div#specController
+            
+        form(class="scrollable")
+          label(for="updateSeparationFactor") Separation
+          input(type="range", class="audioControlled scrollable", name="updateSeparationFactor", id="updateSeparationFactor", value="1000", min="100", max="3000")
+          label(for="updateCohesionFactor") Cohesion
+          input(type="range", class="audioControlled scrollable", name="updateCohesionFactor", id="updateCohesionFactor", value="1000", min="100", max="3000")
+          label(for="updateAlignmentFactor") Alignment
+          input(type="range", class="audioControlled scrollable", name="updateAlignmentFactor", id="updateAlignmentFactor", value="2000", min="100", max="4000")
+          label(for="updateSpeedFactor") Speed and Acceleration
+          input(type="range", class="audioControlled scrollable", name="updateSpeedFactor", id="updateSpeedFactor", value="1000", min="100", max="2000")
+  
+    script.
+      $(document).on('touchmove', function(e) {
+        e.preventDefault();
+      });
+      var ConductorSpace = {};
+
+    script(src="javascript/conductor/models/Conductor2.js")
+    script(src="javascript/conductor/models/Server2.js")
+
+    script(src="javascript/conductor/router/router2.js")
+
+    script(src="javascript/conductor/views/ConductorApp2.js")
+    script(src="javascript/conductor/views/MainView2.js")
+
+    script.
+      var conductor = new ConductorSpace.Conductor();
+
+      var kineTemplates = {};
+      $("[type='text/x-handlebars-template']").each(function(index, div){
+          kineTemplates[div.id] = Handlebars.compile(div.innerHTML);
+      });
+      conductor.set('templates', kineTemplates);
+      var server = new ConductorSpace.Server();
+      var conductorApp = new ConductorSpace.ConductorApp({ model: conductor, server: server });
+      $('body').on('touchmove', '.scrollable', function(e) {
+        e.stopPropagation();
+      });
+
+    script.
+      $('#tiltGrid').click(function(){server.emit('tiltGrid','tilt')});
+
