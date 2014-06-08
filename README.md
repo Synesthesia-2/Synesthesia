@@ -86,6 +86,26 @@ To view your visualizer, run the server (see above), and open a browser with the
       gamma: 1, 
     }
 
+#### Optical flow:
+`opticalFlow.js` will use the oflow library to capture motion data via webcam and emit it under the event `opticalFlowData`. This object looks like:
+
+    { zones:                            // Array of objects containing flow data for each x,y point in front of camera.
+      [ 
+        { x: 9, y: 9, u: 0, v: 0 },     // x,y coordinates and associated u,v flow vectors.
+        { x: 230, y: 9, u: 0, v: 0 },
+        { x: 451, y: 9, u: 0, v: 0 },
+       
+        ...
+
+        { x: 451, y: 451, u: 0, v: 0 },
+        { x: 43, y: 468, u: 0, v: 0 },
+        { x: 264, y: 468, u: 0, v: 0 },
+        { x: 485, y: 468, u: 0, v: 0 } 
+      ],
+      u: 0,                             // Total flow in x-direction (sum of u components of 'zones').
+      v: 0,                             // Total flow in y-direction (sum of v components of 'zones').
+    }
+
 
 ##Screenshots:
 
