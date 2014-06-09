@@ -114,4 +114,19 @@ div#specOptionList .toggled {
   div#specController div#optionBuilder form input[type='range'] {
     width: 420px;
   }
+@media (min-width: 128px) {
+    div#specController {
+      width: 768px;
+      padding: 10px;
+    }
+    div#specController form {
+      width: 658px;
+    }
+    div#specController form label {
+      margin-top: 3em;
+    }
+    div#specController form input[type='range'] {
+      width: 658px;
+    }
+}
 }
