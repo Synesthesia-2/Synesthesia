@@ -11,6 +11,9 @@ jQuery(function($) {
   // Increase this to make shakes count for more.
   var SENSITIVITY = 35;
 
+  // How frequently to refresh the visualization.
+  var INTERVAL = 100;
+
   // This is the minimum value that the meter will contract to, even without any motion. (written as a decimal percentage)
   var MINIMUMHEIGHT = 0.05;
   var minH = MINIMUMHEIGHT * HEIGHT;
@@ -39,7 +42,7 @@ jQuery(function($) {
 
     bars
       .transition()
-      .duration(100)
+      .duration(INTERVAL)
       .attr("x", 0)
       .attr("y", HEIGHT - barHeight)
       .attr("height", barHeight)
@@ -57,5 +60,5 @@ jQuery(function($) {
     foneVisualize(currentValue);
     // Reset shakeData to 0, otherwise meter will keep growing
     shakeData = 0;
-  }, 50);
+  }, INTERVAL);
 });

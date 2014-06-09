@@ -11,6 +11,8 @@ jQuery(function($) {
   // Increase this to make shakes count for less. Default is 1.
   var SENSITIVITY = 50;
 
+  // How frequently to refresh the visualization.
+  var INTERVAL = 100;
   // This is the minimum value that the iris will contract to, even without any motion. (written as a decimal percentage)
   var MINIMUMRADIUS = 0.05;
   var minR = MINIMUMRADIUS * WIDTH;
@@ -41,7 +43,7 @@ jQuery(function($) {
 
     bars
       .transition()
-      .duration(100)
+      .duration(INTERVAL)
       .attr("r", minR + score)
       .style("fill", "white");
   };
@@ -56,5 +58,5 @@ jQuery(function($) {
     irisExpand(currentValue);
     // Reset shakeData to 0, otherwise meter will keep growing
     shakeData = 0;
-  }, 50);
+  }, INTERVAL);
 });
