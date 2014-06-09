@@ -109,31 +109,31 @@ To view your visualizer, run the server (see above), and open a browser with the
 
 Client home screen
 
-![Client home screen](/screenshots/ClientView.png "Client Home Screen")
+![Client home screen](./screenshots/ClientView.png "Client Home Screen")
 
 Conductor home screen
 
-![Conductor home screen](/screenshots/conductorScreen2.png "Conductor Control Panel Page")
+![Conductor home screen](./screenshots/conductorScreen2.png "Conductor Control Panel Page")
 
 Fireworks visualization
 
-![Fireworks visualization](/screenshots/fireworks.png "Fireworks display with audio and phone motion")
+![Fireworks visualization](./screenshots/fireworks.png "Fireworks display with audio and phone motion")
 
 Satellite Dance Grid Visualizations
 
-![Calm Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/CalmGrid.png "Dance grid display with thin lines correlating to low acceleration")
+![Calm Satellite Dance Grid Visualization](./screenshots/SatelliteDanceGrid/CalmGrid.png "Dance grid display with thin lines correlating to low acceleration")
 
-![Color Changing Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/ColorChange.png "Dance grid display with color changes corresponding to max frequency of audio input")
+![Color Changing Satellite Dance Grid Visualization](./screenshots/SatelliteDanceGrid/ColorChange.png "Dance grid display with color changes corresponding to max frequency of audio input")
 
-![Medium Acceleration Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/RampUpGrid.png "Dance grid display with medium-thick lines correlating to moderate acceleration")
+![Medium Acceleration Satellite Dance Grid Visualization](./screenshots/SatelliteDanceGrid/RampUpGrid.png "Dance grid display with medium-thick lines correlating to moderate acceleration")
 
-![High Acceleration Satellite Dance Grid Visualization](/screenshots/SatelliteDanceGrid/RampUpGrid2.png "Dance grid display with thick, bold lines correlating to high acceleration")
+![High Acceleration Satellite Dance Grid Visualization](./screenshots/SatelliteDanceGrid/RampUpGrid2.png "Dance grid display with thick, bold lines correlating to high acceleration")
 
 ## Screencast Demos:
 
 Shakemeter visualization
 
-![Shakemeter visualization](/screenshots/shakemeter.png "Shakemeter display from phone motion")
+![Shakemeter visualization](./screenshots/shakemeter.png "Shakemeter display from phone motion")
 
 
 ##Technology:
