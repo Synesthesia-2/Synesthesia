@@ -10,6 +10,7 @@ exports.inputRoutes = [
   'fone',
   'dancer',
   'update',
+  'gridcontrol'
 ];
 
 exports.renderView = function (req, res, views) {

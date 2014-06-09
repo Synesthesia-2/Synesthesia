@@ -3,7 +3,8 @@
     "opticalFlow",
     "audio",
     "blob",
-    "audienceMotionData"
+    "audienceMotionData",
+    "tiltangle"
   ],
   "extraJS": [
     "/bower_components/jquery/jquery.min.js",

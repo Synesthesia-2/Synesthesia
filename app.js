@@ -113,6 +113,7 @@ var opticalFlow = io.of('/opticalFlow');
 // var linedance = io.of('/linedance');
 var osc = new oscIo.Client('127.0.0.1', oscPort);
 var fone = io.of('/fone');
+var gridcontrol = io.of('/gridcontrol');
 
 osc.send('/oscAddress', 20130);
 
@@ -277,6 +278,23 @@ conductor2.on('connection', function(conductor2){
   });
 });
 
+gridcontrol.on('connection', function(gridcontrol) {
+  console.log('controller connected');
+  gridcontrol.emit('welcome', 'connected to server' );
+
+  gridcontrol.on('tiltangle', function (tiltangle) {
+    // console.log('heard tilt angle event');
+    // console.log(tiltangle);
+    emitData('tiltangle', tiltangle);
+  });
+
+  gridcontrol.on('touchdata', function(touchdata) {
+    console.log('got touch data');
+    console.log(touchdata);
+  });
+});
+
+
 //////////////////////////////////////////
 /// Client events
 //////////////////////////////////////////
@@ -354,4 +372,5 @@ fone.on('connection', function (fone) {
     emitData("foneDisconnect", fone.id);
   });
 });
+
 

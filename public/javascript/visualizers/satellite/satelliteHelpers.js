@@ -8,7 +8,7 @@ var randomCenterAdjustment = function(oldCoords, scalingFactor) {
       updatedCoords[0] = oldCoords[0] + (Math.random() - 0.5) * scalingFactor;
       updatedCoords[1] = oldCoords[1] + (Math.random() - 0.5) * scalingFactor;
       return updatedCoords;
-  };
+};
 
 
 

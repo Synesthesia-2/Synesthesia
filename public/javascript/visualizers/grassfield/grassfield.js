@@ -25,6 +25,7 @@ jQuery(function($) {
     var lineHeight = 25;
     var randomFactor = 5;
 
+    // Here we use a key function to make sure the data join works properly
     var line = svg.selectAll("path").data(inputData, function(d){return d.x + "x" + d.y;});
 
     line
@@ -32,7 +33,10 @@ jQuery(function($) {
       .duration(transitionTime/2)
       .ease('elastic')
       .attr("d", function(d){
+        // This random factor is what lets the grass "blow in the wind"...
         var rf = randomFactor*(Math.random() - 0.5);
+        // This is an SVG bezier curve. Looks just like a grass blade!
+        // http://www.w3.org/TR/SVG11/paths.html#PathDataQuadraticBezierCommands
         var path = "";
         path += "M" + d.x * width / 640 + "," + d.y * height / 480;
         path += " Q" + (d.x - lineHeight/8) * width / 640 + "," + (d.y - lineHeight/4) * height / 480;

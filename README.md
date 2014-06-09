@@ -68,6 +68,44 @@ On startup of the Node server, the directory names in `public/javascript/visuali
 
 To view your visualizer, run the server (see above), and open a browser with the URL `serverIPaddress:PORT/file` (replacing `serverIPaddress` `file` with the name of your visualizer). Inputs such as audio or optical flow can be run in another browser window on the same computer, or if the visualizer is particularly CPU-intensive they can all be run on separate machines.
 
+## Format of Data Inputs
+
+#### Phone accelerometer/gyroscope:
+
+`fone.js` will collect all motion/orientation data into an object called `currentOrientation` and emit it under the event `audienceMotionData`. This object looks like:
+
+    { id: 'kuEV9RLeuvg2mSxEdrQc', // Unique id for each socket.
+      accel: {                    // x,y,z acceleration vectors.
+        x: -0.017253489023150177,
+        y: 0.00399189149550366,
+        z: 0.12266348032015376 
+      },
+      totalAcc: 0,                // Magnitude of the acceleration.
+      alpha: 0,                   // alpha,beta,gamma indicate the
+      beta: -1,                   // phone's orientation.
+      gamma: 1, 
+    }
+
+#### Optical flow:
+`opticalFlow.js` will use the oflow library to capture motion data via webcam and emit it under the event `opticalFlowData`. This object looks like:
+
+    { zones:                            // Array of objects containing flow data for each x,y point in front of camera.
+      [ 
+        { x: 9, y: 9, u: 0, v: 0 },     // x,y coordinates and associated u,v flow vectors.
+        { x: 230, y: 9, u: 0, v: 0 },
+        { x: 451, y: 9, u: 0, v: 0 },
+       
+        ...
+
+        { x: 451, y: 451, u: 0, v: 0 },
+        { x: 43, y: 468, u: 0, v: 0 },
+        { x: 264, y: 468, u: 0, v: 0 },
+        { x: 485, y: 468, u: 0, v: 0 } 
+      ],
+      u: 0,                             // Total flow in x-direction (sum of u components of 'zones').
+      v: 0,                             // Total flow in y-direction (sum of v components of 'zones').
+    }
+
 
 ##Screenshots:
 

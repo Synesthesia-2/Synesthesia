@@ -1,3 +1,14 @@
+// For optimal aesthetics, stay within the following ranges:
+    /////////////////////////////////////////
+    //  Satellite Projection Data Ranges   //
+    /////////////////////////////////////////
+    //  center[0]  (-2,2)     // x-pos     //
+    //  center[1]  (0, 6)     // y-pos     //
+    //  tilt       (-20 20)   // slope     //
+    /////////////////////////////////////////
+
+// **note: expect osc input camera resolution to be 640 x 480
+
  var visualizer = window.visualizer = {};
 
   visualizer.settings = {
@@ -36,7 +47,12 @@
 
     // grid thickness is proportional to the visualizer's current shake value
     // an offset is necessary so that the grid is always visible (i.e. grid thickness > 0 )
-    shakeOffset: 1
+    shakeOffset: 2,
+
+    tiltAngle: {
+      X: 0,
+      Y: 0
+    }
 
   };
 
@@ -87,10 +103,23 @@
   };
 
 
-  visualizer.tiltChange = function () {
-      var tilt = Math.random() * 45 - 20; // new tilt will be between -20 and +25
+  visualizer.tiltChangeBase = function (angle) {
+      if (angle === 0) {
+        angle = 0.1;
+      }
+      var tilt = angle || Math.random() * 45 - 20; // new tilt will be between -20 and +25
       visualizer.projectionParams.tilt = tilt;
       this.settings.tilting = true;
+  };
+
+  // visualizer.tiltChange = _.throttle(visualizer.tiltChangeBase, 1000);
+
+  visualizer.tiltChange = function(tilt) {
+    for (dimension in visualizer.settings.tiltAngle) {
+      visualizer.settings.tiltAngle[dimension] = zFilter(tilt[dimension], visualizer.settings.tiltAngle[dimension], 0.999);
+    }
+    visualizer.settings.tiltAngle = tilt;
+          // this.settings.tilting = true;
   };
 
   visualizer.resetCollectionBins = function () {
@@ -117,6 +146,13 @@
     visualizer.accelerationAccumulator += data.totalAcc;
   };
 
+  visualizer.handleTilt = function(tiltAngle) {
+    // console.log(tiltAngle);
+    visualizer.tiltChange(tiltAngle);
+    // d3.select('path')
+    // .attr("transform", function(d) { return "skewX(" + visualizer.settings.tiltAngle.X + ")" + "skewY(" + visualizer.settings.tiltAngle.Y + ")"; })
+  };
+
   visualizer.nextMove = function () {
       var nextPath;
       var globe = d3.select(this);
@@ -136,17 +172,21 @@
       if (visualizer.settings.tilting) {
         visualizer.settings.tilting = false;
         globe
+          .style('opacity', 1)
           .transition()
-          .duration(200)
+          .duration(3000)
           .attr("d", nextPath)
+          .attr("transform", function(d) { return "skewX(" + 0 + ")" + "skewY(" + 0 + ")"; })
           .each("end", visualizer.nextMove);
       } else {
         globe
           .transition()
-          .duration(200)
+          .duration(50)
           .attr("d", nextPath)
           .style("stroke-width", visualizer.projectionParams.shake)
           .style("stroke", function(d,i){return "hsl(" + ((visualizer.projectionParams.freq/1000)*360) + ",100%,50%)";})
+          // .attr("transform")
+          .attr("transform", function(d) { return "skewX(" + visualizer.settings.tiltAngle.X + ")" + "skewY(" + visualizer.settings.tiltAngle.Y + ")"; })
           .each("end", visualizer.nextMove);
       }
   };
@@ -201,7 +241,7 @@
   d3.select("path")
         .attr("d", visualizer.path) //move center
         .transition()
-        .style('opacity', 0.8)
+        // .style('opacity', 0.8)
         .each("end", visualizer.nextMove);
 
     setInterval(function(){
