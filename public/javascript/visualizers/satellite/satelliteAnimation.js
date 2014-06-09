@@ -43,12 +43,13 @@
     shakeScale: 0.15,
 
     // shake value threshold -- exceeding this value induces a tilt change and resets the visualizer's shake property
-    maxShake: 8,
+    maxShake: 6,
 
     // grid thickness is proportional to the visualizer's current shake value
     // an offset is necessary so that the grid is always visible (i.e. grid thickness > 0 )
-    shakeOffset: 2,
+    shakeOffset: 1.5,
 
+    //tilt angle from remote mobile device orientation data --> used for css transform of rendered svg path
     tiltAngle: {
       X: 0,
       Y: 0
@@ -56,6 +57,7 @@
 
   };
 
+// d3.geo parameters for creating a satellite projection path
   visualizer.projectionParams = {
     distance: 1.1,
     scale: 8500,
@@ -69,10 +71,13 @@
     shake: 1
   };
 
-
+// the acceleration accumulator bins incoming accelerometer data from all connected phones for 100ms time windows
   visualizer.accelerationAccumulator = 0;
+
+// shake is a z-filtered representation of the accumulated acceleration data
   visualizer.shake = 0;
 
+// graticule is the basis of the grid path based on the projection parameters above
   visualizer.graticule = d3.geo.graticule()
       .extent([[-93, 27], [-47 + 1e-6, 57 + 1e-6]])
       .step([0.5, 0.5]);
@@ -80,30 +85,26 @@
 
 
 
-
+// opticalFlowData is a collection bin for incoming oflow vector data 
   visualizer.opticalFlowData = {
       flowU: 0,
       flowV: 0
   };
 
+//setShake updates the visualizer's shake value using the accumulated acceleration data
   visualizer.setShake = function (accelerationAccumulator) {
     this.shake = zFilter(this.accelerationAccumulator, this.shake);
     var scaled = this.shake * this.settings.shakeScale;
-    // console.log(scaled);
-    // console.log(this.settings.maxShake);
-    // console.log('setshakethis',this);
-    // debugger;
     if (scaled < this.settings.maxShake) {
       this.projectionParams.shake  = scaled + this.settings.shakeOffset;
     } else {
-      this.tiltChange();
-      // this.projectionParams.shake = 3;
-      this.shake = 0;
+      this.projTiltChange(); //changes the projection tilt parameter
+      this.shake = 0; // resets shake value
     }
   };
 
-
-  visualizer.tiltChangeBase = function (angle) {
+//applies the given angle or a random tilt to the svg projection path
+  visualizer.projTiltChange = function (angle) {
       if (angle === 0) {
         angle = 0.1;
       }
@@ -112,22 +113,22 @@
       this.settings.tilting = true;
   };
 
-  // visualizer.tiltChange = _.throttle(visualizer.tiltChangeBase, 1000);
-
+//updates the tiltAngle setting
   visualizer.tiltChange = function(tilt) {
-    for (dimension in visualizer.settings.tiltAngle) {
+    for (var dimension in visualizer.settings.tiltAngle) {
       visualizer.settings.tiltAngle[dimension] = zFilter(tilt[dimension], visualizer.settings.tiltAngle[dimension], 0.999);
     }
     visualizer.settings.tiltAngle = tilt;
-          // this.settings.tilting = true;
   };
 
+//resets optical flow data bins
   visualizer.resetCollectionBins = function () {
     for (var key in visualizer.opticalFlowData) {
       visualizer.opticalFlowData[key] = 0;
     }
   };
 
+//shifts the projection centerpoint based on optical flow data
   visualizer.shiftCenter = function () {
       var xShift, yShift;
       xShift = this.opticalFlowData.flowU / 12;
@@ -136,21 +137,20 @@
       this.settings.centerCoords[1] += yShift;
   } ;
 
+//gets freq of the bin with max amplitude upon FFT of audio data
   visualizer.getFreq = function ( audioData ) {
-     console.log(audioData);
       var freq = audioData.hz;
       visualizer.projectionParams.freq = zFilter(freq, visualizer.projectionParams.freq, 0.96);
   };
 
+//add all incoming accelerometer data to the accumulator
   visualizer.handleShakes = function(data){
     visualizer.accelerationAccumulator += data.totalAcc;
   };
 
+//callback for incoming tilt data -- separated from tiltChange for potential future addition of extra functionality
   visualizer.handleTilt = function(tiltAngle) {
-    // console.log(tiltAngle);
     visualizer.tiltChange(tiltAngle);
-    // d3.select('path')
-    // .attr("transform", function(d) { return "skewX(" + visualizer.settings.tiltAngle.X + ")" + "skewY(" + visualizer.settings.tiltAngle.Y + ")"; })
   };
 
   visualizer.nextMove = function () {
@@ -176,7 +176,8 @@
           .transition()
           .duration(3000)
           .attr("d", nextPath)
-          .attr("transform", function(d) { return "skewX(" + 0 + ")" + "skewY(" + 0 + ")"; })
+          .style("stroke-width", visualizer.projectionParams.shakeOffset)
+          // .attr("transform", function(d) { return "skewX(" + 0 + ")" + "skewY(" + 0 + ")"; })
           .each("end", visualizer.nextMove);
       } else {
         globe
@@ -241,7 +242,6 @@
   d3.select("path")
         .attr("d", visualizer.path) //move center
         .transition()
-        // .style('opacity', 0.8)
         .each("end", visualizer.nextMove);
 
     setInterval(function(){
