@@ -1,7 +1,13 @@
 Synesthesia 2.0 is an interactive, realtime data visualization suite developed at [Kinetech](http://kine-tech.org/) in San Francisco.
+
 Synesthesia enables collaborative performance over a network by routing input node devices to output node devices via a node.js server. The server can be anywhere—a virtual machine in the cloud, a computer on the local network, etc.—and the input and output node computers can via the web, so they can be anywhere as well. We have an example server running, for instance, on Microsoft Azure's cloud based in East Asia, while we route audio and video data from San Francisco through the server and back again to different computers and smartphones elsewhere in San Francisco. The flexibility allows a massive possiblity of configurations to explore.
+
 The system is architected for javascript based visualization plugins. Create a javascript file with a visualization, determine which input nodes data is to be collected from, and drop into the plugin folder on the server. Synesthesia will set up the routing, and the user can then browse to the automatically defined web page.
-The application collects, processes, and abstracts audio, orientation, movement, and location data from remote computers and mobile devices and dynamically renders live in-browser displays which can be projected onto a wall, floor, or stage. 
+
+[Possible network layout](./images/network.png "Possible network layout")
+
+The application collects, processes, and abstracts audio, orientation, movement, and location data from remote computers and mobile devices and dynamically renders live in-browser displays which can be projected onto a wall, floor, or stage.
+
 Additionally, a user-friendly control panel page allows for a conductor to enable/disable data transfer from input sources to visualizers and to adjust visualization parameters during a performance while the app is running. 
 
 The current version debuted at the [CODAME Art + Tech Playground](http://www.codame.com/)'s Code + Dance + Hack event on May 31, 2014 at CounterPULSE in San Francsico where the developers were able to collaborate and exchange ideas with dancers, artists, and technologists. 
