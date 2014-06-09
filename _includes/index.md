@@ -4,7 +4,7 @@ Synesthesia enables collaborative performance over a network by routing input no
 
 The system is architected for javascript based visualization plugins. Create a javascript file with a visualization, determine which input nodes data is to be collected from, and drop into the plugin folder on the server. Synesthesia will set up the routing, and the user can then browse to the automatically defined web page.
 
-[Possible network layout](./images/network.png "Possible network layout")
+![Possible network layout](./images/network.png "Possible network layout")
 
 The application collects, processes, and abstracts audio, orientation, movement, and location data from remote computers and mobile devices and dynamically renders live in-browser displays which can be projected onto a wall, floor, or stage.
 
