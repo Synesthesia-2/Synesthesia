@@ -6,6 +6,8 @@ Additionally, a user-friendly control panel page allows for a conductor to enabl
 
 The current version debuted at the [CODAME Art + Tech Playground](http://www.codame.com/)'s Code + Dance + Hack event on May 31, 2014 at CounterPULSE in San Francsico where the developers were able to collaborate and exchange ideas with dancers, artists, and technologists. 
 
+Check out a video of Synesthesia 2.0 in action: [Synesthesia 2.0 Demo](http://vimeo.com/98010268)
+
 Architecturally, the modular plugin style of v2.0 enables developers and artists to easily integrate new visualizers or data input nodes into the existing framework. 
 
 ##Instructions:
